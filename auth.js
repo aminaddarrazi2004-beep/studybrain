@@ -3,8 +3,8 @@
 // Stap 2: nieuw project aanmaken
 // Stap 3: Settings > API > kopieer URL en anon key hieronder
 
-const SUPABASE_URL = 'JOUW_SUPABASE_URL_HIER';
-const SUPABASE_KEY = 'JOUW_SUPABASE_ANON_KEY_HIER';
+const SUPABASE_URL = 'https://jouw-project-id.supabase.co';
+const SUPABASE_KEY = 'eyJhbGc...jouw-publishable-key';
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
