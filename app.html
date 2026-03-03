@@ -10,7 +10,19 @@
 <meta property="og:type" content="website">
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>.topbar{position:fixed;top:0;left:0;right:0;z-index:999;display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:rgba(10,10,15,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06)}.topbar-logo{font-family:DM Sans,sans-serif;font-size:16px;font-weight:700;color:#f0f0f8}.topbar-right{display:flex;align-items:center;gap:12px}.topbar-email{font-size:12px;color:#6b6b8a}.logout-btn{padding:7px 16px;border-radius:8px;border:1px solid rgba(255,77,109,0.3);background:rgba(255,77,109,0.1);color:#ff4d6d;font-size:13px;cursor:pointer;transition:all 0.2s}.logout-btn:hover{background:rgba(255,77,109,0.2)}body{padding-top:56px}</style>
+<style>
+.topbar{position:fixed;top:0;left:0;right:0;z-index:999;display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:rgba(10,10,15,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06)}
+.topbar-logo{font-family:DM Sans,sans-serif;font-size:16px;font-weight:700;color:#f0f0f8}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.topbar-email{font-size:12px;color:#6b6b8a}
+.logout-btn{padding:7px 16px;border-radius:8px;border:1px solid rgba(255,77,109,0.3);background:rgba(255,77,109,0.1);color:#ff4d6d;font-size:13px;cursor:pointer;transition:all 0.2s}
+.logout-btn:hover{background:rgba(255,77,109,0.2)}
+body{padding-top:56px}
+.toetsvraag{display:flex;gap:12px;align-items:flex-start;padding:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,214,0,0.15);border-radius:12px;margin-bottom:10px}
+.vr-num{background:rgba(255,214,0,0.15);color:#ffd600;font-weight:700;font-size:13px;padding:2px 9px;border-radius:20px;white-space:nowrap}
+.toetsvraag p{font-size:14px;line-height:1.6;color:#f0f0f8}
+.topic-tip{display:block;margin-top:8px;font-size:12px;color:#00e676;background:rgba(0,230,118,0.08);border:1px solid rgba(0,230,118,0.2);border-radius:8px;padding:6px 10px}
+</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
@@ -45,16 +57,16 @@
     <div class="time-section">
       <h3>⏰ Hoeveel tijd heb je nog?</h3>
       <div class="time-grid">
-        <button class="time-btn" data-time="30 minuten" onclick="selectTime(this)">
+        <button class="time-btn" data-time="30 minuten">
           <span class="tb-emoji">💀</span>30 min
         </button>
-        <button class="time-btn" data-time="1 uur" onclick="selectTime(this)">
+        <button class="time-btn" data-time="1 uur">
           <span class="tb-emoji">😰</span>1 uur
         </button>
-        <button class="time-btn" data-time="2-3 uur" onclick="selectTime(this)">
+        <button class="time-btn" data-time="2-3 uur">
           <span class="tb-emoji">😬</span>2-3 uur
         </button>
-        <button class="time-btn active" data-time="een avond" onclick="selectTime(this)">
+        <button class="time-btn active" data-time="een avond">
           <span class="tb-emoji">🌙</span>Een avond
         </button>
       </div>
@@ -114,6 +126,11 @@
     <div class="cheatsheet-section">
       <h3>⚡ Ultra-snelle cheatsheet</h3>
       <div class="cheatsheet-content" id="cheatsheetContent"></div>
+    </div>
+
+    <div class="cheatsheet-section" id="toetsvragenSection" style="display:none">
+      <h3>🎯 Voorspelde toetsvragen</h3>
+      <div id="toetsvragenList"></div>
     </div>
 
     <button class="reset-btn" onclick="reset()">← Nieuwe analyse starten</button>
