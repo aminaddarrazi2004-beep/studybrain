@@ -65,9 +65,9 @@ body::before {
 }
 
 .container {
-  max-width: 860px;
+  max-width: 620px;   /* was 860px */
   margin: 0 auto;
-  padding: 40px 24px 80px;
+  padding: 40px 20px 80px;
   position: relative;
   z-index: 1;
 }
@@ -99,7 +99,7 @@ header {
 
 h1 {
   font-family: 'Syne', sans-serif;
-  font-size: clamp(42px, 8vw, 72px);
+  font-size: clamp(36px, 6vw, 56px);  /* was clamp(42px, 8vw, 72px) */;
   font-weight: 800;
   line-height: 1;
   letter-spacing: -2px;
