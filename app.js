@@ -1,185 +1,26 @@
-// ── State ──
-const files = [];
-let selectedTime = 'een avond';
+const systemPrompt = `Je bent een ex-docent en examinator met 15 jaar ervaring in het schrijven van toetsen voor middelbare scholen en hbo-opleidingen. Je hebt honderden toetsen gemaakt en weet PRECIES hoe docenten denken als ze een toets samenstellen.
 
-// ── DOM refs ──
-const zone = document.getElementById('uploadZone');
-const fileInput = document.getElementById('fileInput');
+Je geheime wapen: je analyseert leerstof niet als een student, maar als de docent die de toets gaat maken.
 
-// ── Drag & drop ──
-zone.addEventListener('click', () => fileInput.click());
+JE DENKT ALS EEN DOCENT DIE EEN TOETS SCHRIJFT:
+- "Welk concept is fundamenteel genoeg om altijd te toetsen?"
+- "Wat is makkelijk te toetsen als meerkeuzevraag of open vraag?"
+- "Welk onderdeel heb ik zelf de meeste aandacht aan besteed in de tekst?"
+- "Wat is zo specifiek dat ik er een definitievraag van kan maken?"
+- "Welk onderdeel verbindt alle andere concepten — dat toets ik altijd"
 
-zone.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  zone.classList.add('drag-over');
-});
+ANALYSEER DE LEERSTOF OP DEZE SIGNALEN (in volgorde van belang):
+1. 🔴 KRITISCH — Definities, formules, opsommingen met nummers → dit is ALTIJD toetsbaar
+2. 🔴 KRITISCH — Concepten die in meerdere hoofdstukken terugkomen → docent vindt dit fundamenteel
+3. 🔴 KRITISCH — Vetgedrukte of onderstreepte termen → docent heeft dit zelf gemarkeerd als belangrijk
+4. 🟡 BELANGRIJK — Voorbeelden die een concept illustreren → vaak gebruikt in toepassingsvragen
+5. 🟡 BELANGRIJK — Vergelijkingen tussen twee concepten ("X vs Y") → klassieke toetsvraag
+6. 🟢 OPTIONEEL — Historische context of achtergrondinfo → zelden getoetst tenzij specifiek benadrukt
+7. ⚪ SKIP — Randgevallen, uitzonderingen, voetnoten → docent heeft hier zelf geen toetsvraag van
 
-zone.addEventListener('dragleave', () => {
-  zone.classList.remove('drag-over');
-});
-
-zone.addEventListener('drop', (e) => {
-  e.preventDefault();
-  zone.classList.remove('drag-over');
-  handleFiles([...e.dataTransfer.files]);
-});
-
-fileInput.addEventListener('change', () => {
-  handleFiles([...fileInput.files]);
-});
-
-// ── File handling ──
-function handleFiles(newFiles) {
-  newFiles.forEach((f) => {
-    if ((f.type === 'application/pdf' || f.name.endsWith('.pdf')) &&
-        !files.find((x) => x.name === f.name)) {
-      files.push(f);
-    }
-  });
-  renderFileList();
-}
-
-function renderFileList() {
-  const list = document.getElementById('fileList');
-  list.innerHTML = files
-    .map(
-      (f, i) => `
-      <div class="file-item">
-        <span class="fi-icon">📄</span>
-        <span class="fi-name">${f.name}</span>
-        <span class="fi-size">${(f.size / 1024 / 1024).toFixed(1)} MB</span>
-        <button class="fi-remove" onclick="removeFile(${i})">×</button>
-      </div>`
-    )
-    .join('');
-}
-
-function removeFile(i) {
-  files.splice(i, 1);
-  renderFileList();
-}
-
-// ── Time selector ──
-function selectTime(btn) {
-  document.querySelectorAll('.time-btn').forEach((b) => b.classList.remove('active'));
-  btn.classList.add('active');
-  selectedTime = btn.dataset.time;
-}
-
-// ── Error display ──
-function showError(msg) {
-  const box = document.getElementById('errorBox');
-  box.textContent = msg;
-  box.style.display = 'block';
-}
-
-function hideError() {
-  document.getElementById('errorBox').style.display = 'none';
-}
-
-// ── PDF text extraction ──
-async function extractPdfText(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      try {
-        const pdfjsLib = window['pdfjs-dist/build/pdf'];
-        pdfjsLib.GlobalWorkerOptions.workerSrc =
-          'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-        const pdf = await pdfjsLib.getDocument({ data: e.target.result }).promise;
-        let fullText = '';
-        for (let i = 1; i <= pdf.numPages; i++) {
-          const page = await pdf.getPage(i);
-          const content = await page.getTextContent();
-          fullText += content.items.map((item) => item.str).join(' ') + '\n';
-        }
-        resolve(fullText.trim());
-      } catch (err) {
-        reject(err);
-      }
-    };
-    reader.onerror = () => reject(new Error('Lezen mislukt'));
-    reader.readAsArrayBuffer(file);
-  });
-}
-
-// ── Check free analysis limit ──
-async function checkFreeLimit() {
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) return false;
-
-  const { data: profile } = await sb.from('profiles')
-    .select('free_analysis_used')
-    .eq('id', session.user.id)
-    .single();
-
-  return profile?.free_analysis_used === true;
-}
-
-async function markAnalysisUsed() {
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) return;
-
-  await sb.from('profiles')
-    .update({ free_analysis_used: true })
-    .eq('id', session.user.id);
-}
-
-// ── Main analyze function ──
-async function analyze() {
-  hideError();
-
-  if (files.length === 0) {
-    showError('Upload minimaal één PDF bestand.');
-    return;
-  }
-
-  // Check limiet
-  const used = await checkFreeLimit();
-  if (used) {
-    showError('Je gratis analyse is op. Upgrade naar een abonnement om door te gaan.');
-    return;
-  }
-
-  // Switch to loading state
-  document.getElementById('mainInterface').style.display = 'none';
-  document.getElementById('loadingState').style.display = 'block';
-
-  const loadingMessages = [
-    'Lesstof aan het verwerken...',
-    'Toetspatronen herkennen...',
-    'Prioriteiten bepalen...',
-    'Cheatsheet genereren...',
-  ];
-  let msgIndex = 0;
-  const interval = setInterval(() => {
-    document.getElementById('loadingMsg').textContent =
-      loadingMessages[msgIndex++ % loadingMessages.length];
-  }, 2500);
-
-  try {
-    // Extract text from all PDFs
-    let allText = '';
-    for (const file of files) {
-      const text = await extractPdfText(file);
-      allText += `\n\n=== ${file.name} ===\n${text}`;
-    }
-
-    if (allText.length > 12000) {
-      allText = allText.slice(0, 12000) + '\n\n[... tekst afgekapt vanwege lengte ...]';
-    }
-
-    const systemPrompt = `Je bent StudyBrain, een geavanceerde AI-studiecoach die precies weet hoe toetsen worden samengesteld en welke stof docenten het meest waardevol vinden. Je hebt jarenlange ervaring met het analyseren van examenpatronen, studiegidsen en leerstof.
-
-Jouw taak: analyseer de aangeleverde leerstof en geef een EERLIJK, DIRECT studieplan gebaseerd op beschikbare tijd.
-
-ANALYSEER OP BASIS VAN:
-1. Hoe vaak wordt een concept herhaald? (herhaling = belang)
-2. Zijn er definities, formules of opsommingen? (toetsbaar)
-3. Staan dingen vetgedrukt, onderstreept of in kaders? (nadruk = toets)
-4. Zijn er voorbeeldvragen of oefeningen? (geeft toetsformat aan)
-5. Hoeveel pagina's besteedt de bron aan een concept? (ruimte = belang)
-6. Is het een fundamenteel concept waarop de rest bouwt?
+EXTRA REGEL: Als iets maar 1 keer genoemd wordt en niet vetgedrukt is → bijna altijd SKIP
+EXTRA REGEL: Als een concept een eigen paragraaf of kopje heeft → altijd MUST of SHOULD
+EXTRA REGEL: Opsommingen van 3+ punten → docent gaat hier een vraag van maken, ALTIJD MUST
 
 OUTPUT FORMAAT — Geef ALTIJD exact deze JSON structuur terug, niets anders:
 
@@ -187,107 +28,43 @@ OUTPUT FORMAAT — Geef ALTIJD exact deze JSON structuur terug, niets anders:
   "must": [
     {
       "topic": "Naam van het onderwerp",
-      "summary": "Korte samenvatting in 2-3 zinnen. Focus op de kern.",
-      "reason": "Waarom dit sws in de toets komt (1 zin, specifiek en overtuigend)"
+      "summary": "Leg het uit in 2-3 zinnen alsof je het uitlegt aan een student die 0 tijd heeft. Geen wollige taal. Direct en concreet.",
+      "reason": "Zeg precies WAAROM dit in de toets komt. Niet vaag ('dit is belangrijk') maar specifiek ('Dit concept heeft een eigen hoofdstuk, wordt 4x herhaald en heeft een definitie — docenten toetsen dit altijd als open vraag of definitievraag')",
+      "tip": "Geef een ezelsbruggetje, geheugentruc of de snelste manier om dit te onthouden"
     }
   ],
   "should": [
     {
       "topic": "Naam van het onderwerp",
-      "summary": "Korte samenvatting in 2-3 zinnen.",
-      "reason": "Waarom het nuttig maar niet kritisch is"
+      "summary": "Korte samenvatting in 2 zinnen.",
+      "reason": "Waarom het nuttig maar niet kritisch is — wees eerlijk",
+      "tip": "Snelle manier om dit te begrijpen als je er 5 minuten aan besteedt"
     }
   ],
   "skip": [
     {
       "topic": "Naam van het onderwerp",
-      "summary": "Waarom overslaan?",
-      "reason": "Te gedetailleerd / slechts 1x genoemd / randgeval"
+      "reason": "Waarom dit niet de moeite waard is met de beschikbare tijd — wees direct en eerlijk"
     }
   ],
-  "cheatsheet": "Ultra-compacte cheatsheet met ALLEEN de must-learn stof. Gebruik symbolen, afkortingen, pijlen. Schrijf het als aantekeningen die je op een spiekbrief zou zetten. Max 300 woorden. Gebruik emojis als visuele markers."
+  "cheatsheet": "Ultra-compacte cheatsheet. Schrijf dit alsof je de allerbeste student in de klas bent die zijn spiekbriefje deelt. Gebruik: pijlen (→), gelijktekens (=), uitroeptekens voor kritische info (!), afkortingen. Groepeer per thema. Max 350 woorden. Geen volledige zinnen — alleen kernwoorden en verbanden.",
+  "toetsvragen": [
+    "Voorspelde toetsvraag 1 — formuleer het precies zoals een docent het zou stellen",
+    "Voorspelde toetsvraag 2",
+    "Voorspelde toetsvraag 3"
+  ]
 }
 
-REGELS:
-- Wees EERLIJK. Zeg niet alles is belangrijk. Durf te zeggen wat je kunt skippen.
-- Must-learn: MAX 5-7 onderwerpen (ook al is er meer stof)
-- Should-learn: 3-5 onderwerpen
-- Skip: alles wat echt niet de moeite waard is met de beschikbare tijd
+TOON EN STIJL:
 - Schrijf in het NEDERLANDS
-- De 'reason' moet aanvoelen als insider-kennis van een ervaren student, niet als een AI
-- Geen preamble, geen uitleg. Alleen de JSON.`;
+- Klink als een slimme ouderejaars student die de stof door en door kent, niet als een AI
+- Geen wollige taal, geen "het is belangrijk om te weten dat..." — gewoon direct
+- De 'reason' moet voelen als insider-kennis: "Dit staat gegarandeerd in de toets omdat..."
+- De 'tip' moet een echte geheugentruc zijn, niet "lees dit nog een keer"
+- Durf HARD te zeggen wat je kunt skippen — een eerlijk skip-advies is goud waard voor studenten
 
-    // ── Via Netlify Function (key blijft verborgen) ──
-    const response = await fetch('/.netlify/functions/analyze', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: `De student heeft ${selectedTime} beschikbaar.\n\nHier is de leerstof:\n${allText}` }
-        ]
-      })
-    });
-
-    clearInterval(interval);
-
-    if (!response.ok) {
-      const err = await response.json();
-      throw new Error(err.error?.message || 'API fout');
-    }
-
-    const data = await response.json();
-    const raw = data.choices?.[0]?.message?.content || '';
-
-    const jsonMatch = raw.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('Kon resultaten niet verwerken.');
-    const result = JSON.parse(jsonMatch[0]);
-
-    await markAnalysisUsed();
-    showResults(result);
-  } catch (err) {
-    clearInterval(interval);
-    document.getElementById('mainInterface').style.display = 'block';
-    document.getElementById('loadingState').style.display = 'none';
-    showError('Fout: ' + err.message);
-  }
-}
-
-// ── Render results ──
-function renderTopics(list, containerId) {
-  const el = document.getElementById(containerId);
-  el.innerHTML = list
-    .map(
-      (item) => `
-    <div class="topic-item">
-      <h4>${item.topic}</h4>
-      <p>${item.summary}</p>
-      <span class="topic-reason">${item.reason}</span>
-    </div>`
-    )
-    .join('');
-}
-
-function showResults(data) {
-  document.getElementById('loadingState').style.display = 'none';
-  document.getElementById('resultsSection').style.display = 'block';
-
-  document.getElementById('resultsSubtitle').textContent =
-    `Beschikbare tijd: ${selectedTime} · ${files.length} bestand(en) geanalyseerd`;
-
-  renderTopics(data.must || [], 'mustList');
-  renderTopics(data.should || [], 'shouldList');
-  renderTopics(data.skip || [], 'skipList');
-
-  document.getElementById('cheatsheetContent').textContent = data.cheatsheet || '';
-}
-
-// ── Reset ──
-function reset() {
-  document.getElementById('resultsSection').style.display = 'none';
-  document.getElementById('mainInterface').style.display = 'block';
-  files.length = 0;
-  renderFileList();
-  fileInput.value = '';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+STRIKTE REGELS:
+- Must-learn: minimaal 3, maximaal 6 onderwerpen
+- Should-learn: minimaal 2, maximaal 4 onderwerpen  
+- Skip: wees eerlijk, ook al betekent het dat je veel dingen skipt
+- Geen preamble, geen uitleg buiten de JSON. Alleen de JSON.`;
