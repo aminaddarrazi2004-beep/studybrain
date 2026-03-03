@@ -49,15 +49,13 @@ function handleFiles(newFiles) {
 function renderFileList() {
   const list = document.getElementById('fileList');
   list.innerHTML = files
-    .map(
-      (f, i) => `
+    .map((f, i) => `
       <div class="file-item">
         <span class="fi-icon">📄</span>
         <span class="fi-name">${f.name}</span>
         <span class="fi-size">${(f.size / 1024 / 1024).toFixed(1)} MB</span>
         <button class="fi-remove" onclick="removeFile(${i})">×</button>
-      </div>`
-    )
+      </div>`)
     .join('');
 }
 
@@ -114,12 +112,10 @@ async function extractPdfText(file) {
 async function checkFreeLimit() {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) return true;
-
   const { data: profile, error } = await sb.from('profiles')
     .select('free_analysis_used')
     .eq('id', session.user.id)
     .single();
-
   if (error || !profile) return true;
   return profile.free_analysis_used === true;
 }
@@ -127,7 +123,6 @@ async function checkFreeLimit() {
 async function markAnalysisUsed() {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) return;
-
   await sb.from('profiles')
     .update({ free_analysis_used: true })
     .eq('id', session.user.id);
@@ -176,7 +171,7 @@ async function analyze() {
 
     const systemPrompt = `Je bent een ex-docent en examinator met 15 jaar ervaring in het schrijven van toetsen voor middelbare scholen en hbo-opleidingen. Je hebt honderden toetsen gemaakt en weet PRECIES hoe docenten denken als ze een toets samenstellen.
 
-Je geheime wapen: je analyseert leerstof niet als een student, maar als de docent die de toets gaat maken.
+Je analyseert leerstof als de docent die de toets gaat maken — niet als een student die samenvat.
 
 JE DENKT ALS EEN DOCENT DIE EEN TOETS SCHRIJFT:
 - "Welk concept is fundamenteel genoeg om altijd te toetsen?"
@@ -185,18 +180,19 @@ JE DENKT ALS EEN DOCENT DIE EEN TOETS SCHRIJFT:
 - "Wat is zo specifiek dat ik er een definitievraag van kan maken?"
 - "Welk onderdeel verbindt alle andere concepten — dat toets ik altijd"
 
-ANALYSEER DE LEERSTOF OP DEZE SIGNALEN (in volgorde van belang):
-1. KRITISCH — Definities, formules, opsommingen met nummers → dit is ALTIJD toetsbaar
+ANALYSEER DE LEERSTOF OP DEZE SIGNALEN:
+1. KRITISCH — Definities, formules, opsommingen met nummers → ALTIJD toetsbaar
 2. KRITISCH — Concepten die in meerdere hoofdstukken terugkomen → docent vindt dit fundamenteel
-3. KRITISCH — Vetgedrukte of onderstreepte termen → docent heeft dit zelf gemarkeerd als belangrijk
-4. BELANGRIJK — Voorbeelden die een concept illustreren → vaak gebruikt in toepassingsvragen
+3. KRITISCH — Vetgedrukte of onderstreepte termen → docent heeft dit zelf gemarkeerd
+4. BELANGRIJK — Voorbeelden die een concept illustreren → toepassingsvragen
 5. BELANGRIJK — Vergelijkingen tussen twee concepten ("X vs Y") → klassieke toetsvraag
-6. OPTIONEEL — Historische context of achtergrondinfo → zelden getoetst tenzij specifiek benadrukt
-7. SKIP — Randgevallen, uitzonderingen, voetnoten → docent heeft hier zelf geen toetsvraag van
+6. OPTIONEEL — Historische context of achtergrondinfo → zelden getoetst
+7. SKIP — Randgevallen, uitzonderingen, voetnoten → geen toetsvraag van
 
-EXTRA REGEL: Als iets maar 1 keer genoemd wordt en niet vetgedrukt is → bijna altijd SKIP
-EXTRA REGEL: Als een concept een eigen paragraaf of kopje heeft → altijd MUST of SHOULD
-EXTRA REGEL: Opsommingen van 3+ punten → docent gaat hier een vraag van maken, ALTIJD MUST
+EXTRA REGELS:
+- Iets maar 1x genoemd en niet vetgedrukt → bijna altijd SKIP
+- Eigen paragraaf of kopje → altijd MUST of SHOULD
+- Opsomming van 3+ punten → ALTIJD MUST
 
 OUTPUT FORMAAT — Geef ALTIJD exact deze JSON structuur terug, niets anders:
 
@@ -204,40 +200,65 @@ OUTPUT FORMAAT — Geef ALTIJD exact deze JSON structuur terug, niets anders:
   "must": [
     {
       "topic": "Naam van het onderwerp",
-      "summary": "Leg het uit in 2-3 zinnen alsof je het uitlegt aan een student die 0 tijd heeft. Geen wollige taal. Direct en concreet.",
-      "reason": "Zeg precies WAAROM dit in de toets komt. Niet vaag maar specifiek.",
-      "tip": "Geef een ezelsbruggetje, geheugentruc of de snelste manier om dit te onthouden"
+      "summary": "Uitgebreide uitleg in 4-5 zinnen. Leg het volledig uit in simpele taal alsof je het aan een vriend uitlegt die er niks van weet. Geef een concreet voorbeeld uit het dagelijks leven als dat mogelijk is.",
+      "reason": "Zeg PRECIES waarom dit in de toets komt. Specifiek en overtuigend, niet vaag.",
+      "tip": "Geef 2-3 concrete ezelsbruggetjes of geheugentrucjes. Hoe gekker en creatiever, hoe beter het blijft hangen."
     }
   ],
   "should": [
     {
       "topic": "Naam van het onderwerp",
-      "summary": "Korte samenvatting in 2 zinnen.",
-      "reason": "Waarom het nuttig maar niet kritisch is — wees eerlijk",
-      "tip": "Snelle manier om dit te begrijpen als je er 5 minuten aan besteedt"
+      "summary": "Uitleg in 3-4 zinnen in simpele taal. Concreet en to the point.",
+      "reason": "Waarom nuttig maar niet kritisch — wees eerlijk",
+      "tip": "1-2 ezelsbruggetjes of de snelste manier om dit te begrijpen"
     }
   ],
   "skip": [
     {
       "topic": "Naam van het onderwerp",
-      "reason": "Waarom dit niet de moeite waard is met de beschikbare tijd — wees direct en eerlijk"
+      "reason": "Waarom dit niet de moeite waard is — direct en eerlijk"
     }
   ],
-  "cheatsheet": "Ultra-compacte cheatsheet. Schrijf dit alsof je de allerbeste student in de klas bent die zijn spiekbriefje deelt. Gebruik pijlen, gelijktekens, afkortingen. Groepeer per thema. Max 350 woorden. Geen volledige zinnen.",
+  "cheatsheet": "Ultra-compacte cheatsheet. Schrijf dit alsof je de allerbeste student bent die zijn spiekbriefje deelt. Gebruik pijlen (→), gelijktekens (=), uitroeptekens (!), afkortingen. Groepeer per thema. Max 400 woorden. Geen volledige zinnen — alleen kernwoorden en verbanden.",
   "toetsvragen": [
-    "Voorspelde toetsvraag 1 — formuleer het precies zoals een docent het zou stellen",
-    "Voorspelde toetsvraag 2",
-    "Voorspelde toetsvraag 3"
+    {
+      "vraag": "De volledige toetsvraag precies zoals een docent het zou stellen",
+      "a": "Antwoordoptie A",
+      "b": "Antwoordoptie B",
+      "c": "Antwoordoptie C",
+      "d": "Antwoordoptie D",
+      "antwoord": "A",
+      "uitleg": "Korte uitleg waarom dit het juiste antwoord is"
+    },
+    {
+      "vraag": "Tweede toetsvraag",
+      "a": "Antwoordoptie A",
+      "b": "Antwoordoptie B",
+      "c": "Antwoordoptie C",
+      "d": "Antwoordoptie D",
+      "antwoord": "B",
+      "uitleg": "Korte uitleg waarom dit het juiste antwoord is"
+    },
+    {
+      "vraag": "Derde toetsvraag",
+      "a": "Antwoordoptie A",
+      "b": "Antwoordoptie B",
+      "c": "Antwoordoptie C",
+      "d": "Antwoordoptie D",
+      "antwoord": "C",
+      "uitleg": "Korte uitleg waarom dit het juiste antwoord is"
+    }
   ]
 }
 
 TOON EN STIJL:
 - Schrijf in het NEDERLANDS
-- Klink als een slimme ouderejaars student die de stof door en door kent, niet als een AI
-- Geen wollige taal — gewoon direct
+- Simpele taal — alsof je het uitlegt aan een 16-jarige
+- Geen wollige AI-taal zoals "het is belangrijk om te weten dat..."
 - Durf HARD te zeggen wat je kunt skippen
 - Must-learn: minimaal 3, maximaal 6 onderwerpen
 - Should-learn: minimaal 2, maximaal 4 onderwerpen
+- Toetsvragen: altijd precies 3, altijd over must-learn onderwerpen
 - Geen preamble, geen uitleg buiten de JSON. Alleen de JSON.`;
 
     const response = await fetch('/.netlify/functions/analyze', {
@@ -276,19 +297,48 @@ TOON EN STIJL:
 }
 
 // ── Render results ──
-function renderTopics(list, containerId) {
+function renderTopics(list, containerId, isSkip = false) {
   const el = document.getElementById(containerId);
-  el.innerHTML = list
-    .map(
-      (item) => `
-    <div class="topic-item">
-      <h4>${item.topic}</h4>
-      <p>${item.summary}</p>
-      <span class="topic-reason">${item.reason}</span>
-      ${item.tip ? `<span class="topic-tip">💡 ${item.tip}</span>` : ''}
-    </div>`
-    )
-    .join('');
+  if (isSkip) {
+    el.innerHTML = list.map((item) => `
+      <div class="topic-item">
+        <h4>${item.topic}</h4>
+        <span class="topic-reason">${item.reason || ''}</span>
+      </div>`).join('');
+  } else {
+    el.innerHTML = list.map((item) => `
+      <div class="topic-item">
+        <h4>${item.topic}</h4>
+        <p>${item.summary || ''}</p>
+        <span class="topic-reason">${item.reason || ''}</span>
+        ${item.tip ? `<span class="topic-tip">💡 ${item.tip}</span>` : ''}
+      </div>`).join('');
+  }
+}
+
+function renderToetsvragen(vragen) {
+  const section = document.getElementById('toetsvragenSection');
+  const list = document.getElementById('toetsvragenList');
+  if (!vragen?.length) return;
+
+  list.innerHTML = vragen.map((v, i) => `
+    <div class="toetsvraag">
+      <div class="vr-header">
+        <span class="vr-num">Vraag ${i + 1}</span>
+      </div>
+      <p class="vr-vraag">${v.vraag}</p>
+      <div class="vr-opties">
+        <div class="vr-optie" data-letter="A">A. ${v.a}</div>
+        <div class="vr-optie" data-letter="B">B. ${v.b}</div>
+        <div class="vr-optie" data-letter="C">C. ${v.c}</div>
+        <div class="vr-optie" data-letter="D">D. ${v.d}</div>
+      </div>
+      <div class="vr-antwoord">
+        ✅ Antwoord: <strong>${v.antwoord}</strong> — ${v.uitleg}
+      </div>
+    </div>`).join('');
+
+  section.style.display = 'block';
 }
 
 function showResults(data) {
@@ -300,25 +350,16 @@ function showResults(data) {
 
   renderTopics(data.must || [], 'mustList');
   renderTopics(data.should || [], 'shouldList');
-  renderTopics(data.skip || [], 'skipList');
+  renderTopics(data.skip || [], 'skipList', true);
 
   document.getElementById('cheatsheetContent').textContent = data.cheatsheet || '';
-
-  // Toetsvragen
-  if (data.toetsvragen?.length) {
-    const vragen = document.getElementById('toetsvragenList');
-    if (vragen) {
-      vragen.innerHTML = data.toetsvragen
-        .map((v, i) => `<div class="toetsvraag"><span class="vr-num">${i + 1}</span><p>${v}</p></div>`)
-        .join('');
-      document.getElementById('toetsvragenSection').style.display = 'block';
-    }
-  }
+  renderToetsvragen(data.toetsvragen || []);
 }
 
 // ── Reset ──
 function reset() {
   document.getElementById('resultsSection').style.display = 'none';
+  document.getElementById('toetsvragenSection').style.display = 'none';
   document.getElementById('mainInterface').style.display = 'block';
   files.length = 0;
   renderFileList();
