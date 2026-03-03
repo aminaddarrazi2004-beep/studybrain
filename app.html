@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyBrain — Leer slimmer, niet harder</title>
+<meta name="description" content="Upload je lesstof en ontdek wat je écht moet leren voor je toets. AI-powered studiecoach.">
+<meta property="og:title" content="StudyBrain — Leer slimmer, niet harder">
+<meta property="og:description" content="Upload je PDF, krijg een prioriteitenlijst. Weet wat je MOET leren, wat handig is, en wat je kunt skippen.">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>.topbar{position:fixed;top:0;left:0;right:0;z-index:999;display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:rgba(10,10,15,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06)}.topbar-logo{font-family:DM Sans,sans-serif;font-size:16px;font-weight:700;color:#f0f0f8}.topbar-right{display:flex;align-items:center;gap:12px}.topbar-email{font-size:12px;color:#6b6b8a}.logout-btn{padding:7px 16px;border-radius:8px;border:1px solid rgba(255,77,109,0.3);background:rgba(255,77,109,0.1);color:#ff4d6d;font-size:13px;cursor:pointer;transition:all 0.2s}.logout-btn:hover{background:rgba(255,77,109,0.2)}body{padding-top:56px}</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+<div class="topbar"><div class="topbar-logo">StudyBrain</div><div class="topbar-right"><span class="topbar-email" id="userEmail"></span><button class="logout-btn" onclick="doLogout()">Uitloggen</button></div></div>
+<div class="glow-orb"></div>
+<div class="glow-orb2"></div>
+
+<div class="container">
+
+  <!-- Header -->
+  <header>
+    <div class="logo-badge"><span>●</span> AI-powered study tool</div>
+    <h1>StudyBrain</h1>
+    <p class="tagline">Upload je lesstof. Wij vertellen je <strong>precies wat je moet leren.</strong></p>
+  </header>
+
+  <!-- Upload interface -->
+  <div id="mainInterface">
+
+    <!-- API Key -->
+    <div class="api-section">
+      <div class="api-input-wrap">
+        <span>🔑</span>
+        <input type="password" id="apiKey" placeholder="Voer je Groq API key in (gsk_...)">
+      </div>
+      <p class="api-help">Heb je geen key? Maak gratis een account op <a href="https://console.groq.com" target="_blank">console.groq.com</a></p>
+    </div>
+
+    <!-- Upload zone -->
+    <div class="upload-section">
+      <div class="upload-zone" id="uploadZone">
+        <span class="upload-icon">📄</span>
+        <h3>Sleep je PDF bestanden hier naartoe</h3>
+        <p>Of klik om bestanden te selecteren · PDF, max 20MB per bestand</p>
+        <input type="file" id="fileInput" multiple accept=".pdf,application/pdf">
+      </div>
+      <div class="file-list" id="fileList"></div>
+    </div>
+
+    <!-- Time available -->
+    <div class="time-section">
+      <h3>⏰ Hoeveel tijd heb je nog?</h3>
+      <div class="time-grid">
+        <button class="time-btn" data-time="30 minuten" onclick="selectTime(this)">
+          <span class="tb-emoji">💀</span>30 min
+        </button>
+        <button class="time-btn" data-time="1 uur" onclick="selectTime(this)">
+          <span class="tb-emoji">😰</span>1 uur
+        </button>
+        <button class="time-btn" data-time="2-3 uur" onclick="selectTime(this)">
+          <span class="tb-emoji">😬</span>2-3 uur
+        </button>
+        <button class="time-btn active" data-time="een avond" onclick="selectTime(this)">
+          <span class="tb-emoji">🌙</span>Een avond
+        </button>
+      </div>
+    </div>
+
+    <!-- Analyze -->
+    <button class="analyze-btn" id="analyzeBtn" onclick="analyze()">
+      🧠 Analyseer mijn lesstof
+    </button>
+    <div class="error-box" id="errorBox"></div>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading" id="loadingState">
+    <span class="loading-brain">🧠</span>
+    <h3>StudyBrain analyseert je lesstof...</h3>
+    <p id="loadingMsg">Bezig met lezen en prioriteren...</p>
+    <div class="loading-dots">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="results" id="resultsSection">
+    <div class="results-header">
+      <h2>📊 Jouw studieplan is klaar</h2>
+      <p id="resultsSubtitle">Gebaseerd op jouw lesstof en beschikbare tijd</p>
+    </div>
+
+    <div class="priority-card must">
+      <div class="card-label">
+        <div class="card-badge">🔥 Must learn</div>
+      </div>
+      <div class="card-title">Dit MOET je kennen</div>
+      <div class="card-subtitle">Dit staat sowieso in de toets. Begin hier.</div>
+      <div class="topic-list" id="mustList"></div>
+    </div>
+
+    <div class="priority-card should">
+      <div class="card-label">
+        <div class="card-badge">⚡ Nice to know</div>
+      </div>
+      <div class="card-title">Leer dit als je nog tijd hebt</div>
+      <div class="card-subtitle">Geeft je extra punten, maar niet kritisch.</div>
+      <div class="topic-list" id="shouldList"></div>
+    </div>
+
+    <div class="priority-card skip">
+      <div class="card-label">
+        <div class="card-badge">⏭️ Skip</div>
+      </div>
+      <div class="card-title">Sla dit over</div>
+      <div class="card-subtitle">Te gedetailleerd, te zeldzaam, of niet de moeite waard.</div>
+      <div class="topic-list" id="skipList"></div>
+    </div>
+
+    <div class="cheatsheet-section">
+      <h3>⚡ Ultra-snelle cheatsheet</h3>
+      <div class="cheatsheet-content" id="cheatsheetContent"></div>
+    </div>
+
+    <button class="reset-btn" onclick="reset()">← Nieuwe analyse starten</button>
+  </div>
+
+</div>
+
+<script src="auth.js"></script>
+<script src="app.js"></script>
+<script>checkAccess();(async()=>{const r=await sb.auth.getSession();if(r.data.session)document.getElementById("userEmail").textContent=r.data.session.user.email;})();</script>
+</body>
+</html>

@@ -42,13 +42,15 @@ function handleFiles(newFiles) {
 function renderFileList() {
   const list = document.getElementById('fileList');
   list.innerHTML = files
-    .map((f, i) => `
+    .map(
+      (f, i) => `
       <div class="file-item">
         <span class="fi-icon">📄</span>
         <span class="fi-name">${f.name}</span>
         <span class="fi-size">${(f.size / 1024 / 1024).toFixed(1)} MB</span>
         <button class="fi-remove" onclick="removeFile(${i})">×</button>
-      </div>`)
+      </div>`
+    )
     .join('');
 }
 
@@ -106,87 +108,92 @@ async function analyze() {
   hideError();
 
   const apiKey = document.getElementById('apiKey').value.trim();
-  if (!apiKey) { showError('Vul eerst je Groq API key in.'); return; }
-  if (files.length === 0) { showError('Upload minimaal één PDF bestand.'); return; }
+  if (!apiKey) {
+    showError('Vul eerst je Groq API key in.');
+    return;
+  }
+  if (files.length === 0) {
+    showError('Upload minimaal één PDF bestand.');
+    return;
+  }
 
+  // Switch to loading state
   document.getElementById('mainInterface').style.display = 'none';
   document.getElementById('loadingState').style.display = 'block';
 
   const loadingMessages = [
     'Lesstof aan het verwerken...',
     'Toetspatronen herkennen...',
-    'Uitleg per onderwerp schrijven...',
-    'Voorbeelden en ezelsbruggetjes toevoegen...',
-    'Studieplan samenstellen...',
+    'Prioriteiten bepalen...',
+    'Cheatsheet genereren...',
   ];
   let msgIndex = 0;
   const interval = setInterval(() => {
     document.getElementById('loadingMsg').textContent =
       loadingMessages[msgIndex++ % loadingMessages.length];
-  }, 2800);
+  }, 2500);
 
   try {
+    // Extract text from all PDFs
     let allText = '';
     for (const file of files) {
       const text = await extractPdfText(file);
       allText += `\n\n=== ${file.name} ===\n${text}`;
     }
 
-    if (allText.length > 14000) {
-      allText = allText.slice(0, 14000) + '\n\n[... tekst afgekapt ...]';
+    // Truncate to avoid token limits (~12k chars ≈ ~3k tokens)
+    if (allText.length > 12000) {
+      allText =
+        allText.slice(0, 12000) + '\n\n[... tekst afgekapt vanwege lengte ...]';
     }
 
-    const systemPrompt = `Je bent StudyBrain, gemaakt door 100 ervaren leraren, examentrainers en studiecoaches. Jouw taak is studenten echt helpen de stof te begrijpen zodat ze de toets halen.
+    const systemPrompt = `Je bent StudyBrain, een geavanceerde AI-studiecoach die precies weet hoe toetsen worden samengesteld en welke stof docenten het meest waardevol vinden. Je hebt jarenlange ervaring met het analyseren van examenpatronen, studiegidsen en leerstof.
 
-KERNMISSIE: Geef per onderwerp uitleg die zo goed is dat een student na het lezen de toets kan halen. Echte uitleg. Alsof je naast ze zit en het uitlegt.
+Jouw taak: analyseer de aangeleverde leerstof en geef een EERLIJK, DIRECT studieplan gebaseerd op beschikbare tijd.
 
-PRIORITEIT BEPALEN:
-1. Hoe vaak herhaald in de tekst? Vaker = belangrijker
-2. Definities, formules, lijstjes? Altijd toetsbaar
-3. Bouwt andere stof hierop voort? Dan is het de basis, MUST
-4. Hoeveel ruimte in de tekst? Meer = zwaarder gewogen
-5. Voorbeeldvragen over? Dan weet je: dit komt erin
+ANALYSEER OP BASIS VAN:
+1. Hoe vaak wordt een concept herhaald? (herhaling = belang)
+2. Zijn er definities, formules of opsommingen? (toetsbaar)
+3. Staan dingen vetgedrukt, onderstreept of in kaders? (nadruk = toets)
+4. Zijn er voorbeeldvragen of oefeningen? (geeft toetsformat aan)
+5. Hoeveel pagina's besteedt de bron aan een concept? (ruimte = belang)
+6. Is het een fundamenteel concept waarop de rest bouwt?
 
-SCHRIJFREGELS:
-- Schrijf alsof je het uitlegt aan een vriend die het vak NIET kent
-- Gewone taal, moeilijk woord altijd direct uitleggen tussen haakjes
-- Gebruik altijd een voorbeeld of vergelijking uit het dagelijks leven
-- Geef een ezelsbruggetje of trucje om het te onthouden
-- summary is minimaal 5 tot 7 zinnen, lang genoeg dat iemand het echt snapt
-- detail gaat dieper met getallen, formules, uitzonderingen, valkuilen en een ezelsbruggetje
-- Schrijf actief, bijvoorbeeld: Als je dit ziet in een vraag, of Stel je voor dat
-
-OUTPUT is ALLEEN dit exacte JSON formaat, geen tekst ervoor of erna:
+OUTPUT FORMAAT — Geef ALTIJD exact deze JSON structuur terug, niets anders:
 
 {
   "must": [
     {
       "topic": "Naam van het onderwerp",
-      "summary": "Schrijf hier 5 tot 7 zinnen echte uitleg. Begin met wat dit IS in gewone woorden. Leg dan uit hoe het werkt met een voorbeeld of vergelijking uit het dagelijks leven. Bespreek de details die je moet kennen. Sluit af met wat hierover gevraagd wordt in de toets en hoe je zo een vraag herkent.",
-      "detail": "Ga hier dieper in. Geef alle details: getallen, formules, uitzonderingen, veelgemaakte fouten. Schrijf een ezelsbruggetje. Geef een concreet voorbeeld van hoe een toetsvraag eruit ziet en hoe je hem aanpakt. Minimaal 4 zinnen.",
-      "reason": "1 concrete zin waarom dit in de toets komt, specifiek en niet vaag."
+      "summary": "Korte samenvatting in 2-3 zinnen. Focus op de kern.",
+      "reason": "Waarom dit sws in de toets komt (1 zin, specifiek en overtuigend)"
     }
   ],
   "should": [
     {
       "topic": "Naam van het onderwerp",
-      "summary": "4 tot 5 zinnen: wat is het, hoe werkt het, waarom is het handig om te kennen, en een voorbeeld.",
-      "detail": "Belangrijkste details plus een ezelsbruggetje.",
-      "reason": "Waarom handig maar niet het allerbelangrijkste, 1 zin."
+      "summary": "Korte samenvatting in 2-3 zinnen.",
+      "reason": "Waarom het nuttig maar niet kritisch is"
     }
   ],
   "skip": [
     {
       "topic": "Naam van het onderwerp",
-      "summary": "1 tot 2 zinnen waarom je dit kunt overslaan.",
-      "detail": "",
-      "reason": "Staat maar 1 keer in de tekst of randdetail of zelden gevraagd."
+      "summary": "Waarom overslaan?",
+      "reason": "Te gedetailleerd / slechts 1x genoemd / randgeval"
     }
   ],
-  "cheatsheet": "Spiekbriefje van de slimste student. Alleen must-learn stof. Gebruik pijltjes voor gevolgen, = voor definities, ! voor let op, en emojis. Per onderwerp de kern in max 2 regels. Eindig met: TOP 3 TOETSVRAGEN — VRAAG: [vraag] ANTWOORD: [antwoord]"
+  "cheatsheet": "Ultra-compacte cheatsheet met ALLEEN de must-learn stof. Gebruik symbolen, afkortingen, pijlen. Schrijf het als aantekeningen die je op een spiekbrief zou zetten. Max 300 woorden. Gebruik emojis als visuele markers."
 }
 
-Must 5 tot 7 onderwerpen. Should 3 tot 5. Skip de rest. Alles in Nederlands. Geen tekst buiten de JSON.`;
+REGELS:
+- Wees EERLIJK. Zeg niet alles is belangrijk. Durf te zeggen wat je kunt skippen.
+- Must-learn: MAX 5-7 onderwerpen (ook al is er meer stof)
+- Should-learn: 3-5 onderwerpen
+- Skip: alles wat echt niet de moeite waard is met de beschikbare tijd
+- Schrijf in het NEDERLANDS
+- De 'reason' moet aanvoelen als insider-kennis van een ervaren student, niet als een AI
+- Geen preamble, geen uitleg. Alleen de JSON.`;
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -196,7 +203,7 @@ Must 5 tot 7 onderwerpen. Should 3 tot 5. Skip de rest. Alles in Nederlands. Gee
       },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
-        max_tokens: 4000,
+        max_tokens: 2000,
         temperature: 0.3,
         response_format: { type: 'json_object' },
         messages: [
@@ -219,12 +226,12 @@ Must 5 tot 7 onderwerpen. Should 3 tot 5. Skip de rest. Alles in Nederlands. Gee
     const data = await response.json();
     const raw = data.choices?.[0]?.message?.content || '';
 
+    // Parse JSON
     const jsonMatch = raw.match(/\{[\s\S]*\}/);
     if (!jsonMatch) throw new Error('Kon resultaten niet verwerken.');
     const result = JSON.parse(jsonMatch[0]);
 
     showResults(result);
-
   } catch (err) {
     clearInterval(interval);
     document.getElementById('mainInterface').style.display = 'block';
@@ -236,31 +243,16 @@ Must 5 tot 7 onderwerpen. Should 3 tot 5. Skip de rest. Alles in Nederlands. Gee
 // ── Render results ──
 function renderTopics(list, containerId) {
   const el = document.getElementById(containerId);
-  el.innerHTML = list.map((item, i) => {
-    const id = `detail-${containerId}-${i}`;
-    const hasDetail = item.detail && item.detail.trim().length > 0;
-    return `
+  el.innerHTML = list
+    .map(
+      (item) => `
     <div class="topic-item">
       <h4>${item.topic}</h4>
-      <p class="topic-summary">${item.summary}</p>
-      ${hasDetail ? `
-        <button class="expand-btn" onclick="toggleDetail('${id}', this)">
-          <span>📖 Volledige uitleg + ezelsbruggetjes</span>
-          <span class="expand-arrow">▼</span>
-        </button>
-        <div class="topic-detail" id="${id}">
-          <div class="detail-inner">${item.detail}</div>
-        </div>` : ''}
+      <p>${item.summary}</p>
       <span class="topic-reason">${item.reason}</span>
-    </div>`;
-  }).join('');
-}
-
-function toggleDetail(id, btn) {
-  const el = document.getElementById(id);
-  el.classList.toggle('open');
-  btn.classList.toggle('active');
-  btn.querySelector('.expand-arrow').textContent = el.classList.contains('open') ? '▲' : '▼';
+    </div>`
+    )
+    .join('');
 }
 
 function showResults(data) {
@@ -274,8 +266,7 @@ function showResults(data) {
   renderTopics(data.should || [], 'shouldList');
   renderTopics(data.skip || [], 'skipList');
 
-  const cs = document.getElementById('cheatsheetContent');
-  cs.innerHTML = (data.cheatsheet || '').replace(/\n/g, '<br>');
+  document.getElementById('cheatsheetContent').textContent = data.cheatsheet || '';
 }
 
 // ── Reset ──

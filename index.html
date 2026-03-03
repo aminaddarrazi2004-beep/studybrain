@@ -4,128 +4,220 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>StudyBrain — Leer slimmer, niet harder</title>
-<meta name="description" content="Upload je lesstof en ontdek wat je écht moet leren voor je toets.studiecoach.">
-<meta property="og:title" content="StudyBrain — Leer slimmer, niet harder">
-<meta property="og:description" content="Upload je PDF, krijg een prioriteitenlijst. Weet wat je MOET leren, wat handig is, en wat je kunt skippen.">
-<meta property="og:type" content="website">
-<link rel="stylesheet" href="style.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<meta name="description" content="De AI-studiecoach die vertelt wat je MOET leren.">
+<link rel="stylesheet" href="landing.css">
 </head>
 <body>
-<div class="glow-orb"></div>
-<div class="glow-orb2"></div>
 
-<div class="container">
-
-  <!-- Header -->
-  <header>
-    <div class="logo-badge"><span>●</span> Studybrain </div>
-    <h1>StudyBrain</h1>
-    <p class="tagline">Upload je lesstof. Wij vertellen je <strong>precies wat je moet leren.</strong></p>
-  </header>
-
-  <!-- Upload interface -->
-  <div id="mainInterface">
-
-    <!-- API Key -->
-    <div class="api-section">
-      <div class="api-input-wrap">
-        <span>🔑</span>
-        <input type="password" id="apiKey" placeholder="Voer je Groq API key in (gsk_...)">
-      </div>
-      <p class="api-help">Heb je geen key? voer de key hier in [TEST] <a href=" target="_blank">console.groq.com</a></p>
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">&#129504; StudyBrain</div>
+    <div class="nav-links">
+      <a href="#how">Hoe het werkt</a>
+      <a href="#pricing">Abonnementen</a>
     </div>
-
-    <!-- Upload zone -->
-    <div class="upload-section">
-      <div class="upload-zone" id="uploadZone">
-        <span class="upload-icon">📄</span>
-        <h3>Sleep je PDF bestanden hier naartoe</h3>
-        <p>Of klik om bestanden te selecteren · PDF, max 20MB per bestand</p>
-        <input type="file" id="fileInput" multiple accept=".pdf,application/pdf">
-      </div>
-      <div class="file-list" id="fileList"></div>
-    </div>
-
-    <!-- Time available -->
-    <div class="time-section">
-      <h3>⏰ Hoeveel tijd heb je nog?</h3>
-      <div class="time-grid">
-<button class="time-btn" data-time="30 minuten" onclick="selectTime(this)">
-  <span class="tb-emoji">💀</span>30 min
-</button>
-<button class="time-btn" data-time="1 tot 3 uur" onclick="selectTime(this)">
-  <span class="tb-emoji">😰</span>1–3 uur
-</button>
-<button class="time-btn active" data-time="een avond" onclick="selectTime(this)">
-  <span class="tb-emoji">🌙</span>Een avond
-</button>
-<button class="time-btn" data-time="1 of 2 dagen" onclick="selectTime(this)">
-  <span class="tb-emoji">📅</span>1–2 dagen
-</button>      </div>
-    </div>
-
-    <!-- Analyze -->
-    <button class="analyze-btn" id="analyzeBtn" onclick="analyze()">
-      🧠 Analyseer mijn lesstof
-    </button>
-    <div class="error-box" id="errorBox"></div>
-  </div>
-
-  <!-- Loading -->
-  <div class="loading" id="loadingState">
-    <span class="loading-brain">🧠</span>
-    <h3>StudyBrain analyseert je lesstof...</h3>
-    <p id="loadingMsg">Bezig met lezen en prioriteren...</p>
-    <div class="loading-dots">
-      <span></span><span></span><span></span>
+    <div class="nav-actions">
+      <a href="login.html" class="btn-ghost">Inloggen</a>
+      <a href="login.html#signup" class="btn-nav">Gratis proberen</a>
     </div>
   </div>
+</nav>
 
-  <!-- Results -->
-  <div class="results" id="resultsSection">
-    <div class="results-header">
-      <h2>📊 Jouw studieplan is klaar</h2>
-      <p id="resultsSubtitle">Gebaseerd op jouw lesstof en beschikbare tijd</p>
-    </div>
-
-    <div class="priority-card must">
-      <div class="card-label">
-        <div class="card-badge">🔥 Must learn</div>
+<section class="hero">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge"><span class="badge-dot"></span> AI-powered &middot; Gemaakt door 100 leraren</div>
+      <h1>Stop met alles leren<br><span class="gradient-text">wat niet telt.</span></h1>
+      <p class="hero-sub">Upload je lesstof. StudyBrain analyseert wat <strong>sowieso in de toets komt</strong>, wat handig is, en wat je veilig kunt overslaan.</p>
+      <div class="hero-cta">
+        <a href="login.html#signup" class="btn-primary">Probeer 1x gratis &#8594;</a>
+        <a href="#how" class="btn-secondary">Hoe werkt het?</a>
       </div>
-      <div class="card-title">Dit MOET je kennen</div>
-      <div class="card-subtitle">Dit staat sowieso in de toets. Begin hier.</div>
-      <div class="topic-list" id="mustList"></div>
-    </div>
-
-    <div class="priority-card should">
-      <div class="card-label">
-        <div class="card-badge">⚡ Nice to know</div>
+      <div class="social-proof">
+        <div class="avatars">
+          <div class="av">S</div><div class="av">M</div><div class="av">J</div><div class="av">L</div><div class="av">R</div>
+        </div>
+        <span><strong>1.200+</strong> studenten leren al slimmer</span>
       </div>
-      <div class="card-title">Leer dit als je nog tijd hebt</div>
-      <div class="card-subtitle">Geeft je extra punten, maar niet kritisch.</div>
-      <div class="topic-list" id="shouldList"></div>
     </div>
-
-    <div class="priority-card skip">
-      <div class="card-label">
-        <div class="card-badge">⏭️ Skip</div>
+    <div class="hero-mockup">
+      <div class="mockup">
+        <div class="mockup-bar">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span class="mockup-url">studybrain.app</span>
+        </div>
+        <div class="mockup-content">
+          <div class="m-badge green-badge">&#128293; MUST LEARN</div>
+          <div class="m-card">
+            <div class="m-title">Celonderdelen</div>
+            <div class="m-text">Een cel is het kleinste levende bouwsteentje. De celkern bevat DNA, de mitochondrien maken energie aan voor alle processen...</div>
+            <div class="m-expand">&#128214; Volledige uitleg + ezelsbruggetjes &#9660;</div>
+          </div>
+          <div class="m-card">
+            <div class="m-title">ATP &amp; Energiemunt</div>
+            <div class="m-text">ATP is de oplaadbare batterij van de cel. Aeroob = 38 ATP, anaeroob = maar 2 ATP...</div>
+            <div class="m-expand">&#128214; Volledige uitleg + ezelsbruggetjes &#9660;</div>
+          </div>
+          <div class="m-badge red-badge">&#9197; SKIP</div>
+          <div class="m-card m-card-skip">
+            <div class="m-title">Historische context celtheorie</div>
+            <div class="m-text">Staat maar 1x in de tekst, zelden gevraagd.</div>
+          </div>
+        </div>
       </div>
-      <div class="card-title">Sla dit over</div>
-      <div class="card-subtitle">Te gedetailleerd, te zeldzaam, of niet de moeite waard.</div>
-      <div class="topic-list" id="skipList"></div>
     </div>
-
-    <div class="cheatsheet-section">
-      <h3>⚡ Ultra-snelle cheatsheet</h3>
-      <div class="cheatsheet-content" id="cheatsheetContent"></div>
-    </div>
-
-    <button class="reset-btn" onclick="reset()">← Nieuwe analyse starten</button>
   </div>
+</section>
 
-</div>
+<section class="how" id="how">
+  <div class="section-inner">
+    <div class="label">Zo simpel is het</div>
+    <h2>3 stappen naar een hogere cijfer</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-icon">&#128196;</div>
+        <h3>Upload je PDF</h3>
+        <p>Sleep je samenvattingen of syllabi erin. Meerdere bestanden tegelijk mag.</p>
+      </div>
+      <div class="step-line"></div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-icon">&#9200;</div>
+        <h3>Kies je tijd</h3>
+        <p>30 minuten of een avond? StudyBrain past het plan aan op jouw situatie.</p>
+      </div>
+      <div class="step-line"></div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-icon">&#129504;</div>
+        <h3>Leer wat telt</h3>
+        <p>Uitleg, ezelsbruggetjes en een spiekbriefje van alleen de stof die ertoe doet.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-<script src="app.js"></script>
+<section class="features">
+  <div class="section-inner">
+    <div class="label">Waarom StudyBrain</div>
+    <h2>Niet gewoon een samenvatting.<br><span class="gradient-text">Een studieplan.</span></h2>
+    <div class="feat-grid">
+      <div class="feat-card feat-big">
+        <div class="feat-icon">&#128293;</div>
+        <h3>Weet precies wat in de toets komt</h3>
+        <p>StudyBrain analyseert herhaling, definities, vetgedrukte tekst en structuur. Precies zoals een ervaren leraar. Geen giswerk meer.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">&#128214;</div>
+        <h3>Echte uitleg</h3>
+        <p>Elk onderwerp krijgt uitleg in gewone taal, met een voorbeeld uit het dagelijks leven.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">&#9889;</div>
+        <h3>Ezelsbruggetjes</h3>
+        <p>Trucjes zodat het blijft hangen, ook met maar 30 minuten studeren.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">&#9197;</div>
+        <h3>Durft te skippen</h3>
+        <p>Eerlijk advies over wat niet de moeite waard is met jouw beschikbare tijd.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">&#128221;</div>
+        <h3>Spiekbriefje</h3>
+        <p>Ultra-compact overzicht plus de top 3 meest waarschijnlijke toetsvragen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="section-inner">
+    <div class="label">Abonnementen</div>
+    <h2>Kies jouw plan</h2>
+    <p class="pricing-sub">Begin gratis met 1 analyse. Upgrade wanneer je wil.</p>
+    <div class="plans">
+
+      <div class="plan">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">&#8364;9<span class="cents">,99</span><span class="per">/mnd</span></div>
+        <div class="plan-desc">Voor studenten die af en toe hulp nodig hebben.</div>
+        <ul class="plan-list">
+          <li class="yes">15 analyses per maand</li>
+          <li class="yes">1 PDF per analyse</li>
+          <li class="yes">Must / Should / Skip overzicht</li>
+          <li class="yes">Cheatsheet inbegrepen</li>
+          <li class="no">Uitklapbare diepere uitleg</li>
+          <li class="no">Meerdere PDFs tegelijk</li>
+          <li class="no">Top 3 toetsvragen</li>
+        </ul>
+        <a href="login.html#signup" class="plan-cta ghost-cta">Begin met Starter</a>
+      </div>
+
+      <div class="plan plan-hot">
+        <div class="hot-label">&#11088; Meest gekozen</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">&#8364;17<span class="cents">,99</span><span class="per">/mnd</span></div>
+        <div class="plan-desc">Voor studenten die serieus willen scoren.</div>
+        <ul class="plan-list">
+          <li class="yes"><strong>Onbeperkt</strong> analyses</li>
+          <li class="yes">Tot <strong>5 PDFs</strong> tegelijk</li>
+          <li class="yes">Must / Should / Skip overzicht</li>
+          <li class="yes">Cheatsheet inbegrepen</li>
+          <li class="yes"><strong>Volledige uitleg + ezelsbruggetjes</strong></li>
+          <li class="yes"><strong>Top 3 toetsvragen</strong></li>
+          <li class="no">Persoonlijk studieSchema</li>
+        </ul>
+        <a href="login.html#signup" class="plan-cta hot-cta">Begin met Pro</a>
+      </div>
+
+      <div class="plan">
+        <div class="plan-name">Elite</div>
+        <div class="plan-price">&#8364;24<span class="cents">,99</span><span class="per">/mnd</span></div>
+        <div class="plan-desc">Voor wie het maximale uit StudyBrain wil halen.</div>
+        <ul class="plan-list">
+          <li class="yes"><strong>Onbeperkt</strong> analyses</li>
+          <li class="yes">Tot <strong>15 PDFs</strong> tegelijk</li>
+          <li class="yes">Must / Should / Skip overzicht</li>
+          <li class="yes">Cheatsheet + Top 3 toetsvragen</li>
+          <li class="yes">Volledige uitleg + ezelsbruggetjes</li>
+          <li class="yes"><strong>Persoonlijk studieSchema op maat</strong></li>
+          <li class="yes"><strong>Vroege toegang nieuwe features</strong></li>
+        </ul>
+        <a href="login.html#signup" class="plan-cta ghost-cta">Begin met Elite</a>
+      </div>
+
+    </div>
+    <p class="pricing-note">&#128274; Veilig betalen &middot; Maandelijks opzegbaar &middot; Geen verborgen kosten</p>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="orb cta-orb1"></div>
+  <div class="orb cta-orb2"></div>
+  <div class="section-inner">
+    <h2>Klaar om slimmer te leren?</h2>
+    <p>Maak gratis een account aan en doe je eerste analyse. Geen creditcard nodig.</p>
+    <a href="login.html#signup" class="btn-primary btn-xl">Gratis starten &mdash; 1 analyse cadeau &#8594;</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">&#129504; StudyBrain</div>
+    <p>Slimmer studeren voor iedereen.</p>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Voorwaarden</a>
+      <a href="#">Contact</a>
+    </div>
+    <p class="copy">&copy; 2026 StudyBrain. Alle rechten voorbehouden.</p>
+  </div>
+</footer>
+
 </body>
 </html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyBrain — Inloggen</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root { --bg:#0a0a0f; --surface:#12121a; --card:#1a1a26; --border:#2a2a3d; --accent:#ff4d6d; --green:#00e676; --text:#f0f0f8; --muted:#6b6b8a; }
+body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; position:relative; overflow:hidden; }
+.orb { position:fixed; border-radius:50%; pointer-events:none; }
+.orb1 { width:500px; height:500px; background:radial-gradient(circle,rgba(255,77,109,0.09) 0%,transparent 70%); top:-200px; right:-100px; animation:pulse 7s ease-in-out infinite; }
+.orb2 { width:400px; height:400px; background:radial-gradient(circle,rgba(0,230,118,0.05) 0%,transparent 70%); bottom:-100px; left:-100px; animation:pulse 9s ease-in-out infinite reverse; }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.12)} }
+.logo { font-family:'Syne',sans-serif; font-size:24px; font-weight:800; margin-bottom:36px; text-decoration:none; color:var(--text); position:relative; z-index:1; }
+.auth-box { background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:40px; width:100%; max-width:420px; position:relative; z-index:1; animation:fadeUp 0.5s ease both; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.tab-row { display:flex; background:var(--card); border-radius:12px; padding:4px; margin-bottom:32px; }
+.tab { flex:1; padding:10px; text-align:center; border-radius:8px; font-size:14px; font-weight:500; cursor:pointer; color:var(--muted); border:none; background:transparent; font-family:'DM Sans',sans-serif; transition:all 0.2s; }
+.tab.active { background:var(--accent); color:white; }
+.auth-title { font-family:'Syne',sans-serif; font-size:24px; font-weight:800; margin-bottom:6px; }
+.auth-sub { font-size:14px; color:var(--muted); margin-bottom:24px; }
+.free-badge { background:rgba(0,230,118,0.1); border:1px solid rgba(0,230,118,0.25); border-radius:10px; padding:10px 14px; font-size:13px; color:var(--green); margin-bottom:20px; text-align:center; }
+.field { margin-bottom:16px; }
+.field label { display:block; font-size:13px; font-weight:500; margin-bottom:6px; color:var(--muted); }
+.field input { width:100%; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:13px 16px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:15px; outline:none; transition:border-color 0.2s; }
+.field input:focus { border-color:var(--accent); }
+.field input::placeholder { color:var(--muted); }
+.submit-btn { width:100%; padding:15px; background:linear-gradient(135deg,#ff4d6d,#c9184a); border:none; border-radius:14px; color:white; font-family:'Syne',sans-serif; font-size:17px; font-weight:700; cursor:pointer; transition:all 0.3s; margin-top:8px; }
+.submit-btn:hover { transform:translateY(-2px); box-shadow:0 12px 32px rgba(255,77,109,0.4); }
+.submit-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; box-shadow:none; }
+.msg { padding:12px 16px; border-radius:10px; font-size:13px; margin-bottom:16px; display:none; line-height:1.5; }
+.msg.error { background:rgba(255,77,109,0.12); border:1px solid rgba(255,77,109,0.3); color:#ff8fa3; }
+.msg.success { background:rgba(0,230,118,0.1); border:1px solid rgba(0,230,118,0.3); color:var(--green); }
+.back-link { margin-top:20px; font-size:13px; color:var(--muted); text-align:center; position:relative; z-index:1; }
+.back-link a { color:var(--accent); text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<a href="index.html" class="logo">&#129504; StudyBrain</a>
+
+<div class="auth-box">
+  <div class="tab-row">
+    <button class="tab active" id="tabLogin" onclick="showTab('login')">Inloggen</button>
+    <button class="tab" id="tabSignup" onclick="showTab('signup')">Account aanmaken</button>
+  </div>
+
+  <div id="formLogin">
+    <div class="auth-title">Welkom terug</div>
+    <div class="auth-sub">Log in om door te gaan met studeren.</div>
+    <div class="msg error" id="loginError"></div>
+    <div class="msg success" id="loginSuccess"></div>
+    <div class="field"><label>E-mailadres</label><input type="email" id="loginEmail" placeholder="jouw@email.nl"></div>
+    <div class="field"><label>Wachtwoord</label><input type="password" id="loginPassword" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="submit-btn" onclick="doLogin()" id="loginBtn">Inloggen &#8594;</button>
+  </div>
+
+  <div id="formSignup" style="display:none">
+    <div class="free-badge">&#127873; 1 gratis analyse bij aanmaken &mdash; geen creditcard nodig</div>
+    <div class="auth-title">Account aanmaken</div>
+    <div class="auth-sub">Begin gratis. Upgrade wanneer je wil.</div>
+    <div class="msg error" id="signupError"></div>
+    <div class="msg success" id="signupSuccess"></div>
+    <div class="field"><label>E-mailadres</label><input type="email" id="signupEmail" placeholder="jouw@email.nl"></div>
+    <div class="field"><label>Wachtwoord</label><input type="password" id="signupPassword" placeholder="Minimaal 6 tekens"></div>
+    <div class="field"><label>Wachtwoord herhalen</label><input type="password" id="signupPassword2" placeholder="Herhaal wachtwoord" onkeydown="if(event.key==='Enter')doSignup()"></div>
+    <button class="submit-btn" onclick="doSignup()" id="signupBtn">Account aanmaken &#8594;</button>
+  </div>
+</div>
+
+<div class="back-link"><a href="index.html">&#8592; Terug naar hoofdpagina</a></div>
+
+<script src="auth.js"></script>
+<script>
+  if (window.location.hash === '#signup') showTab('signup');
+  function showTab(tab) {
+    document.getElementById('formLogin').style.display = tab === 'login' ? 'block' : 'none';
+    document.getElementById('formSignup').style.display = tab === 'signup' ? 'block' : 'none';
+    document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+    document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
+  }
+</script>
+</body>
+</html>

@@ -65,7 +65,7 @@ body::before {
 }
 
 .container {
-  max-width: 600px;
+  max-width: 620px;
   margin: 0 auto;
   padding: 40px 20px 80px;
   position: relative;
@@ -99,7 +99,7 @@ header {
 
 h1 {
   font-family: 'Syne', sans-serif;
-  font-size: clamp(36px, 6vw, 56px);  /* was clamp(42px, 8vw, 72px) */;
+  font-size: clamp(36px, 6vw, 56px);
   font-weight: 800;
   line-height: 1;
   letter-spacing: -2px;
@@ -227,6 +227,10 @@ h1 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
+}
+
+@media (max-width: 480px) {
+  .time-grid { grid-template-columns: repeat(2, 1fr); }
 }
 .time-btn {
   background: var(--card);
@@ -450,68 +454,3 @@ h1 {
   .time-grid { grid-template-columns: repeat(2, 1fr); }
   h1 { letter-spacing: -1px; }
 }
-/* ── Expanded topic detail ── */
-.topic-summary {
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.75;
-  margin-bottom: 10px;
-}
-
-.expand-btn {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  background: rgba(255,255,255,0.05);
-  border: 1px dashed var(--border);
-  border-radius: 8px;
-  padding: 10px 14px;
-  color: var(--muted);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-bottom: 8px;
-  text-align: left;
-  gap: 8px;
-}
-.expand-btn:hover {
-  background: rgba(255,255,255,0.09);
-  color: var(--text);
-  border-color: rgba(255,255,255,0.2);
-}
-.expand-btn.active {
-  color: var(--text);
-  border-color: rgba(255,255,255,0.25);
-}
-.expand-arrow {
-  font-size: 11px;
-  flex-shrink: 0;
-}
-
-.topic-detail {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease, opacity 0.3s ease;
-  opacity: 0;
-}
-.topic-detail.open {
-  max-height: 800px;
-  opacity: 1;
-}
-.detail-inner {
-  background: rgba(255,255,255,0.03);
-  border-left: 3px solid var(--accent);
-  border-radius: 0 10px 10px 0;
-  padding: 14px 16px;
-  font-size: 13.5px;
-  line-height: 1.8;
-  color: #d0d0e8;
-  margin-bottom: 10px;
-  white-space: pre-wrap;
-}
-.must .detail-inner  { border-left-color: var(--green); }
-.should .detail-inner { border-left-color: var(--yellow); }
-.skip .detail-inner  { border-left-color: var(--red); }
