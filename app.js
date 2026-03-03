@@ -42,15 +42,13 @@ function handleFiles(newFiles) {
 function renderFileList() {
   const list = document.getElementById('fileList');
   list.innerHTML = files
-    .map(
-      (f, i) => `
+    .map((f, i) => `
       <div class="file-item">
         <span class="fi-icon">📄</span>
         <span class="fi-name">${f.name}</span>
         <span class="fi-size">${(f.size / 1024 / 1024).toFixed(1)} MB</span>
         <button class="fi-remove" onclick="removeFile(${i})">×</button>
-      </div>`
-    )
+      </div>`)
     .join('');
 }
 
@@ -108,75 +106,65 @@ async function analyze() {
   hideError();
 
   const apiKey = document.getElementById('apiKey').value.trim();
-  if (!apiKey) {
-    showError('Vul eerst je Groq API key in.');
-    return;
-  }
-  if (files.length === 0) {
-    showError('Upload minimaal één PDF bestand.');
-    return;
-  }
+  if (!apiKey) { showError('Vul eerst je Groq API key in.'); return; }
+  if (files.length === 0) { showError('Upload minimaal één PDF bestand.'); return; }
 
-  // Switch to loading state
   document.getElementById('mainInterface').style.display = 'none';
   document.getElementById('loadingState').style.display = 'block';
 
   const loadingMessages = [
     'Lesstof aan het verwerken...',
     'Toetspatronen herkennen...',
-    'Prioriteiten bepalen...',
-    'Cheatsheet genereren...',
+    'Uitleg per onderwerp schrijven...',
+    'Voorbeelden en ezelsbruggetjes toevoegen...',
+    'Studieplan samenstellen...',
   ];
   let msgIndex = 0;
   const interval = setInterval(() => {
     document.getElementById('loadingMsg').textContent =
       loadingMessages[msgIndex++ % loadingMessages.length];
-  }, 2500);
+  }, 2800);
 
   try {
-    // Extract text from all PDFs
     let allText = '';
     for (const file of files) {
       const text = await extractPdfText(file);
       allText += `\n\n=== ${file.name} ===\n${text}`;
     }
 
-    // Truncate to avoid token limits (~12k chars ≈ ~3k tokens)
-    if (allText.length > 12000) {
-      allText =
-        allText.slice(0, 12000) + '\n\n[... tekst afgekapt vanwege lengte ...]';
+    if (allText.length > 14000) {
+      allText = allText.slice(0, 14000) + '\n\n[... tekst afgekapt ...]';
     }
 
-const systemPrompt = `Je bent StudyBrain — gemaakt door 100 ervaren leraren, examentrainers en studiecoaches samen. Jouw taak is studenten écht helpen de stof te begrijpen zodat ze de toets halen, niet alleen een lijstje geven.
+    const systemPrompt = `Je bent StudyBrain, gemaakt door 100 ervaren leraren, examentrainers en studiecoaches. Jouw taak is studenten echt helpen de stof te begrijpen zodat ze de toets halen.
 
-KERNMISSIE: Geef per onderwerp uitleg die zo goed is dat een student na het lezen de toets kan halen. Echte uitleg. Alsof je naast ze zit.
+KERNMISSIE: Geef per onderwerp uitleg die zo goed is dat een student na het lezen de toets kan halen. Echte uitleg. Alsof je naast ze zit en het uitlegt.
 
 PRIORITEIT BEPALEN:
 1. Hoe vaak herhaald in de tekst? Vaker = belangrijker
 2. Definities, formules, lijstjes? Altijd toetsbaar
-3. Bouwt andere stof hierop voort? Dan is het de basis = MUST
+3. Bouwt andere stof hierop voort? Dan is het de basis, MUST
 4. Hoeveel ruimte in de tekst? Meer = zwaarder gewogen
 5. Voorbeeldvragen over? Dan weet je: dit komt erin
 
-SCHRIJFREGELS (DIT IS HET ALLERBELANGRIJKSTE):
+SCHRIJFREGELS:
 - Schrijf alsof je het uitlegt aan een vriend die het vak NIET kent
-- Gewone taal. Moeilijk woord? Direct uitleggen tussen haakjes
-- ALTIJD een voorbeeld of vergelijking uit het dagelijks leven
+- Gewone taal, moeilijk woord altijd direct uitleggen tussen haakjes
+- Gebruik altijd een voorbeeld of vergelijking uit het dagelijks leven
 - Geef een ezelsbruggetje of trucje om het te onthouden
-- summary = minimaal 5 tot 7 zinnen. Lang genoeg dat iemand het écht snapt
-- detail = ga dieper: getallen, formules, uitzonderingen, valkuilen + ezelsbruggetje
-- Schrijf actief: "Als je dit ziet in een vraag..." of "Stel je voor dat..."
-- VERBODEN WOORDEN: "essentieel", "cruciaal", "fundamenteel", "implementeren", "conceptueel"
+- summary is minimaal 5 tot 7 zinnen, lang genoeg dat iemand het echt snapt
+- detail gaat dieper met getallen, formules, uitzonderingen, valkuilen en een ezelsbruggetje
+- Schrijf actief, bijvoorbeeld: Als je dit ziet in een vraag, of Stel je voor dat
 
-OUTPUT = ALLEEN dit exacte JSON formaat, geen tekst ervoor of erna:
+OUTPUT is ALLEEN dit exacte JSON formaat, geen tekst ervoor of erna:
 
 {
   "must": [
     {
       "topic": "Naam van het onderwerp",
-      "summary": "Schrijf hier 5 tot 7 zinnen echte uitleg. Zin 1: wat IS dit in gewone woorden. Zin 2-3: hoe werkt het, met een voorbeeld of vergelijking uit het dagelijks leven. Zin 4-5: wat zijn de details die je moet kennen. Zin 6-7: wat wordt hierover gevraagd in de toets en hoe herken je zo een vraag.",
-      "detail": "Ga hier dieper. Geef alle details: getallen, formules, uitzonderingen, veelgemaakte fouten. Schrijf een ezelsbruggetje. Geef een concreet voorbeeld van hoe een toetsvraag eruit ziet en hoe je hem aanpakt. Minimaal 4 zinnen.",
-      "reason": "1 concrete zin: dit staat in de toets omdat docenten altijd een specifieke vraagvorm stellen over dit onderwerp."
+      "summary": "Schrijf hier 5 tot 7 zinnen echte uitleg. Begin met wat dit IS in gewone woorden. Leg dan uit hoe het werkt met een voorbeeld of vergelijking uit het dagelijks leven. Bespreek de details die je moet kennen. Sluit af met wat hierover gevraagd wordt in de toets en hoe je zo een vraag herkent.",
+      "detail": "Ga hier dieper in. Geef alle details: getallen, formules, uitzonderingen, veelgemaakte fouten. Schrijf een ezelsbruggetje. Geef een concreet voorbeeld van hoe een toetsvraag eruit ziet en hoe je hem aanpakt. Minimaal 4 zinnen.",
+      "reason": "1 concrete zin waarom dit in de toets komt, specifiek en niet vaag."
     }
   ],
   "should": [
@@ -184,26 +172,21 @@ OUTPUT = ALLEEN dit exacte JSON formaat, geen tekst ervoor of erna:
       "topic": "Naam van het onderwerp",
       "summary": "4 tot 5 zinnen: wat is het, hoe werkt het, waarom is het handig om te kennen, en een voorbeeld.",
       "detail": "Belangrijkste details plus een ezelsbruggetje.",
-      "reason": "Waarom handig maar niet het allerbelangrijkste? 1 zin."
+      "reason": "Waarom handig maar niet het allerbelangrijkste, 1 zin."
     }
   ],
   "skip": [
     {
       "topic": "Naam van het onderwerp",
-      "summary": "1 tot 2 zinnen waarom je dit kunt overslaan met de beschikbare tijd.",
+      "summary": "1 tot 2 zinnen waarom je dit kunt overslaan.",
       "detail": "",
-      "reason": "Staat maar 1 keer in de tekst / randdetail / zelden gevraagd."
+      "reason": "Staat maar 1 keer in de tekst of randdetail of zelden gevraagd."
     }
   ],
-  "cheatsheet": "Spiekbriefje van de slimste student uit de klas. Alleen must-learn stof. Gebruik pijl voor gevolgen, = voor definities, !llllk
+  "cheatsheet": "Spiekbriefje van de slimste student. Alleen must-learn stof. Gebruik pijltjes voor gevolgen, = voor definities, ! voor let op, en emojis. Per onderwerp de kern in max 2 regels. Eindig met: TOP 3 TOETSVRAGEN — VRAAG: [vraag] ANTWOORD: [antwoord]"
+}
 
-REGELS:
-- Must-learn: MAX 5 tot 7 onderwerpen
-- Should-learn: 3 tot 5 onderwerpen  
-- Skip: alles wat niet de moeite waard is
-- Schrijf in het NEDERLANDS
-- Wees eerlijk: niet alles is belangrijk, durf dingen in de skip te zetten
-- Geen inleiding, geen uitleg buiten de JSON. Alleen de JSON.`;
+Must 5 tot 7 onderwerpen. Should 3 tot 5. Skip de rest. Alles in Nederlands. Geen tekst buiten de JSON.`;
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -213,7 +196,7 @@ REGELS:
       },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
-      max_tokens: 4000,
+        max_tokens: 4000,
         temperature: 0.3,
         response_format: { type: 'json_object' },
         messages: [
@@ -236,12 +219,12 @@ REGELS:
     const data = await response.json();
     const raw = data.choices?.[0]?.message?.content || '';
 
-    // Parse JSON
     const jsonMatch = raw.match(/\{[\s\S]*\}/);
     if (!jsonMatch) throw new Error('Kon resultaten niet verwerken.');
     const result = JSON.parse(jsonMatch[0]);
 
     showResults(result);
+
   } catch (err) {
     clearInterval(interval);
     document.getElementById('mainInterface').style.display = 'block';
@@ -278,6 +261,21 @@ function toggleDetail(id, btn) {
   el.classList.toggle('open');
   btn.classList.toggle('active');
   btn.querySelector('.expand-arrow').textContent = el.classList.contains('open') ? '▲' : '▼';
+}
+
+function showResults(data) {
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('resultsSection').style.display = 'block';
+
+  document.getElementById('resultsSubtitle').textContent =
+    `Beschikbare tijd: ${selectedTime} · ${files.length} bestand(en) geanalyseerd`;
+
+  renderTopics(data.must || [], 'mustList');
+  renderTopics(data.should || [], 'shouldList');
+  renderTopics(data.skip || [], 'skipList');
+
+  const cs = document.getElementById('cheatsheetContent');
+  cs.innerHTML = (data.cheatsheet || '').replace(/\n/g, '<br>');
 }
 
 // ── Reset ──
