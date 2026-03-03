@@ -103,12 +103,41 @@ async function extractPdfText(file) {
   });
 }
 
+// ── Check free analysis limit ──
+async function checkFreeLimit() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return false;
+
+  const { data: profile } = await sb.from('profiles')
+    .select('free_analysis_used')
+    .eq('id', session.user.id)
+    .single();
+
+  return profile?.free_analysis_used === true;
+}
+
+async function markAnalysisUsed() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+
+  await sb.from('profiles')
+    .update({ free_analysis_used: true })
+    .eq('id', session.user.id);
+}
+
 // ── Main analyze function ──
 async function analyze() {
   hideError();
 
   if (files.length === 0) {
     showError('Upload minimaal één PDF bestand.');
+    return;
+  }
+
+  // Check limiet
+  const used = await checkFreeLimit();
+  if (used) {
+    showError('Je gratis analyse is op. Upgrade naar een abonnement om door te gaan.');
     return;
   }
 
@@ -214,6 +243,7 @@ REGELS:
     if (!jsonMatch) throw new Error('Kon resultaten niet verwerken.');
     const result = JSON.parse(jsonMatch[0]);
 
+    await markAnalysisUsed();
     showResults(result);
   } catch (err) {
     clearInterval(interval);
