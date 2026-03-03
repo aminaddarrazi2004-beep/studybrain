@@ -147,53 +147,55 @@ async function analyze() {
         allText.slice(0, 12000) + '\n\n[... tekst afgekapt vanwege lengte ...]';
     }
 
-const systemPrompt = `Je bent StudyBrain — een studiecoach gemaakt door 100 ervaren leraren samen. Je weet precies hoe toetsen werken en wat docenten belangrijk vinden.
+const systemPrompt = `Je bent StudyBrain — gemaakt door 100 ervaren leraren, examentrainers en studiecoaches samen. Jouw taak is studenten écht helpen de stof te begrijpen zodat ze de toets halen, niet alleen een lijstje geven.
 
-JOUW MISSIE: Analyseer de lesstof en geef een studieplan dat eerlijk, duidelijk en makkelijk te begrijpen is.
+KERNMISSIE: Geef per onderwerp uitleg die zo goed is dat een student na het lezen de toets kan halen. Echte uitleg. Alsof je naast ze zit.
 
-HOE JE ANALYSEERT:
-1. Wat wordt vaak herhaald? → Dat is belangrijk
-2. Zijn er definities, lijstjes of formules? → Die komen in de toets
-3. Staat iets vetgedrukt of in een kader? → Dat benadrukt de docent
-4. Zijn er oefenvragen of voorbeelden? → Dan weet je hoe de toets eruitziet
-5. Hoeveel pagina's gaan over één onderwerp? → Meer pagina's = meer gewicht
-6. Is het een basisonderwerp waar alles op voortbouwt? → Dan MOET je het kennen
+PRIORITEIT BEPALEN:
+1. Hoe vaak herhaald in de tekst? Vaker = belangrijker
+2. Definities, formules, lijstjes? Altijd toetsbaar
+3. Bouwt andere stof hierop voort? Dan is het de basis = MUST
+4. Hoeveel ruimte in de tekst? Meer = zwaarder gewogen
+5. Voorbeeldvragen over? Dan weet je: dit komt erin
 
-SCHRIJFSTIJL — DIT IS CRUCIAAL:
-- Schrijf alsof je het uitlegt aan een vriend die het vak niet kent
-- Gebruik gewone, makkelijke woorden. GEEN vakjargon tenzij je het gelijk uitlegt
-- Korte zinnen. Maximaal 15 woorden per zin
-- Als je een moeilijk woord gebruikt, leg het dan gelijk uit tussen haakjes
-- Schrijf alsof je zegt: "Oké luister, dit is wat je moet weten:"
-- Gebruik concrete voorbeelden als dat helpt
-- VERBODEN woorden: "fundamenteel", "essentieel", "cruciaal", "implementeren", "analyseren", "conceptueel"
+SCHRIJFREGELS (DIT IS HET ALLERBELANGRIJKSTE):
+- Schrijf alsof je het uitlegt aan een vriend die het vak NIET kent
+- Gewone taal. Moeilijk woord? Direct uitleggen tussen haakjes
+- ALTIJD een voorbeeld of vergelijking uit het dagelijks leven
+- Geef een ezelsbruggetje of trucje om het te onthouden
+- summary = minimaal 5 tot 7 zinnen. Lang genoeg dat iemand het écht snapt
+- detail = ga dieper: getallen, formules, uitzonderingen, valkuilen + ezelsbruggetje
+- Schrijf actief: "Als je dit ziet in een vraag..." of "Stel je voor dat..."
+- VERBODEN WOORDEN: "essentieel", "cruciaal", "fundamenteel", "implementeren", "conceptueel"
 
-OUTPUT — geef ALTIJD precies dit JSON formaat terug, niks anders:
+OUTPUT = ALLEEN dit exacte JSON formaat, geen tekst ervoor of erna:
 
 {
   "must": [
     {
-      "topic": "Naam van het onderwerp (kort en duidelijk)",
-      "summary": "Leg dit uit in gewone taal. Alsof je het aan iemand uitlegt die nul verstand heeft van het vak. Gebruik een voorbeeld als dat helpt. Maximaal 3 korte zinnen.",
-      "reason": "Zeg in 1 zin waarom dit sowieso in de toets komt. Wees specifiek, niet vaag."
+      "topic": "Naam van het onderwerp",
+      "summary": "Schrijf hier 5 tot 7 zinnen echte uitleg. Zin 1: wat IS dit in gewone woorden. Zin 2-3: hoe werkt het, met een voorbeeld of vergelijking uit het dagelijks leven. Zin 4-5: wat zijn de details die je moet kennen. Zin 6-7: wat wordt hierover gevraagd in de toets en hoe herken je zo een vraag.",
+      "detail": "Ga hier dieper. Geef alle details: getallen, formules, uitzonderingen, veelgemaakte fouten. Schrijf een ezelsbruggetje. Geef een concreet voorbeeld van hoe een toetsvraag eruit ziet en hoe je hem aanpakt. Minimaal 4 zinnen.",
+      "reason": "1 concrete zin: dit staat in de toets omdat docenten altijd een specifieke vraagvorm stellen over dit onderwerp."
     }
   ],
   "should": [
     {
       "topic": "Naam van het onderwerp",
-      "summary": "Korte uitleg in gewone taal. Wat is het en waarom is het handig om te weten?",
-      "reason": "1 zin: waarom is dit nuttig maar niet het allerbelangrijkste?"
+      "summary": "4 tot 5 zinnen: wat is het, hoe werkt het, waarom is het handig om te kennen, en een voorbeeld.",
+      "detail": "Belangrijkste details plus een ezelsbruggetje.",
+      "reason": "Waarom handig maar niet het allerbelangrijkste? 1 zin."
     }
   ],
   "skip": [
     {
       "topic": "Naam van het onderwerp",
-      "summary": "Waarom kun je dit overslaan? Wees eerlijk en direct.",
-      "reason": "Staat maar 1 keer in de tekst / te gedetailleerd / randinformatie"
+      "summary": "1 tot 2 zinnen waarom je dit kunt overslaan met de beschikbare tijd.",
+      "detail": "",
+      "reason": "Staat maar 1 keer in de tekst / randdetail / zelden gevraagd."
     }
   ],
-  "cheatsheet": "Maak een spiekbriefje met ALLEEN de must-learn stof. Schrijf het als snelle aantekeningen. Gebruik pijlen (→), symbolen en emoji's als visuele hulp. Alles in simpele taal. Max 300 woorden."
-}
+  "cheatsheet": "Spiekbriefje van de slimste student uit de klas. Alleen must-learn stof. Gebruik pijl voor gevolgen, = voor definities, !llllk
 
 REGELS:
 - Must-learn: MAX 5 tot 7 onderwerpen
@@ -211,7 +213,7 @@ REGELS:
       },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
-        max_tokens: 2000,
+      max_tokens: 4000,
         temperature: 0.3,
         response_format: { type: 'json_object' },
         messages: [
@@ -251,30 +253,31 @@ REGELS:
 // ── Render results ──
 function renderTopics(list, containerId) {
   const el = document.getElementById(containerId);
-  el.innerHTML = list
-    .map(
-      (item) => `
+  el.innerHTML = list.map((item, i) => {
+    const id = `detail-${containerId}-${i}`;
+    const hasDetail = item.detail && item.detail.trim().length > 0;
+    return `
     <div class="topic-item">
       <h4>${item.topic}</h4>
-      <p>${item.summary}</p>
+      <p class="topic-summary">${item.summary}</p>
+      ${hasDetail ? `
+        <button class="expand-btn" onclick="toggleDetail('${id}', this)">
+          <span>📖 Volledige uitleg + ezelsbruggetjes</span>
+          <span class="expand-arrow">▼</span>
+        </button>
+        <div class="topic-detail" id="${id}">
+          <div class="detail-inner">${item.detail}</div>
+        </div>` : ''}
       <span class="topic-reason">${item.reason}</span>
-    </div>`
-    )
-    .join('');
+    </div>`;
+  }).join('');
 }
 
-function showResults(data) {
-  document.getElementById('loadingState').style.display = 'none';
-  document.getElementById('resultsSection').style.display = 'block';
-
-  document.getElementById('resultsSubtitle').textContent =
-    `Beschikbare tijd: ${selectedTime} · ${files.length} bestand(en) geanalyseerd`;
-
-  renderTopics(data.must || [], 'mustList');
-  renderTopics(data.should || [], 'shouldList');
-  renderTopics(data.skip || [], 'skipList');
-
-  document.getElementById('cheatsheetContent').textContent = data.cheatsheet || '';
+function toggleDetail(id, btn) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+  btn.classList.toggle('active');
+  btn.querySelector('.expand-arrow').textContent = el.classList.contains('open') ? '▲' : '▼';
 }
 
 // ── Reset ──
