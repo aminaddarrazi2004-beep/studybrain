@@ -107,11 +107,6 @@ async function extractPdfText(file) {
 async function analyze() {
   hideError();
 
-  const apiKey = document.getElementById('apiKey').value.trim();
-  if (!apiKey) {
-    showError('Vul eerst je Groq API key in.');
-    return;
-  }
   if (files.length === 0) {
     showError('Upload minimaal één PDF bestand.');
     return;
@@ -141,10 +136,8 @@ async function analyze() {
       allText += `\n\n=== ${file.name} ===\n${text}`;
     }
 
-    // Truncate to avoid token limits (~12k chars ≈ ~3k tokens)
     if (allText.length > 12000) {
-      allText =
-        allText.slice(0, 12000) + '\n\n[... tekst afgekapt vanwege lengte ...]';
+      allText = allText.slice(0, 12000) + '\n\n[... tekst afgekapt vanwege lengte ...]';
     }
 
     const systemPrompt = `Je bent StudyBrain, een geavanceerde AI-studiecoach die precies weet hoe toetsen worden samengesteld en welke stof docenten het meest waardevol vinden. Je hebt jarenlange ervaring met het analyseren van examenpatronen, studiegidsen en leerstof.
@@ -195,25 +188,16 @@ REGELS:
 - De 'reason' moet aanvoelen als insider-kennis van een ervaren student, niet als een AI
 - Geen preamble, geen uitleg. Alleen de JSON.`;
 
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    // ── Via Netlify Function (key blijft verborgen) ──
+    const response = await fetch('/.netlify/functions/analyze', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        max_tokens: 2000,
-        temperature: 0.3,
-        response_format: { type: 'json_object' },
         messages: [
           { role: 'system', content: systemPrompt },
-          {
-            role: 'user',
-            content: `De student heeft ${selectedTime} beschikbaar.\n\nHier is de leerstof:\n${allText}`,
-          },
-        ],
-      }),
+          { role: 'user', content: `De student heeft ${selectedTime} beschikbaar.\n\nHier is de leerstof:\n${allText}` }
+        ]
+      })
     });
 
     clearInterval(interval);
@@ -226,7 +210,6 @@ REGELS:
     const data = await response.json();
     const raw = data.choices?.[0]?.message?.content || '';
 
-    // Parse JSON
     const jsonMatch = raw.match(/\{[\s\S]*\}/);
     if (!jsonMatch) throw new Error('Kon resultaten niet verwerken.');
     const result = JSON.parse(jsonMatch[0]);
