@@ -65,8 +65,9 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 24
 h1 {
   font-family: 'Syne', sans-serif;
   font-size: clamp(28px, 3.5vw, 44px);
-  font-weight: 800;
-  font-synthesis: none;           /* ← geen synthetische stretch */
+  font-weight: 700;               /* ← van 800 naar 700, Syne 800 is te breed */
+  font-synthesis: none;
+  font-stretch: normal;           /* ← expliciet geen stretch */
   line-height: 1.15;
   letter-spacing: -0.5px;
   margin-bottom: 20px;
