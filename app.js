@@ -152,6 +152,28 @@ JSON formaat:
             role: 'user',
             content: `Analyseer deze leerstof voor een student met ${selectedTime} beschikbaar.
 
+TIJDSLOT REGELS — VOLG DIT STRIKT:
+${selectedTime === '30 minuten' ? `
+- Must: MAX 2 onderwerpen — alleen het allerbelangrijkste
+- Should: MAX 1 onderwerp
+- Skip: ALLES wat niet in must zit — wees genadeloos
+- De student heeft 30 minuten. Geef alleen wat absoluut noodzakelijk is.` : ''}
+${selectedTime === '1 uur' ? `
+- Must: MAX 3 onderwerpen
+- Should: MAX 2 onderwerpen
+- Skip: alles wat niet kritisch is
+- De student heeft 1 uur. Wees selectief maar iets ruimer dan 30 min.` : ''}
+${selectedTime === '2-3 uur' ? `
+- Must: 4-5 onderwerpen
+- Should: 2-3 onderwerpen
+- Skip: alleen echt onbelangrijke details
+- De student heeft 2-3 uur. Geef een solide studieplan.` : ''}
+${selectedTime === 'een avond' ? `
+- Must: 5-6 onderwerpen — alles wat getoetst kan worden
+- Should: 3-4 onderwerpen
+- Skip: alleen randgevallen en voetnoten
+- De student heeft een avond. Geef een volledig studieplan.` : ''}
+
 CONTROLEER VOOR JE BEGINT:
 - Staat er een vergelijkingstabel met getallen? → die onderwerpen zijn ALTIJD must
 - Staat er iets over enzymen/denaturatie? → ALTIJD must  
