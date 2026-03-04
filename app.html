@@ -18,19 +18,72 @@
 .logout-btn{padding:7px 16px;border-radius:8px;border:1px solid rgba(255,77,109,0.3);background:rgba(255,77,109,0.1);color:#ff4d6d;font-size:13px;cursor:pointer;transition:all 0.2s}
 .logout-btn:hover{background:rgba(255,77,109,0.2)}
 body{padding-top:56px}
+
+/* Toetsvragen */
 .toetsvraag{padding:18px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,214,0,0.15);border-radius:12px;margin-bottom:14px}
 .vr-header{margin-bottom:8px}
 .vr-num{background:rgba(255,214,0,0.15);color:#ffd600;font-weight:700;font-size:13px;padding:2px 9px;border-radius:20px}
 .vr-vraag{font-size:15px;font-weight:600;margin:10px 0 14px;line-height:1.5;color:#f0f0f8}
 .vr-opties{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
-.vr-optie{padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;font-size:14px;color:#f0f0f8}
-.vr-antwoord{font-size:13px;color:#00e676;background:rgba(0,230,118,0.08);border:1px solid rgba(0,230,118,0.2);border-radius:10px;padding:10px 14px;line-height:1.5}
+.vr-optie{padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;font-size:14px;color:#f0f0f8;cursor:pointer;transition:all 0.2s}
+.vr-optie:hover{border-color:rgba(255,214,0,0.4);background:rgba(255,214,0,0.06)}
+.vr-optie.selected{border-color:#ffd600;background:rgba(255,214,0,0.1);color:#ffd600}
+.vr-optie.correct{border-color:#00e676;background:rgba(0,230,118,0.1);color:#00e676}
+.vr-optie.incorrect{border-color:#ff4d6d;background:rgba(255,77,109,0.1);color:#ff4d6d}
+.vr-feedback{font-size:13px;border-radius:10px;padding:10px 14px;line-height:1.5;margin-top:8px}
+.correct-feedback{color:#00e676;background:rgba(0,230,118,0.08);border:1px solid rgba(0,230,118,0.2)}
+.incorrect-feedback{color:#ff8fa3;background:rgba(255,77,109,0.08);border:1px solid rgba(255,77,109,0.2)}
+.submit-toets-btn{width:100%;padding:14px;background:linear-gradient(135deg,#ffd600,#ff9500);border:none;border-radius:12px;color:#0a0a0f;font-family:Syne,sans-serif;font-size:16px;font-weight:700;cursor:pointer;margin-top:16px;transition:all 0.2s}
+.submit-toets-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,214,0,0.3)}
+.score-box{text-align:center;padding:20px;background:rgba(255,214,0,0.08);border:1px solid rgba(255,214,0,0.2);border-radius:12px;font-size:18px;font-weight:600;color:#ffd600;margin-top:16px}
 .topic-tip{display:block;margin-top:8px;font-size:12px;color:#00e676;background:rgba(0,230,118,0.08);border:1px solid rgba(0,230,118,0.2);border-radius:8px;padding:6px 10px}
+
+/* Upgrade modal */
+.upgrade-modal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:24px}
+.upgrade-box{background:#12121a;border:1px solid rgba(255,77,109,0.3);border-radius:24px;padding:40px;max-width:420px;width:100%;text-align:center;animation:fadeUp 0.3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.upgrade-icon{font-size:48px;margin-bottom:16px}
+.upgrade-box h2{font-family:Syne,sans-serif;font-size:22px;font-weight:700;margin-bottom:10px}
+.upgrade-box p{font-size:14px;color:#6b6b8a;margin-bottom:24px;line-height:1.6}
+.upgrade-plans{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.upgrade-plan-btn{display:block;padding:14px;border-radius:12px;font-family:Syne,sans-serif;font-size:14px;font-weight:700;text-decoration:none;transition:all 0.2s}
+.upgrade-plan-btn.starter{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#f0f0f8}
+.upgrade-plan-btn.starter:hover{border-color:rgba(255,255,255,0.3)}
+.upgrade-plan-btn.pro{background:linear-gradient(135deg,#ff4d6d,#c9184a);color:white}
+.upgrade-plan-btn.pro:hover{opacity:0.9;transform:translateY(-1px)}
+.upgrade-plan-btn.elite{background:rgba(255,214,0,0.1);border:1px solid rgba(255,214,0,0.3);color:#ffd600}
+.upgrade-plan-btn.elite:hover{background:rgba(255,214,0,0.15)}
+.upgrade-close{font-size:13px;color:#6b6b8a;cursor:pointer;text-decoration:underline}
+.upgrade-close:hover{color:#f0f0f8}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
-<div class="topbar"><div class="topbar-logo">StudyBrain</div><div class="topbar-right"><span class="topbar-email" id="userEmail"></span><button class="logout-btn" onclick="doLogout()">Uitloggen</button></div></div>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="topbar-logo">StudyBrain</div>
+  <div class="topbar-right">
+    <span class="topbar-email" id="userEmail"></span>
+    <button class="logout-btn" onclick="doLogout()">Uitloggen</button>
+  </div>
+</div>
+
+<!-- Upgrade Modal -->
+<div class="upgrade-modal" id="upgradeModal">
+  <div class="upgrade-box">
+    <div class="upgrade-icon">🔒</div>
+    <h2>Je gratis analyse is op</h2>
+    <p>Upgrade naar een abonnement om onbeperkt te blijven analyseren en meer oefenvragen te krijgen.</p>
+    <div class="upgrade-plans">
+      <a href="https://buy.stripe.com/test_14A00b6fA3uqeWi85h1wY00" target="_blank" class="upgrade-plan-btn starter">Starter — €9,99/mnd · 5 oefenvragen</a>
+      <a href="https://buy.stripe.com/test_14A9AL1Zkd50cOaetF1wY01" target="_blank" class="upgrade-plan-btn pro">⭐ Pro — €17,99/mnd · 10 oefenvragen</a>
+      <a href="https://buy.stripe.com/test_fZu14f0Vg3uq3dAetF1wY02" target="_blank" class="upgrade-plan-btn elite">Elite — €24,99/mnd · 10 oefenvragen</a>
+    </div>
+    <span class="upgrade-close" onclick="hideUpgradeModal()">Nee bedankt, terug naar de app</span>
+  </div>
+</div>
+
 <div class="glow-orb"></div>
 <div class="glow-orb2"></div>
 
@@ -45,8 +98,6 @@ body{padding-top:56px}
 
   <!-- Upload interface -->
   <div id="mainInterface">
-
-    <!-- Upload zone -->
     <div class="upload-section">
       <div class="upload-zone" id="uploadZone">
         <span class="upload-icon">📄</span>
@@ -57,29 +108,17 @@ body{padding-top:56px}
       <div class="file-list" id="fileList"></div>
     </div>
 
-    <!-- Time available -->
     <div class="time-section">
       <h3>⏰ Hoeveel tijd heb je nog?</h3>
       <div class="time-grid">
-        <button class="time-btn" data-time="30 minuten">
-          <span class="tb-emoji">💀</span>30 min
-        </button>
-        <button class="time-btn" data-time="1 uur">
-          <span class="tb-emoji">😰</span>1 uur
-        </button>
-        <button class="time-btn" data-time="2-3 uur">
-          <span class="tb-emoji">😬</span>2-3 uur
-        </button>
-        <button class="time-btn active" data-time="een avond">
-          <span class="tb-emoji">🌙</span>Een avond
-        </button>
+        <button class="time-btn" data-time="30 minuten"><span class="tb-emoji">💀</span>30 min</button>
+        <button class="time-btn" data-time="1 uur"><span class="tb-emoji">😰</span>1 uur</button>
+        <button class="time-btn" data-time="2-3 uur"><span class="tb-emoji">😬</span>2-3 uur</button>
+        <button class="time-btn active" data-time="een avond"><span class="tb-emoji">🌙</span>Een avond</button>
       </div>
     </div>
 
-    <!-- Analyze -->
-    <button class="analyze-btn" id="analyzeBtn" onclick="analyze()">
-      🧠 Analyseer mijn lesstof
-    </button>
+    <button class="analyze-btn" id="analyzeBtn" onclick="analyze()">🧠 Analyseer mijn lesstof</button>
     <div class="error-box" id="errorBox"></div>
   </div>
 
@@ -88,9 +127,7 @@ body{padding-top:56px}
     <span class="loading-brain">🧠</span>
     <h3>StudyBrain analyseert je lesstof...</h3>
     <p id="loadingMsg">Bezig met lezen en prioriteren...</p>
-    <div class="loading-dots">
-      <span></span><span></span><span></span>
-    </div>
+    <div class="loading-dots"><span></span><span></span><span></span></div>
   </div>
 
   <!-- Results -->
@@ -101,27 +138,21 @@ body{padding-top:56px}
     </div>
 
     <div class="priority-card must">
-      <div class="card-label">
-        <div class="card-badge">🔥 Must learn</div>
-      </div>
+      <div class="card-label"><div class="card-badge">🔥 Must learn</div></div>
       <div class="card-title">Dit MOET je kennen</div>
       <div class="card-subtitle">Dit staat sowieso in de toets. Begin hier.</div>
       <div class="topic-list" id="mustList"></div>
     </div>
 
     <div class="priority-card should">
-      <div class="card-label">
-        <div class="card-badge">⚡ Nice to know</div>
-      </div>
+      <div class="card-label"><div class="card-badge">⚡ Nice to know</div></div>
       <div class="card-title">Leer dit als je nog tijd hebt</div>
       <div class="card-subtitle">Geeft je extra punten, maar niet kritisch.</div>
       <div class="topic-list" id="shouldList"></div>
     </div>
 
     <div class="priority-card skip">
-      <div class="card-label">
-        <div class="card-badge">⏭️ Skip</div>
-      </div>
+      <div class="card-label"><div class="card-badge">⏭️ Skip</div></div>
       <div class="card-title">Sla dit over</div>
       <div class="card-subtitle">Te gedetailleerd, te zeldzaam, of niet de moeite waard.</div>
       <div class="topic-list" id="skipList"></div>
@@ -133,8 +164,10 @@ body{padding-top:56px}
     </div>
 
     <div class="cheatsheet-section" id="toetsvragenSection" style="display:none">
-      <h3>🎯 Voorspelde toetsvragen</h3>
+      <h3>🎯 Oefentoets — maak de vragen en dien in</h3>
       <div id="toetsvragenList"></div>
+      <div id="toetsScore"></div>
+      <button class="submit-toets-btn" id="submitToets" style="display:none" onclick="submitToets()">✅ Indienen & antwoorden bekijken</button>
     </div>
 
     <button class="reset-btn" onclick="reset()">← Nieuwe analyse starten</button>
