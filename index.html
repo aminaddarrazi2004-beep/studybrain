@@ -6,6 +6,21 @@
 <title>StudyBrain — Leer slimmer, niet harder</title>
 <meta name="description" content="De AI-studiecoach die vertelt wat je MOET leren.">
 <link rel="stylesheet" href="landing.css">
+<style>
+  /* PRIJZEN — fix brede/rare euro + cijfers */
+  .plan-price {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 38px;
+    font-weight: 700;
+    font-synthesis: none;
+    line-height: 1;
+    margin-bottom: 8px;
+    letter-spacing: -1px;
+  }
+  .plan-price .euro { font-size: 22px; font-weight: 500; vertical-align: super; margin-right: 1px; }
+  .plan-price .cents { font-size: 18px; font-weight: 400; color: var(--muted); }
+  .plan-price .per { font-size: 13px; font-weight: 400; color: var(--muted); margin-left: 2px; letter-spacing: 0; }
+</style>
 </head>
 <body>
 
@@ -148,52 +163,59 @@
     <p class="pricing-sub">Begin gratis met 1 analyse. Upgrade wanneer je wil.</p>
     <div class="plans">
 
+      <!-- STARTER -->
       <div class="plan">
         <div class="plan-name">Starter</div>
-        <div class="plan-price">&#8364;9<span class="cents">,99</span><span class="per">/mnd</span></div>
+        <div class="plan-price"><span class="euro">€</span>9<span class="cents">,99</span><span class="per">/mnd</span></div>
         <div class="plan-desc">Voor studenten die af en toe hulp nodig hebben.</div>
         <ul class="plan-list">
-          <li class="yes">15 analyses per maand</li>
+          <li class="yes">10 analyses per maand</li>
           <li class="yes">1 PDF per analyse</li>
           <li class="yes">Must / Should / Skip overzicht</li>
-          <li class="yes">Cheatsheet inbegrepen</li>
+          <li class="yes">Cheatsheet per analyse</li>
           <li class="yes">5 oefenvragen per analyse</li>
+          <li class="no">Volledige uitleg + ezelsbruggetjes</li>
           <li class="no">Meerdere PDFs tegelijk</li>
-          <li class="no">10 oefenvragen</li>
+          <li class="no">Persoonlijk studieplan</li>
         </ul>
         <a href="https://buy.stripe.com/test_14A00b6fA3uqeWi85h1wY00" target="_blank" class="plan-cta ghost-cta">Begin met Starter</a>
       </div>
 
+      <!-- PRO -->
       <div class="plan plan-hot">
         <div class="hot-label">&#11088; Meest gekozen</div>
         <div class="plan-name">Pro</div>
-        <div class="plan-price">&#8364;17<span class="cents">,99</span><span class="per">/mnd</span></div>
+        <div class="plan-price"><span class="euro">€</span>17<span class="cents">,99</span><span class="per">/mnd</span></div>
         <div class="plan-desc">Voor studenten die serieus willen scoren.</div>
         <ul class="plan-list">
           <li class="yes"><strong>Onbeperkt</strong> analyses</li>
-          <li class="yes">Tot <strong>5 PDFs</strong> tegelijk</li>
+          <li class="yes">Tot <strong>3 PDFs</strong> tegelijk</li>
           <li class="yes">Must / Should / Skip overzicht</li>
-          <li class="yes">Cheatsheet inbegrepen</li>
-          <li class="yes">Volledige uitleg + ezelsbruggetjes</li>
+          <li class="yes">Cheatsheet per analyse</li>
+          <li class="yes"><strong>Volledige uitleg + ezelsbruggetjes</strong></li>
           <li class="yes"><strong>10 oefenvragen per analyse</strong></li>
-          <li class="no">Persoonlijk studieSchema</li>
+          <li class="yes"><strong>Persoonlijk studieplan</strong></li>
+          <li class="no">Exporteren naar Notion / Anki</li>
+          <li class="no">Prioriteit bij nieuwe features</li>
         </ul>
         <a href="https://buy.stripe.com/test_14A9AL1Zkd50cOaetF1wY01" target="_blank" class="plan-cta hot-cta">Begin met Pro</a>
       </div>
 
+      <!-- ELITE -->
       <div class="plan">
         <div class="plan-name">Elite</div>
-        <div class="plan-price">&#8364;24<span class="cents">,99</span><span class="per">/mnd</span></div>
+        <div class="plan-price"><span class="euro">€</span>24<span class="cents">,99</span><span class="per">/mnd</span></div>
         <div class="plan-desc">Voor wie het maximale uit StudyBrain wil halen.</div>
         <ul class="plan-list">
           <li class="yes"><strong>Onbeperkt</strong> analyses</li>
-          <li class="yes">Tot <strong>15 PDFs</strong> tegelijk</li>
+          <li class="yes">Tot <strong>10 PDFs</strong> tegelijk</li>
           <li class="yes">Must / Should / Skip overzicht</li>
-          <li class="yes">Cheatsheet inbegrepen</li>
+          <li class="yes">Cheatsheet per analyse</li>
           <li class="yes">Volledige uitleg + ezelsbruggetjes</li>
-          <li class="yes"><strong>10 oefenvragen per analyse</strong></li>
-          <li class="yes"><strong>Persoonlijk studieSchema op maat</strong></li>
-          <li class="yes"><strong>Vroege toegang nieuwe features</strong></li>
+          <li class="yes"><strong>20 oefenvragen per analyse</strong></li>
+          <li class="yes"><strong>Persoonlijk studieplan op maat</strong></li>
+          <li class="yes"><strong>Exporteren naar Notion / Anki</strong></li>
+          <li class="yes"><strong>Vroege toegang + directe support</strong></li>
         </ul>
         <a href="https://buy.stripe.com/test_fZu14f0Vg3uq3dAetF1wY02" target="_blank" class="plan-cta ghost-cta">Begin met Elite</a>
       </div>
