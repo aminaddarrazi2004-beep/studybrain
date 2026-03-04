@@ -19,10 +19,11 @@
 .logout-btn:hover{background:rgba(255,77,109,0.2)}
 body{padding-top:56px}
 
-/* Toetsvragen */
+/* ── Toetsvragen ── */
 .toetsvraag{padding:18px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,214,0,0.15);border-radius:12px;margin-bottom:14px}
-.vr-header{margin-bottom:8px}
+.vr-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .vr-num{background:rgba(255,214,0,0.15);color:#ffd600;font-weight:700;font-size:13px;padding:2px 9px;border-radius:20px}
+.vr-vak{background:rgba(255,77,109,0.12);color:#ff8fa3;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;letter-spacing:0.04em}
 .vr-vraag{font-size:15px;font-weight:600;margin:10px 0 14px;line-height:1.5;color:#f0f0f8}
 .vr-opties{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
 .vr-optie{padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;font-size:14px;color:#f0f0f8;cursor:pointer;transition:all 0.2s}
@@ -38,7 +39,36 @@ body{padding-top:56px}
 .score-box{text-align:center;padding:20px;background:rgba(255,214,0,0.08);border:1px solid rgba(255,214,0,0.2);border-radius:12px;font-size:18px;font-weight:600;color:#ffd600;margin-top:16px}
 .topic-tip{display:block;margin-top:8px;font-size:12px;color:#00e676;background:rgba(0,230,118,0.08);border:1px solid rgba(0,230,118,0.2);border-radius:8px;padding:6px 10px}
 
-/* Upgrade modal */
+/* ── Multi-vak styling (Elite/Pro) ── */
+.vak-sectie{margin-bottom:8px}
+.vak-titel{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);color:#f0f0f8}
+.vak-divider{border:none;border-top:2px solid rgba(255,255,255,0.05);margin:32px 0}
+.vak-blok{margin-bottom:16px;border-radius:14px;padding:16px;border:1px solid}
+.must-blok{background:rgba(0,230,118,0.04);border-color:rgba(0,230,118,0.15)}
+.should-blok{background:rgba(255,214,0,0.04);border-color:rgba(255,214,0,0.15)}
+.skip-blok{background:rgba(255,77,109,0.04);border-color:rgba(255,77,109,0.12)}
+.vak-cheatsheet{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:16px;margin-bottom:16px}
+.vak-cheatsheet pre{font-family:'DM Sans',sans-serif;font-size:13px;color:#c0c0d8;white-space:pre-wrap;line-height:1.7;margin-top:8px}
+.blok-label{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;color:#6b6b8a}
+.must-blok .blok-label{color:#00e676}
+.should-blok .blok-label{color:#ffd600}
+.skip-blok .blok-label{color:#ff4d6d}
+
+/* ── Weekplan ── */
+.weekplan{padding:4px 0}
+.weekplan h3{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:20px}
+.dag-item{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.dag-item strong{font-size:14px;font-weight:700;color:#ff8fa3;display:block;margin-bottom:8px}
+.dag-item ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+.dag-item ul li{font-size:13px;color:#c0c0d8;padding-left:14px;position:relative}
+.dag-item ul li::before{content:'→';position:absolute;left:0;color:#6b6b8a}
+.weekplan-tips{background:rgba(0,230,118,0.05);border:1px solid rgba(0,230,118,0.15);border-radius:12px;padding:14px 16px;margin-top:16px}
+.weekplan-tips strong{font-size:13px;color:#00e676;display:block;margin-bottom:8px}
+.weekplan-tips ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+.weekplan-tips ul li{font-size:13px;color:#c0c0d8;padding-left:14px;position:relative}
+.weekplan-tips ul li::before{content:'💡';position:absolute;left:0}
+
+/* ── Upgrade modal ── */
 .upgrade-modal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:24px}
 .upgrade-box{background:#12121a;border:1px solid rgba(255,77,109,0.3);border-radius:24px;padding:40px;max-width:420px;width:100%;text-align:center;animation:fadeUp 0.3s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
@@ -62,7 +92,7 @@ body{padding-top:56px}
 
 <!-- Topbar -->
 <div class="topbar">
-  <div class="topbar-logo">StudyBrain</div>
+  <div class="topbar-logo">🧠 StudyBrain</div>
   <div class="topbar-right">
     <span class="topbar-email" id="userEmail"></span>
     <button class="logout-btn" onclick="doLogout()">Uitloggen</button>
@@ -74,11 +104,11 @@ body{padding-top:56px}
   <div class="upgrade-box">
     <div class="upgrade-icon">🔒</div>
     <h2>Je gratis analyse is op</h2>
-    <p>Upgrade naar een abonnement om onbeperkt te blijven analyseren en meer oefenvragen te krijgen.</p>
+    <p>Upgrade naar een abonnement om onbeperkt te blijven analyseren en je persoonlijk studieplan te krijgen.</p>
     <div class="upgrade-plans">
-      <a href="https://buy.stripe.com/test_14A00b6fA3uqeWi85h1wY00" target="_blank" class="upgrade-plan-btn starter">Starter — €9,99/mnd · 5 oefenvragen</a>
-      <a href="https://buy.stripe.com/test_14A9AL1Zkd50cOaetF1wY01" target="_blank" class="upgrade-plan-btn pro">⭐ Pro — €17,99/mnd · 10 oefenvragen</a>
-      <a href="https://buy.stripe.com/test_fZu14f0Vg3uq3dAetF1wY02" target="_blank" class="upgrade-plan-btn elite">Elite — €24,99/mnd · 10 oefenvragen</a>
+      <a href="https://buy.stripe.com/test_14A00b6fA3uqeWi85h1wY00" target="_blank" class="upgrade-plan-btn starter">Starter — €6,99/mnd · 10 analyses · cheatsheet</a>
+      <a href="https://buy.stripe.com/test_14A9AL1Zkd50cOaetF1wY01" target="_blank" class="upgrade-plan-btn pro">⭐ Pro — €12,99/mnd · onbeperkt + studieplan</a>
+      <a href="https://buy.stripe.com/test_fZu14f0Vg3uq3dAetF1wY02" target="_blank" class="upgrade-plan-btn elite">Elite — €19,99/mnd · 4 vakken combineren</a>
     </div>
     <span class="upgrade-close" onclick="hideUpgradeModal()">Nee bedankt, terug naar de app</span>
   </div>
@@ -177,6 +207,12 @@ body{padding-top:56px}
 
 <script src="auth.js"></script>
 <script src="app.js"></script>
-<script>checkAccess();(async()=>{const r=await sb.auth.getSession();if(r.data.session)document.getElementById("userEmail").textContent=r.data.session.user.email;})();</script>
+<script>
+  checkAccess();
+  (async () => {
+    const r = await sb.auth.getSession();
+    if (r.data.session) document.getElementById("userEmail").textContent = r.data.session.user.email;
+  })();
+</script>
 </body>
 </html>
