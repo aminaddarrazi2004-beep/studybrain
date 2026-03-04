@@ -1,6 +1,7 @@
 // ── State ──
 const files = [];
 let selectedTime = 'een avond';
+let userPlan = 'gratis';
 
 // ── DOM refs ──
 const zone = document.getElementById('uploadZone');
@@ -14,11 +15,27 @@ zone.addEventListener('drop', (e) => { e.preventDefault(); zone.classList.remove
 fileInput.addEventListener('change', () => handleFiles([...fileInput.files]));
 
 // ── Time buttons ──
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   document.querySelectorAll('.time-btn').forEach(btn => {
     btn.addEventListener('click', () => selectTime(btn));
   });
+  await loadUserPlan();
 });
+
+// ── Load user plan ──
+async function loadUserPlan() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  const { data: profile } = await sb.from('profiles').select('plan').eq('id', session.user.id).single();
+  if (profile?.plan) userPlan = profile.plan;
+}
+
+// ── Plan helpers ──
+function getVragenCount() {
+  if (userPlan === 'gratis') return 1;
+  if (userPlan === 'starter') return 5;
+  return 10; // pro of elite
+}
 
 // ── File handling ──
 function handleFiles(newFiles) {
@@ -83,14 +100,16 @@ async function extractPdfText(file) {
 async function checkFreeLimit() {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) return true;
-  const { data: profile, error } = await sb.from('profiles').select('free_analysis_used').eq('id', session.user.id).single();
+  const { data: profile, error } = await sb.from('profiles').select('free_analysis_used, plan').eq('id', session.user.id).single();
   if (error || !profile) return true;
+  if (profile.plan && profile.plan !== 'gratis') return false; // betaald plan = geen limiet
   return profile.free_analysis_used === true;
 }
 
 async function markAnalysisUsed() {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) return;
+  if (userPlan !== 'gratis') return; // alleen voor gratis users
   await sb.from('profiles').update({ free_analysis_used: true }).eq('id', session.user.id);
 }
 
@@ -99,7 +118,11 @@ async function analyze() {
   hideError();
   if (files.length === 0) { showError('Upload minimaal één PDF bestand.'); return; }
 
-  const used = false; // tijdelijk uit voor testen
+  const used = await checkFreeLimit();
+  if (used) {
+    showUpgradeModal();
+    return;
+  }
 
   document.getElementById('mainInterface').style.display = 'none';
   document.getElementById('loadingState').style.display = 'block';
@@ -107,6 +130,8 @@ async function analyze() {
   const msgs = ['Lesstof aan het verwerken...', 'Toetspatronen herkennen...', 'Prioriteiten bepalen...', 'Cheatsheet genereren...'];
   let mi = 0;
   const iv = setInterval(() => { document.getElementById('loadingMsg').textContent = msgs[mi++ % msgs.length]; }, 2500);
+
+  const vragenCount = getVragenCount();
 
   try {
     let allText = '';
@@ -142,9 +167,7 @@ JSON formaat:
   "skip": [{"topic":"...","reason":"Max 1 zin. Direct en eerlijk."}],
   "cheatsheet": "Spiekbriefje met → = ! symbolen. Groepeer per thema. Max 400 woorden. Alleen kernwoorden.",
   "toetsvragen": [
-    {"vraag":"...","a":"...","b":"...","c":"...","d":"...","antwoord":"A","uitleg":"1-2 zinnen waarom correct."},
-    {"vraag":"...","a":"...","b":"...","c":"...","d":"...","antwoord":"B","uitleg":"1-2 zinnen waarom correct."},
-    {"vraag":"...","a":"...","b":"...","c":"...","d":"...","antwoord":"C","uitleg":"1-2 zinnen waarom correct."}
+    {"vraag":"...","a":"...","b":"...","c":"...","d":"...","antwoord":"A","uitleg":"1-2 zinnen waarom correct."}
   ]
 }`
           },
@@ -156,30 +179,27 @@ TIJDSLOT REGELS — VOLG DIT STRIKT:
 ${selectedTime === '30 minuten' ? `
 - Must: MAX 2 onderwerpen — alleen het allerbelangrijkste
 - Should: MAX 1 onderwerp
-- Skip: ALLES wat niet in must zit — wees genadeloos
-- De student heeft 30 minuten. Geef alleen wat absoluut noodzakelijk is.` : ''}
+- Skip: ALLES wat niet in must zit — wees genadeloos` : ''}
 ${selectedTime === '1 uur' ? `
 - Must: MAX 3 onderwerpen
 - Should: MAX 2 onderwerpen
-- Skip: alles wat niet kritisch is
-- De student heeft 1 uur. Wees selectief maar iets ruimer dan 30 min.` : ''}
+- Skip: alles wat niet kritisch is` : ''}
 ${selectedTime === '2-3 uur' ? `
 - Must: 4-5 onderwerpen
 - Should: 2-3 onderwerpen
-- Skip: alleen echt onbelangrijke details
-- De student heeft 2-3 uur. Geef een solide studieplan.` : ''}
+- Skip: alleen echt onbelangrijke details` : ''}
 ${selectedTime === 'een avond' ? `
 - Must: 5-6 onderwerpen — alles wat getoetst kan worden
 - Should: 3-4 onderwerpen
-- Skip: alleen randgevallen en voetnoten
-- De student heeft een avond. Geef een volledig studieplan.` : ''}
+- Skip: alleen randgevallen en voetnoten` : ''}
+
+TOETSVRAGEN: Genereer precies ${vragenCount} toetsvragen met 4 opties (a,b,c,d). De antwoorden komen NIET direct zichtbaar — studenten maken eerst de toets en checken daarna pas.
 
 CONTROLEER VOOR JE BEGINT:
-- Staat er een vergelijkingstabel met getallen? → die onderwerpen zijn ALTIJD must
-- Staat er iets over enzymen/denaturatie? → ALTIJD must  
+- Staat er een vergelijkingstabel met getallen? → ALTIJD must
+- Staat er iets over enzymen/denaturatie? → ALTIJD must
 - Staat er celademhaling aeroob vs anaeroob? → ALTIJD must
 - Schrijf NOOIT "essentieel voor het begrijpen" in het reason veld
-- Geef ALTIJD precies 3 toetsvragen met 4 opties
 
 LEERSTOF:
 ${allText}`
@@ -207,6 +227,14 @@ ${allText}`
   }
 }
 
+// ── Upgrade modal ──
+function showUpgradeModal() {
+  document.getElementById('upgradeModal').style.display = 'flex';
+}
+function hideUpgradeModal() {
+  document.getElementById('upgradeModal').style.display = 'none';
+}
+
 // ── Render ──
 function renderTopics(list, containerId, isSkip = false) {
   const el = document.getElementById(containerId);
@@ -227,23 +255,76 @@ function renderTopics(list, containerId, isSkip = false) {
   }
 }
 
+// ── Oefentoets ──
+let toetsvragenData = [];
+let gebruikersAntwoorden = {};
+
 function renderToetsvragen(vragen) {
   const section = document.getElementById('toetsvragenSection');
-  const list = document.getElementById('toetsvragenList');
   if (!vragen?.length) return;
+  toetsvragenData = vragen;
+  gebruikersAntwoorden = {};
+
+  const list = document.getElementById('toetsvragenList');
   list.innerHTML = vragen.map((v, i) => `
-    <div class="toetsvraag">
+    <div class="toetsvraag" id="vraag-${i}">
       <div class="vr-header"><span class="vr-num">Vraag ${i + 1}</span></div>
       <p class="vr-vraag">${v.vraag}</p>
       <div class="vr-opties">
-        <div class="vr-optie">A. ${v.a}</div>
-        <div class="vr-optie">B. ${v.b}</div>
-        <div class="vr-optie">C. ${v.c}</div>
-        <div class="vr-optie">D. ${v.d}</div>
+        ${['a','b','c','d'].map(l => `
+          <div class="vr-optie" id="optie-${i}-${l}" onclick="selectAntwoord(${i}, '${l.toUpperCase()}', this)">
+            ${l.toUpperCase()}. ${v[l]}
+          </div>`).join('')}
       </div>
-      <div class="vr-antwoord">✅ Antwoord: <strong>${v.antwoord}</strong> — ${v.uitleg}</div>
+      <div class="vr-feedback" id="feedback-${i}" style="display:none"></div>
     </div>`).join('');
+
+  // Indienen knop
+  document.getElementById('submitToets').style.display = 'block';
   section.style.display = 'block';
+}
+
+function selectAntwoord(vraagIndex, letter, el) {
+  // Verwijder active van andere opties
+  document.querySelectorAll(`#vraag-${vraagIndex} .vr-optie`).forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  gebruikersAntwoorden[vraagIndex] = letter;
+}
+
+function submitToets() {
+  let goed = 0;
+  toetsvragenData.forEach((v, i) => {
+    const gekozen = gebruikersAntwoorden[i];
+    const correct = v.antwoord.toUpperCase();
+    const feedback = document.getElementById(`feedback-${i}`);
+
+    // Kleur opties
+    document.querySelectorAll(`#vraag-${i} .vr-optie`).forEach(o => {
+      const letter = o.textContent.trim()[0];
+      if (letter === correct) o.classList.add('correct');
+      else if (letter === gekozen && gekozen !== correct) o.classList.add('incorrect');
+      o.onclick = null; // disable klikken
+    });
+
+    // Feedback tonen
+    if (gekozen === correct) {
+      goed++;
+      feedback.innerHTML = `✅ Goed! ${v.uitleg}`;
+      feedback.className = 'vr-feedback correct-feedback';
+    } else {
+      feedback.innerHTML = `❌ Fout. Juist antwoord: <strong>${correct}</strong> — ${v.uitleg}`;
+      feedback.className = 'vr-feedback incorrect-feedback';
+    }
+    feedback.style.display = 'block';
+  });
+
+  // Score tonen
+  document.getElementById('toetsScore').innerHTML = `
+    <div class="score-box">
+      🎯 Jouw score: <strong>${goed}/${toetsvragenData.length}</strong>
+      ${goed === toetsvragenData.length ? ' — Perfect! 🔥' : goed >= toetsvragenData.length/2 ? ' — Goed bezig! 💪' : ' — Nog even oefenen! 📚'}
+    </div>`;
+  document.getElementById('submitToets').style.display = 'none';
 }
 
 function showResults(data) {
@@ -262,6 +343,8 @@ function reset() {
   document.getElementById('toetsvragenSection').style.display = 'none';
   document.getElementById('mainInterface').style.display = 'block';
   files.length = 0;
+  toetsvragenData = [];
+  gebruikersAntwoorden = {};
   renderFileList();
   fileInput.value = '';
   window.scrollTo({ top: 0, behavior: 'smooth' });
