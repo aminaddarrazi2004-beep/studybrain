@@ -18,32 +18,33 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: 'DM Sans', sans-serif;
-  font-optical-sizing: auto;      /* ← voorkomt synthetisch stretchen */
+  font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
 
 /* NAV */
-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(10,10,15,0.88); backdrop-filter: blur(14px); }
-.nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 32px; }
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(10,10,15,0.88); backdrop-filter: blur(14px); }
+.nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
 .nav-logo {
   font-family: 'Syne', sans-serif;
-  font-size: 20px;
-  font-weight: 700;               /* ← was 800, dat veroorzaakte stretch */
-  font-synthesis: none;           /* ← browser mag NIET zelf vet/schuin maken */
+  font-size: 18px;
+  font-weight: 700;
+  font-synthesis: none;
   letter-spacing: -0.2px;
   color: var(--text);
   text-decoration: none;
   margin-right: auto;
+  white-space: nowrap;
 }
 .nav-links { display: flex; gap: 28px; }
 .nav-links a { color: var(--muted); font-size: 14px; text-decoration: none; transition: color 0.2s; }
 .nav-links a:hover { color: var(--text); }
-.nav-actions { display: flex; gap: 10px; align-items: center; }
-.btn-ghost { padding: 8px 18px; border-radius: 10px; border: 1px solid var(--border); color: var(--muted); font-size: 14px; text-decoration: none; transition: all 0.2s; }
+.nav-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+.btn-ghost { padding: 8px 14px; border-radius: 10px; border: 1px solid var(--border); color: var(--muted); font-size: 13px; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
 .btn-ghost:hover { border-color: var(--text); color: var(--text); }
-.btn-nav { padding: 8px 18px; border-radius: 10px; background: var(--accent); color: white; font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+.btn-nav { padding: 8px 14px; border-radius: 10px; background: var(--accent); color: white; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
 .btn-nav:hover { opacity: 0.88; transform: translateY(-1px); }
 
 /* ORBS */
@@ -65,9 +66,9 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 24
 h1 {
   font-family: 'Syne', sans-serif;
   font-size: clamp(28px, 3.5vw, 44px);
-  font-weight: 700;               /* ← van 800 naar 700, Syne 800 is te breed */
+  font-weight: 700;
   font-synthesis: none;
-  font-stretch: normal;           /* ← expliciet geen stretch */
+  font-stretch: normal;
   line-height: 1.15;
   letter-spacing: -0.5px;
   margin-bottom: 20px;
@@ -76,7 +77,7 @@ h1 {
 h2 {
   font-family: 'Syne', sans-serif;
   font-size: clamp(22px, 3vw, 36px);
-  font-weight: 700;               /* ← was 800, nu 700 = minder kans op stretch */
+  font-weight: 700;
   font-synthesis: none;
   line-height: 1.2;
   letter-spacing: -0.3px;
@@ -191,7 +192,9 @@ footer p { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
 nav { animation: fadeDown 0.5s ease both; }
 .hero-content { animation: fadeUp2 0.6s 0.1s ease both; }
 
-/* RESPONSIVE */
+/* =====================
+   RESPONSIVE — TABLET
+   ===================== */
 @media (max-width: 900px) {
   .hero-inner { grid-template-columns: 1fr; }
   .hero-mockup { display: none; }
@@ -202,9 +205,47 @@ nav { animation: fadeDown 0.5s ease both; }
   .plans { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
   .nav-links { display: none; }
 }
+
+/* =====================
+   RESPONSIVE — MOBILE
+   ===================== */
 @media (max-width: 600px) {
-  .feat-grid { grid-template-columns: 1fr; }
+
+  /* NAV — voorkom wrapping knoppen */
+  nav { padding: 10px 14px; }
+  .nav-logo { font-size: 16px; }
+  .btn-ghost { padding: 7px 11px; font-size: 12px; }
+  .btn-nav { padding: 7px 11px; font-size: 12px; }
+
+  /* HERO — verwijder lege ruimte boven content */
+  .hero { min-height: auto; padding-top: 64px; align-items: flex-start; }
+  .hero-inner { padding: 32px 20px 48px; gap: 0; }
+
+  /* HERO CTA knoppen op volle breedte */
+  .hero-cta { flex-direction: column; gap: 10px; }
+  .btn-primary, .btn-secondary { text-align: center; justify-content: center; width: 100%; }
+
+  /* HOW — compactere stappen */
+  .section-inner { padding: 56px 20px; }
+  .steps { gap: 28px; margin-top: 32px; }
+  .step-num { font-size: 36px; margin-bottom: 4px; }
+  .step-icon { font-size: 28px; margin-bottom: 8px; }
+  .step h3 { font-size: 16px; margin-bottom: 6px; }
+  .step p { font-size: 13px; }
+
+  /* FEATURES — kleinere cards */
+  .feat-grid { grid-template-columns: 1fr; gap: 12px; margin-top: 32px; }
   .feat-big { grid-column: span 1; }
-  .hero-cta { flex-direction: column; }
-  .btn-primary, .btn-secondary { text-align: center; justify-content: center; }
+  .feat-card { padding: 20px; border-radius: 16px; }
+  .feat-icon { font-size: 26px; margin-bottom: 10px; }
+  .feat-card h3 { font-size: 15px; }
+  .feat-card p { font-size: 13px; }
+
+  /* PRICING */
+  .plan { padding: 24px 20px; }
+  .hot-label { margin: -24px -20px 20px -20px; }
+  .plan-price { font-size: 36px; }
+
+  /* CTA BAND */
+  .cta-band .section-inner { padding: 64px 20px; }
 }
