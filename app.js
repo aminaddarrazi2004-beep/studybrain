@@ -37,9 +37,20 @@ function getVragenCount() {
   return 10; // pro of elite
 }
 
+function getMaxFiles() {
+  if (userPlan === 'gratis' || userPlan === 'starter') return 1;
+  if (userPlan === 'pro') return 3;
+  return 4; // elite — max 4 vakken
+}
+
 // ── File handling ──
 function handleFiles(newFiles) {
+  const maxFiles = getMaxFiles();
   newFiles.forEach((f) => {
+    if (files.length >= maxFiles) {
+      showError(`Jouw plan ondersteunt maximaal ${maxFiles} bestand(en) tegelijk.`);
+      return;
+    }
     if ((f.type === 'application/pdf' || f.name.endsWith('.pdf')) && !files.find((x) => x.name === f.name)) {
       files.push(f);
     }
@@ -83,7 +94,9 @@ async function extractPdfText(file) {
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
         const pdf = await pdfjsLib.getDocument({ data: e.target.result }).promise;
         let fullText = '';
-        for (let i = 1; i <= pdf.numPages; i++) {
+        // Max 15 pagina's per PDF om context window te beschermen
+        const maxPages = Math.min(pdf.numPages, 15);
+        for (let i = 1; i <= maxPages; i++) {
           const page = await pdf.getPage(i);
           const content = await page.getTextContent();
           fullText += content.items.map((item) => item.str).join(' ') + '\n';
@@ -102,53 +115,27 @@ async function checkFreeLimit() {
   if (!session) return true;
   const { data: profile, error } = await sb.from('profiles').select('free_analysis_used, plan').eq('id', session.user.id).single();
   if (error || !profile) return true;
-  if (profile.plan && profile.plan !== 'gratis') return false; // betaald plan = geen limiet
+  if (profile.plan && profile.plan !== 'gratis') return false;
   return profile.free_analysis_used === true;
 }
 
 async function markAnalysisUsed() {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) return;
-  if (userPlan !== 'gratis') return; // alleen voor gratis users
+  if (userPlan !== 'gratis') return;
   await sb.from('profiles').update({ free_analysis_used: true }).eq('id', session.user.id);
 }
 
-// ── Main analyze ──
-async function analyze() {
-  hideError();
-  if (files.length === 0) { showError('Upload minimaal één PDF bestand.'); return; }
-
-  const used = await checkFreeLimit();
-  if (used) {
-    showUpgradeModal();
-    return;
-  }
-
-  document.getElementById('mainInterface').style.display = 'none';
-  document.getElementById('loadingState').style.display = 'block';
-
-  const msgs = ['Lesstof aan het verwerken...', 'Toetspatronen herkennen...', 'Prioriteiten bepalen...', 'Cheatsheet genereren...'];
-  let mi = 0;
-  const iv = setInterval(() => { document.getElementById('loadingMsg').textContent = msgs[mi++ % msgs.length]; }, 2500);
-
-  const vragenCount = getVragenCount();
-
-  try {
-    let allText = '';
-    for (const file of files) {
-      const text = await extractPdfText(file);
-      allText += `\n\n=== ${file.name} ===\n${text}`;
-    }
-    if (allText.length > 12000) allText = allText.slice(0, 12000) + '\n\n[... afgekapt ...]';
-
-    const res = await fetch('/.netlify/functions/analyze', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        messages: [
-          {
-            role: 'system',
-            content: `Je bent een Nederlandse ex-examinator met 15 jaar ervaring. Je schrijft studieplannen vanuit het perspectief van de docent die de toets maakt.
+// ── API call helper ──
+async function callAnalyzeAPI(text, vakNaam, vragenCount) {
+  const res = await fetch('/.netlify/functions/analyze', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      messages: [
+        {
+          role: 'system',
+          content: `Je bent een Nederlandse ex-examinator met 15 jaar ervaring. Je schrijft studieplannen vanuit het perspectief van de docent die de toets maakt.
 
 IJZEREN REGELS — NOOIT BREKEN:
 - Vergelijkingstabellen (X vs Y met getallen zoals 38 ATP vs 2 ATP) → ALTIJD must
@@ -170,10 +157,10 @@ JSON formaat:
     {"vraag":"...","a":"...","b":"...","c":"...","d":"...","antwoord":"A","uitleg":"1-2 zinnen waarom correct."}
   ]
 }`
-          },
-          {
-            role: 'user',
-            content: `Analyseer deze leerstof voor een student met ${selectedTime} beschikbaar.
+        },
+        {
+          role: 'user',
+          content: `Analyseer deze leerstof (${vakNaam}) voor een student met ${selectedTime} beschikbaar.
 
 TIJDSLOT REGELS — VOLG DIT STRIKT:
 ${selectedTime === '30 minuten' ? `
@@ -193,32 +180,123 @@ ${selectedTime === 'een avond' ? `
 - Should: 3-4 onderwerpen
 - Skip: alleen randgevallen en voetnoten` : ''}
 
-TOETSVRAGEN: Genereer precies ${vragenCount} toetsvragen met 4 opties (a,b,c,d). De antwoorden komen NIET direct zichtbaar — studenten maken eerst de toets en checken daarna pas.
-
-CONTROLEER VOOR JE BEGINT:
-- Staat er een vergelijkingstabel met getallen? → ALTIJD must
-- Staat er iets over enzymen/denaturatie? → ALTIJD must
-- Staat er celademhaling aeroob vs anaeroob? → ALTIJD must
-- Schrijf NOOIT "essentieel voor het begrijpen" in het reason veld
+TOETSVRAGEN: Genereer precies ${vragenCount} toetsvragen met 4 opties (a,b,c,d).
 
 LEERSTOF:
-${allText}`
-          }
-        ]
-      })
-    });
+${text}`
+        }
+      ]
+    })
+  });
 
-    clearInterval(iv);
-    if (!res.ok) { const err = await res.json(); throw new Error(err.error?.message || 'API fout'); }
+  if (!res.ok) { const err = await res.json(); throw new Error(err.error?.message || 'API fout'); }
+  const data = await res.json();
+  const raw = data.choices?.[0]?.message?.content || '';
+  const match = raw.match(/\{[\s\S]*\}/);
+  if (!match) throw new Error('Kon resultaten niet verwerken.');
+  return JSON.parse(match[0]);
+}
 
-    const data = await res.json();
-    const raw = data.choices?.[0]?.message?.content || '';
-    const match = raw.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error('Kon resultaten niet verwerken.');
-    const result = JSON.parse(match[0]);
+// ── Gecombineerd studieplan (Elite/Pro met meerdere vakken) ──
+async function buildCombinedStudieplan(vakResultaten) {
+  // Maak een compact overzicht van alle must-items per vak
+  const overzicht = vakResultaten.map(({ vakNaam, result }) => {
+    const mustTopics = result.must.map(m => m.topic).join(', ');
+    return `Vak: ${vakNaam}\nBelangrijkste onderwerpen: ${mustTopics}`;
+  }).join('\n\n');
 
-    await markAnalysisUsed();
-    showResults(result);
+  const res = await fetch('/.netlify/functions/analyze', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      messages: [
+        {
+          role: 'system',
+          content: `Je bent een studiecoach die weekplanningen maakt voor studenten. Geef ALLEEN JSON terug.
+
+JSON formaat:
+{
+  "weekplan": [
+    {"dag": "Maandag", "taken": ["Vak X — onderwerp A (30 min)", "Vak Y — onderwerp B (45 min)"]},
+    {"dag": "Dinsdag", "taken": ["..."]}
+  ],
+  "tips": ["Algemene studietip 1", "Tip 2", "Tip 3"]
+}`
+        },
+        {
+          role: 'user',
+          content: `Maak een weekplanning voor deze student die ${selectedTime} per dag beschikbaar heeft.
+
+Verwerk spaced repetition: belangrijke onderwerpen meerdere keren inplannen.
+
+Vakken en onderwerpen:
+${overzicht}`
+        }
+      ]
+    })
+  });
+
+  if (!res.ok) return null;
+  const data = await res.json();
+  const raw = data.choices?.[0]?.message?.content || '';
+  const match = raw.match(/\{[\s\S]*\}/);
+  if (!match) return null;
+  return JSON.parse(match[0]);
+}
+
+// ── Main analyze ──
+async function analyze() {
+  hideError();
+  if (files.length === 0) { showError('Upload minimaal één PDF bestand.'); return; }
+
+  const used = await checkFreeLimit();
+  if (used) { showUpgradeModal(); return; }
+
+  document.getElementById('mainInterface').style.display = 'none';
+  document.getElementById('loadingState').style.display = 'block';
+
+  const isMultiVak = files.length > 1 && (userPlan === 'pro' || userPlan === 'elite');
+  const msgs = isMultiVak
+    ? ['Vakken verwerken...', 'Elk vak analyseren...', 'Prioriteiten bepalen...', 'Weekplanning maken...', 'Cheatsheets genereren...']
+    : ['Lesstof aan het verwerken...', 'Toetspatronen herkennen...', 'Prioriteiten bepalen...', 'Cheatsheet genereren...'];
+
+  let mi = 0;
+  const iv = setInterval(() => { document.getElementById('loadingMsg').textContent = msgs[mi++ % msgs.length]; }, 2500);
+
+  const vragenCount = getVragenCount();
+
+  try {
+    if (isMultiVak) {
+      // ── Multi-vak: elk bestand apart analyseren ──
+      const vakResultaten = [];
+
+      for (const file of files) {
+        const vakNaam = file.name.replace('.pdf', '');
+        let text = await extractPdfText(file);
+        // Max 10.000 tekens per vak zodat kwaliteit hoog blijft
+        if (text.length > 10000) text = text.slice(0, 10000) + '\n\n[... afgekapt ...]';
+        const result = await callAnalyzeAPI(text, vakNaam, vragenCount);
+        vakResultaten.push({ vakNaam, result });
+      }
+
+      // Gecombineerd weekplan bouwen
+      const weekplan = await buildCombinedStudieplan(vakResultaten);
+
+      clearInterval(iv);
+      await markAnalysisUsed();
+      showMultiResults(vakResultaten, weekplan);
+
+    } else {
+      // ── Enkel bestand ──
+      let text = await extractPdfText(files[0]);
+      if (text.length > 12000) text = text.slice(0, 12000) + '\n\n[... afgekapt ...]';
+      const result = await callAnalyzeAPI(text, files[0].name, vragenCount);
+
+      clearInterval(iv);
+      await markAnalysisUsed();
+      showResults(result);
+    }
+
   } catch (err) {
     clearInterval(iv);
     document.getElementById('mainInterface').style.display = 'block';
@@ -235,7 +313,7 @@ function hideUpgradeModal() {
   document.getElementById('upgradeModal').style.display = 'none';
 }
 
-// ── Render ──
+// ── Render enkel vak ──
 function renderTopics(list, containerId, isSkip = false) {
   const el = document.getElementById(containerId);
   if (isSkip) {
@@ -255,6 +333,81 @@ function renderTopics(list, containerId, isSkip = false) {
   }
 }
 
+// ── Render multi-vak resultaten ──
+function showMultiResults(vakResultaten, weekplan) {
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('resultsSection').style.display = 'block';
+  document.getElementById('resultsSubtitle').textContent = `${files.length} vakken geanalyseerd · ${selectedTime} beschikbaar`;
+
+  // Toon elk vak apart als tab of sectie
+  const container = document.getElementById('mustList');
+  container.innerHTML = vakResultaten.map(({ vakNaam, result }) => `
+    <div class="vak-sectie">
+      <h3 class="vak-titel">📚 ${vakNaam}</h3>
+
+      <div class="vak-blok must-blok">
+        <div class="blok-label">🔥 MUST LEARN</div>
+        ${result.must.map(item => `
+          <div class="topic-item">
+            <h4>${item.topic}</h4>
+            <p>${item.summary || ''}</p>
+            <span class="topic-reason">${item.reason || ''}</span>
+            ${item.tip ? `<span class="topic-tip">💡 ${item.tip}</span>` : ''}
+          </div>`).join('')}
+      </div>
+
+      <div class="vak-blok should-blok">
+        <div class="blok-label">⚡ NICE TO KNOW</div>
+        ${result.should.map(item => `
+          <div class="topic-item">
+            <h4>${item.topic}</h4>
+            <p>${item.summary || ''}</p>
+            ${item.tip ? `<span class="topic-tip">💡 ${item.tip}</span>` : ''}
+          </div>`).join('')}
+      </div>
+
+      <div class="vak-blok skip-blok">
+        <div class="blok-label">⏭ SKIP</div>
+        ${result.skip.map(item => `
+          <div class="topic-item">
+            <h4>${item.topic}</h4>
+            <span class="topic-reason">${item.reason || ''}</span>
+          </div>`).join('')}
+      </div>
+
+      <div class="vak-cheatsheet">
+        <div class="blok-label">📝 Cheatsheet</div>
+        <pre>${result.cheatsheet || ''}</pre>
+      </div>
+    </div>
+  `).join('<hr class="vak-divider">');
+
+  // Weekplan tonen als het er is
+  if (weekplan?.weekplan) {
+    const weekContainer = document.getElementById('shouldList');
+    weekContainer.innerHTML = `
+      <div class="weekplan">
+        <h3>📅 Jouw weekplanning</h3>
+        ${weekplan.weekplan.map(dag => `
+          <div class="dag-item">
+            <strong>${dag.dag}</strong>
+            <ul>${dag.taken.map(t => `<li>${t}</li>`).join('')}</ul>
+          </div>`).join('')}
+        ${weekplan.tips ? `
+          <div class="weekplan-tips">
+            <strong>💡 Studietips</strong>
+            <ul>${weekplan.tips.map(t => `<li>${t}</li>`).join('')}</ul>
+          </div>` : ''}
+      </div>`;
+  }
+
+  // Alle toetsvragen samenvoegen
+  const alleVragen = vakResultaten.flatMap(({ vakNaam, result }) =>
+    (result.toetsvragen || []).map(v => ({ ...v, vakNaam }))
+  );
+  renderToetsvragen(alleVragen);
+}
+
 // ── Oefentoets ──
 let toetsvragenData = [];
 let gebruikersAntwoorden = {};
@@ -268,7 +421,10 @@ function renderToetsvragen(vragen) {
   const list = document.getElementById('toetsvragenList');
   list.innerHTML = vragen.map((v, i) => `
     <div class="toetsvraag" id="vraag-${i}">
-      <div class="vr-header"><span class="vr-num">Vraag ${i + 1}</span></div>
+      <div class="vr-header">
+        <span class="vr-num">Vraag ${i + 1}</span>
+        ${v.vakNaam ? `<span class="vr-vak">${v.vakNaam}</span>` : ''}
+      </div>
       <p class="vr-vraag">${v.vraag}</p>
       <div class="vr-opties">
         ${['a','b','c','d'].map(l => `
@@ -279,13 +435,11 @@ function renderToetsvragen(vragen) {
       <div class="vr-feedback" id="feedback-${i}" style="display:none"></div>
     </div>`).join('');
 
-  // Indienen knop
   document.getElementById('submitToets').style.display = 'block';
   section.style.display = 'block';
 }
 
 function selectAntwoord(vraagIndex, letter, el) {
-  // Verwijder active van andere opties
   document.querySelectorAll(`#vraag-${vraagIndex} .vr-optie`).forEach(o => o.classList.remove('selected'));
   el.classList.add('selected');
   gebruikersAntwoorden[vraagIndex] = letter;
@@ -298,15 +452,13 @@ function submitToets() {
     const correct = v.antwoord.toUpperCase();
     const feedback = document.getElementById(`feedback-${i}`);
 
-    // Kleur opties
     document.querySelectorAll(`#vraag-${i} .vr-optie`).forEach(o => {
       const letter = o.textContent.trim()[0];
       if (letter === correct) o.classList.add('correct');
       else if (letter === gekozen && gekozen !== correct) o.classList.add('incorrect');
-      o.onclick = null; // disable klikken
+      o.onclick = null;
     });
 
-    // Feedback tonen
     if (gekozen === correct) {
       goed++;
       feedback.innerHTML = `✅ Goed! ${v.uitleg}`;
@@ -318,7 +470,6 @@ function submitToets() {
     feedback.style.display = 'block';
   });
 
-  // Score tonen
   document.getElementById('toetsScore').innerHTML = `
     <div class="score-box">
       🎯 Jouw score: <strong>${goed}/${toetsvragenData.length}</strong>
