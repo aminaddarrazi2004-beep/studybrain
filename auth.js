@@ -1,12 +1,18 @@
 // StudyBrain — Auth via Supabase
-// Stap 1: ga naar supabase.com, maak gratis account
-// Stap 2: nieuw project aanmaken
-// Stap 3: Settings > API > kopieer URL en anon key hieronder
-
 const SUPABASE_URL = 'https://wtfzqpaectqrbprmxjqp.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0ZnpxcGFlY3RxcmJwcm14anFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NzE4NDYsImV4cCI6MjA4ODE0Nzg0Nn0.LeJqnukvUpVJZyG_2pjwS0xnl24ATdV6Mi6qqZeVbJ4';
-
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ✅ Verwerk email verificatie zodra gebruiker terugkomt via de link
+(async () => {
+  const hash = window.location.hash;
+  if (hash && hash.includes('access_token')) {
+    const { error } = await sb.auth.getSession();
+    if (!error) {
+      window.location.href = 'login.html?verified=1';
+    }
+  }
+})();
 
 function showMsg(id, tekst, type) {
   const el = document.getElementById(id);
@@ -15,6 +21,14 @@ function showMsg(id, tekst, type) {
   el.className = 'msg ' + type;
   el.style.display = 'block';
 }
+
+// ✅ Toon melding als gebruiker net geverifieerd is
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('verified') === '1') {
+    showMsg('loginError', '✅ E-mail bevestigd! Je kunt nu inloggen.', 'success');
+  }
+});
 
 async function doSignup() {
   const email = document.getElementById('signupEmail').value.trim();
@@ -25,7 +39,16 @@ async function doSignup() {
   if (pw1 !== pw2)     return showMsg('signupError', 'Wachtwoorden komen niet overeen.', 'error');
   const btn = document.getElementById('signupBtn');
   btn.disabled = true; btn.textContent = 'Bezig...';
-  const { error } = await sb.auth.signUp({ email, password: pw1 });
+
+  const { error } = await sb.auth.signUp({
+    email,
+    password: pw1,
+    options: {
+      // ✅ Na verificatie terugsturen naar jouw login pagina
+      emailRedirectTo: 'https://frabjous-malasada-97133c.netlify.app/login.html'
+    }
+  });
+
   if (error) {
     showMsg('signupError', 'Fout: ' + error.message, 'error');
     btn.disabled = false; btn.textContent = 'Account aanmaken';
