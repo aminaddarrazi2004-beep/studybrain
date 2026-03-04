@@ -7,7 +7,6 @@
 <meta name="description" content="De AI-studiecoach die vertelt wat je MOET leren.">
 <link rel="stylesheet" href="landing.css">
 <style>
-  /* PRIJZEN — fix brede/rare euro + cijfers */
   .plan-price {
     font-family: 'DM Sans', sans-serif;
     font-size: 38px;
@@ -20,7 +19,6 @@
   .plan-price .euro { font-size: 22px; font-weight: 500; vertical-align: super; margin-right: 1px; }
   .plan-price .cents { font-size: 18px; font-weight: 400; color: var(--muted); }
   .plan-price .per { font-size: 13px; font-weight: 400; color: var(--muted); margin-left: 2px; letter-spacing: 0; }
-
   .pricing-compare {
     text-align: center;
     background: rgba(255,77,109,0.07);
@@ -35,13 +33,58 @@
     margin-right: auto;
   }
   .pricing-compare strong { color: var(--text); }
+
+  /* Logo in nav */
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    margin-right: auto;
+  }
+  .nav-logo img { height: 30px; width: auto; display: block; }
+  .nav-logo-text {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  /* Logo in footer */
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .footer-logo img { height: 26px; width: auto; }
+  .footer-logo-text {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  /* Logo in hero header */
+  .hero-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 32px;
+  }
+  .hero-logo img { height: 80px; width: auto; filter: drop-shadow(0 0 24px rgba(255,77,109,0.4)); }
 </style>
 </head>
 <body>
 
 <nav>
   <div class="nav-inner">
-    <div class="nav-logo">&#129504; StudyBrain</div>
+    <a href="/" class="nav-logo">
+      <img src="logo.png" alt="StudyBrain">
+      <span class="nav-logo-text">StudyBrain</span>
+    </a>
     <div class="nav-links">
       <a href="#how">Hoe het werkt</a>
       <a href="#pricing">Abonnementen</a>
@@ -182,8 +225,6 @@
     </div>
 
     <div class="plans">
-
-      <!-- STARTER -->
       <div class="plan">
         <div class="plan-name">Starter</div>
         <div class="plan-price"><span class="euro">€</span>6<span class="cents">,99</span><span class="per">/mnd</span></div>
@@ -200,7 +241,6 @@
         <a href="https://buy.stripe.com/test_14A00b6fA3uqeWi85h1wY00" target="_blank" class="plan-cta ghost-cta">Begin met Starter</a>
       </div>
 
-      <!-- PRO -->
       <div class="plan plan-hot">
         <div class="hot-label">&#11088; Meest gekozen</div>
         <div class="plan-name">Pro</div>
@@ -219,7 +259,6 @@
         <a href="https://buy.stripe.com/test_14A9AL1Zkd50cOaetF1wY01" target="_blank" class="plan-cta hot-cta">Begin met Pro</a>
       </div>
 
-      <!-- ELITE -->
       <div class="plan">
         <div class="plan-name">Elite</div>
         <div class="plan-price"><span class="euro">€</span>19<span class="cents">,99</span><span class="per">/mnd</span></div>
@@ -236,7 +275,6 @@
         </ul>
         <a href="https://buy.stripe.com/test_fZu14f0Vg3uq3dAetF1wY02" target="_blank" class="plan-cta ghost-cta">Begin met Elite</a>
       </div>
-
     </div>
     <p class="pricing-note">&#128274; Veilig betalen &middot; Maandelijks opzegbaar &middot; Geen verborgen kosten</p>
   </div>
@@ -254,7 +292,10 @@
 
 <footer>
   <div class="footer-inner">
-    <div class="footer-logo">&#129504; StudyBrain</div>
+    <div class="footer-logo">
+      <img src="logo.png" alt="StudyBrain">
+      <span class="footer-logo-text">StudyBrain</span>
+    </div>
     <p>Slimmer studeren voor iedereen.</p>
     <div class="footer-links">
       <a href="#">Privacy</a>
