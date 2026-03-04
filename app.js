@@ -99,8 +99,7 @@ async function analyze() {
   hideError();
   if (files.length === 0) { showError('Upload minimaal één PDF bestand.'); return; }
 
-  const used = await checkFreeLimit();
-  if (used) { showError('Je gratis analyse is op. Upgrade naar een abonnement om door te gaan.'); return; }
+  const used = false; // tijdelijk uit voor testen
 
   document.getElementById('mainInterface').style.display = 'none';
   document.getElementById('loadingState').style.display = 'block';
