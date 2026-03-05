@@ -128,7 +128,7 @@ async function markAnalysisUsed() {
 
 // ── API call helper ──
 async function callAnalyzeAPI(text, vakNaam, vragenCount) {
-  const res = await fetch('/.netlify/functions/analyze', {
+  const res = await fetch('https://analyze.aminaddarrazi2004.workers.dev', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -205,7 +205,7 @@ async function buildCombinedStudieplan(vakResultaten) {
     return `Vak: ${vakNaam}\nBelangrijkste onderwerpen: ${mustTopics}`;
   }).join('\n\n');
 
-  const res = await fetch('/.netlify/functions/analyze', {
+  const res = await fetch('https://analyze.aminaddarrazi2004.workers.dev', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
