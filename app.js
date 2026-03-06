@@ -192,7 +192,9 @@ ${text}`
   if (!res.ok) { const err = await res.json(); throw new Error(err.error?.message || 'API fout'); }
   const data = await res.json();
   const raw = data.choices?.[0]?.message?.content || '';
-  const match = raw.match(/\{[\s\S]*\}/);
+  // Verwijder markdown code blocks als Groq die teruggeeft
+  const cleaned = raw.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
+  const match = cleaned.match(/\{[\s\S]*\}/);
   if (!match) throw new Error('Kon resultaten niet verwerken.');
   return JSON.parse(match[0]);
 }
