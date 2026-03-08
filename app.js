@@ -296,7 +296,7 @@ async function analyze() {
 
       clearInterval(iv);
       await markAnalysisUsed();
-      showResults(result);
+      showResults(result, files[0].name.replace('.pdf',''));
     }
 
   } catch (err) {
@@ -318,6 +318,8 @@ function hideUpgradeModal() {
 // ── Render enkel vak ──
 function renderTopics(list, containerId, isSkip = false) {
   const el = document.getElementById(containerId);
+  const hasFullAccess = (userPlan === 'pro' || userPlan === 'elite');
+
   if (isSkip) {
     el.innerHTML = list.map((item) => `
       <div class="topic-item">
@@ -328,11 +330,100 @@ function renderTopics(list, containerId, isSkip = false) {
     el.innerHTML = list.map((item) => `
       <div class="topic-item">
         <h4>${item.topic}</h4>
-        <p>${item.summary || ''}</p>
+        ${hasFullAccess ? `<p>${item.summary || ''}</p>` : `<p class="locked-text">🔒 Volledige uitleg beschikbaar vanaf Pro</p>`}
         <span class="topic-reason">${item.reason || ''}</span>
-        ${item.tip ? `<span class="topic-tip">💡 ${item.tip}</span>` : ''}
+        ${hasFullAccess && item.tip ? `<span class="topic-tip">💡 ${item.tip}</span>` : ''}
+        ${!hasFullAccess ? `<a href="index.html#pricing" class="upgrade-inline">Upgrade naar Pro →</a>` : ''}
       </div>`).join('');
   }
+}
+
+// ── Persoonlijk studieplan (Pro/Elite) ──
+async function buildStudieplan(result, vakNaam) {
+  const mustTopics = result.must.map(m => `- ${m.topic}: ${m.summary || ''}`).join('\n');
+  const shouldTopics = result.should.map(s => `- ${s.topic}`).join('\n');
+
+  const res = await fetch('https://analyze.aminaddarrazi2004.workers.dev', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      messages: [
+        {
+          role: 'system',
+          content: `Je bent een persoonlijke studiecoach. Maak een concreet studieplan. Geef ALLEEN JSON terug.
+
+JSON formaat:
+{
+  "leerroute": [
+    {"stap": 1, "onderwerp": "...", "aanpak": "Hoe je dit het best leert in 2-3 zinnen.", "tijd": "20 min"}
+  ],
+  "herhalingsschema": [
+    {"moment": "Vanavond", "actie": "..."},
+    {"moment": "Morgen", "actie": "..."},
+    {"moment": "Dag voor de toets", "actie": "..."}
+  ],
+  "geheimtip": "1 specifieke tip van een ervaren docent voor dit vak."
+}`
+        },
+        {
+          role: 'user',
+          content: `Maak een persoonlijk studieplan voor ${vakNaam} met ${selectedTime} beschikbaar.
+
+Must-know onderwerpen:
+${mustTopics}
+
+Nice-to-know:
+${shouldTopics}`
+        }
+      ]
+    })
+  });
+
+  if (!res.ok) return null;
+  const data = await res.json();
+  const raw = data.choices?.[0]?.message?.content || '';
+  const cleaned = raw.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
+  const match = cleaned.match(/\{[\s\S]*\}/);
+  if (!match) return null;
+  return JSON.parse(match[0]);
+}
+
+// ── Render studieplan ──
+function renderStudieplan(studieplan, containerId) {
+  const el = document.getElementById(containerId);
+  if (!studieplan || !el) return;
+
+  el.innerHTML = `
+    <div class="studieplan">
+      <h3>📋 Jouw persoonlijk studieplan</h3>
+
+      <div class="sp-section">
+        <div class="sp-label">🗺️ Leerroute — stap voor stap</div>
+        ${studieplan.leerroute.map(s => `
+          <div class="sp-stap">
+            <div class="sp-stap-num">Stap ${s.stap}</div>
+            <div class="sp-stap-body">
+              <strong>${s.onderwerp}</strong>
+              <p>${s.aanpak}</p>
+              <span class="sp-tijd">⏱ ${s.tijd}</span>
+            </div>
+          </div>`).join('')}
+      </div>
+
+      <div class="sp-section">
+        <div class="sp-label">🔁 Herhalingsschema</div>
+        ${studieplan.herhalingsschema.map(h => `
+          <div class="sp-herhaling">
+            <strong>${h.moment}</strong>
+            <p>${h.actie}</p>
+          </div>`).join('')}
+      </div>
+
+      ${studieplan.geheimtip ? `
+      <div class="sp-geheimtip">
+        🎯 <strong>Geheime docenttip:</strong> ${studieplan.geheimtip}
+      </div>` : ''}
+    </div>`;
 }
 
 // ── Render multi-vak resultaten ──
@@ -480,7 +571,7 @@ function submitToets() {
   document.getElementById('submitToets').style.display = 'none';
 }
 
-function showResults(data) {
+async function showResults(data, vakNaam) {
   document.getElementById('loadingState').style.display = 'none';
   document.getElementById('resultsSection').style.display = 'block';
   document.getElementById('resultsSubtitle').textContent = `Beschikbare tijd: ${selectedTime} · ${files.length} bestand(en) geanalyseerd`;
@@ -489,6 +580,18 @@ function showResults(data) {
   renderTopics(data.skip || [], 'skipList', true);
   document.getElementById('cheatsheetContent').textContent = data.cheatsheet || '';
   renderToetsvragen(data.toetsvragen || []);
+
+  // Persoonlijk studieplan voor Pro en Elite
+  if (userPlan === 'pro' || userPlan === 'elite') {
+    const studieplanSection = document.getElementById('toetsvragenSection');
+    const planContainer = document.createElement('div');
+    planContainer.id = 'studieplanContainer';
+    planContainer.innerHTML = `<div style="padding:20px;text-align:center;color:#6b6b8a">📋 Studieplan wordt gegenereerd...</div>`;
+    studieplanSection.parentNode.insertBefore(planContainer, studieplanSection);
+
+    const studieplan = await buildStudieplan(data, vakNaam || files[0]?.name?.replace('.pdf','') || 'dit vak');
+    renderStudieplan(studieplan, 'studieplanContainer');
+  }
 }
 
 function reset() {
