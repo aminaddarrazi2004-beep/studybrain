@@ -1,7 +1,17 @@
 // StudyBrain — Auth via Supabase
 const SUPABASE_URL = 'https://wtfzqpaectqrbprmxjqp.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0ZnpxcGFlY3RxcmJwcm14anFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NzE4NDYsImV4cCI6MjA4ODE0Nzg0Nn0.LeJqnukvUpVJZyG_2pjwS0xnl24ATdV6Mi6qqZeVbJ4';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ✅ Sessie blijft bewaard tussen pagina's (localStorage)
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: {
+    persistSession: true,
+    storageKey: 'studybrain-auth',
+    storage: window.localStorage,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+  }
+});
 
 // ✅ Verwerk email verificatie zodra gebruiker terugkomt via de link
 (async () => {
@@ -28,6 +38,15 @@ window.addEventListener('DOMContentLoaded', () => {
   if (params.get('verified') === '1') {
     showMsg('loginError', '✅ E-mail bevestigd! Je kunt nu inloggen.', 'success');
   }
+
+  // ✅ Vul opgeslagen e-mail in als "Onthoud mij" eerder was aangevinkt
+  const savedEmail = localStorage.getItem('studybrain-remember-email');
+  if (savedEmail) {
+    const emailField = document.getElementById('loginEmail');
+    const rememberBox = document.getElementById('rememberMe');
+    if (emailField) emailField.value = savedEmail;
+    if (rememberBox) rememberBox.checked = true;
+  }
 });
 
 async function doSignup() {
@@ -44,8 +63,7 @@ async function doSignup() {
     email,
     password: pw1,
     options: {
-      // ✅ Na verificatie terugsturen naar jouw login pagina
-      emailRedirectTo: 'https://frabjous-malasada-97133c.netlify.app/login.html'
+      emailRedirectTo: 'https://studybrain.pages.dev/login.html'
     }
   });
 
@@ -61,14 +79,22 @@ async function doSignup() {
 async function doLogin() {
   const email    = document.getElementById('loginEmail').value.trim();
   const password = document.getElementById('loginPassword').value;
+  const remember = document.getElementById('rememberMe')?.checked;
   if (!email || !password) return showMsg('loginError', 'Vul je e-mail en wachtwoord in.', 'error');
   const btn = document.getElementById('loginBtn');
   btn.disabled = true; btn.textContent = 'Bezig...';
+
   const { error } = await sb.auth.signInWithPassword({ email, password });
   if (error) {
     showMsg('loginError', 'Verkeerd e-mailadres of wachtwoord.', 'error');
     btn.disabled = false; btn.textContent = 'Inloggen';
   } else {
+    // ✅ Sla e-mail op als "Onthoud mij" is aangevinkt
+    if (remember) {
+      localStorage.setItem('studybrain-remember-email', email);
+    } else {
+      localStorage.removeItem('studybrain-remember-email');
+    }
     window.location.href = 'app.html';
   }
 }
