@@ -350,29 +350,42 @@ async function buildStudieplan(result, vakNaam) {
       messages: [
         {
           role: 'system',
-          content: `Je bent een persoonlijke studiecoach. Maak een concreet studieplan. Geef ALLEEN JSON terug.
+          content: `Je bent een briljante bijlesdocent. Je LEGT DE STOF UIT — geen instructies zoals "lees dit" of "maak een schema". Geef de kennis direct.
+
+VERBODEN: "Lees de theorie over...", "Maak een schema van...", "Noteer...", "Bestudeer...", "Zoek op..."
+
+Geef ALLEEN JSON terug.
 
 JSON formaat:
 {
   "leerroute": [
-    {"stap": 1, "onderwerp": "...", "aanpak": "Hoe je dit het best leert in 2-3 zinnen.", "tijd": "20 min"}
+    {
+      "stap": 1,
+      "onderwerp": "Naam van het onderwerp",
+      "uitleg": "Leg de stof zelf uit in 3-4 zinnen. Gebruik echte feiten, formules, getallen. Schrijf alsof je het uitlegt aan een vriend. Geef een voorbeeld uit het dagelijks leven.",
+      "onthoud": "De 1 zin die de student moet kunnen opzeggen op de toets.",
+      "ezelsbruggetje": "Een grappig geheugensteuntje.",
+      "tijd": "15 min"
+    }
   ],
   "herhalingsschema": [
-    {"moment": "Vanavond", "actie": "..."},
-    {"moment": "Morgen", "actie": "..."},
+    {"moment": "Vanavond", "actie": "Specifiek wat herhalen, niet algemeen"},
+    {"moment": "Morgen ochtend", "actie": "..."},
     {"moment": "Dag voor de toets", "actie": "..."}
   ],
-  "geheimtip": "1 specifieke tip van een ervaren docent voor dit vak."
+  "geheimtip": "1 concrete tip die alleen een echte docent weet. Welk type vraag stellen ze altijd?"
 }`
         },
         {
           role: 'user',
-          content: `Maak een persoonlijk studieplan voor ${vakNaam} met ${selectedTime} beschikbaar.
+          content: `Leg de volgende stof uit voor ${vakNaam}. De student heeft ${selectedTime} beschikbaar.
 
-Must-know onderwerpen:
+BELANGRIJK: Leg de inhoud zelf uit! Niet zeggen wat ze moeten doen — de kennis direct geven.
+
+Onderwerpen:
 ${mustTopics}
 
-Nice-to-know:
+Extra:
 ${shouldTopics}`
         }
       ]
@@ -404,7 +417,9 @@ function renderStudieplan(studieplan, containerId) {
             <div class="sp-stap-num">Stap ${s.stap}</div>
             <div class="sp-stap-body">
               <strong>${s.onderwerp}</strong>
-              <p>${s.aanpak}</p>
+              <p>${s.uitleg || s.aanpak || ''}</p>
+              ${s.onthoud ? `<div class="sp-onthoud">📌 Onthoud: ${s.onthoud}</div>` : ''}
+              ${s.ezelsbruggetje ? `<div class="sp-ezel">🧠 ${s.ezelsbruggetje}</div>` : ''}
               <span class="sp-tijd">⏱ ${s.tijd}</span>
             </div>
           </div>`).join('')}
