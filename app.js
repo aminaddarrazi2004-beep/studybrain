@@ -489,43 +489,40 @@ function downloadStudieplanPDF() {
   <meta charset="UTF-8">
   <title>Studieplan — StudyBrain</title>
   <style>
+    @media print { .no-print { display: none !important; } }
     body { font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 32px; color: #1a1a2e; }
     h3 { font-size: 22px; margin-bottom: 20px; color: #c9184a; }
     .sp-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #888; margin: 20px 0 10px; display: block; }
     .sp-samenvatting p { font-size: 14px; line-height: 1.7; background: #f8f8ff; padding: 12px; border-radius: 8px; }
-    .sp-focus-item { display: flex; gap: 10px; margin-bottom: 6px; font-size: 14px; }
+    .sp-focus-item { display: flex; gap: 10px; margin-bottom: 6px; font-size: 14px; align-items: flex-start; }
     .sp-focus-num { background: #c9184a; color: white; border-radius: 50%; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
     .sp-stap { display: flex; gap: 14px; margin-bottom: 16px; page-break-inside: avoid; }
-    .sp-stap-num { background: #fff0f3; color: #c9184a; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; height: fit-content; white-space: nowrap; }
+    .sp-stap-num { background: #fff0f3; color: #c9184a; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; white-space: nowrap; }
     .sp-stap-body strong { font-size: 15px; display: block; margin-bottom: 4px; }
     .sp-stap-body p { font-size: 13px; color: #444; line-height: 1.6; margin-bottom: 6px; }
-    .sp-onthoud { background: #fffde7; border-left: 3px solid #ffc107; padding: 6px 10px; font-size: 13px; margin: 6px 0; border-radius: 4px; }
-    .sp-ezel { background: #f0fff4; border-left: 3px solid #00c853; padding: 6px 10px; font-size: 13px; margin: 6px 0; border-radius: 4px; }
-    .sp-valkuil { background: #fff3e0; border-left: 3px solid #ff9800; padding: 6px 10px; font-size: 13px; margin: 6px 0; border-radius: 4px; }
+    .sp-onthoud { background: #fffde7; border-left: 3px solid #ffc107; padding: 6px 10px; font-size: 13px; margin: 6px 0; }
+    .sp-ezel { background: #f0fff4; border-left: 3px solid #00c853; padding: 6px 10px; font-size: 13px; margin: 6px 0; }
+    .sp-valkuil { background: #fff3e0; border-left: 3px solid #ff9800; padding: 6px 10px; font-size: 13px; margin: 6px 0; }
     .sp-tijd { font-size: 11px; color: #888; background: #f5f5f5; padding: 2px 8px; border-radius: 20px; display: inline-block; margin-top: 4px; }
     .sp-herhaling { background: #f8f8ff; border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; }
     .sp-herhaling strong { font-size: 13px; color: #c9184a; display: block; margin-bottom: 4px; }
     .sp-herhaling p { font-size: 13px; color: #444; margin: 0; line-height: 1.5; }
     .sp-geheimtip { background: #fffde7; border: 1px solid #ffc107; border-radius: 8px; padding: 12px 16px; font-size: 13px; margin-top: 16px; }
-    .sp-download-btn, .sp-header, .sp-download-bottom { display: none !important; }
+    .sp-download-btn, .sp-header { display: none !important; }
     .footer { margin-top: 32px; text-align: center; font-size: 11px; color: #aaa; border-top: 1px solid #eee; padding-top: 12px; }
+    .print-btn { display: block; margin: 20px auto; padding: 12px 28px; background: #c9184a; color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; }
   </style>
 </head>
 <body>
+  <button class="print-btn no-print" onclick="window.print();window.close();">🖨️ Opslaan als PDF</button>
   ${el.innerHTML}
   <div class="footer">Gegenereerd door StudyBrain — studybrain.pages.dev</div>
 </body>
 </html>`;
 
-  const blob = new Blob([htmlContent], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'studieplan-studybrain.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  const newWin = window.open('', '_blank', 'width=800,height=900');
+  newWin.document.write(htmlContent);
+  newWin.document.close();
 }
 
 // ── Render multi-vak resultaten ──
