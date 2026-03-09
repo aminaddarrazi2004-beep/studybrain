@@ -350,42 +350,51 @@ async function buildStudieplan(result, vakNaam) {
       messages: [
         {
           role: 'system',
-          content: `Je bent een briljante bijlesdocent. Je LEGT DE STOF UIT — geen instructies zoals "lees dit" of "maak een schema". Geef de kennis direct.
+          content: `Je bent een topleraar die een student persoonlijk begeleidt. Je maakt een PERSOONLIJK STUDIEPLAN dat de stof uitlegt en de student stap voor stap voorbereidt op de toets.
 
-VERBODEN: "Lees de theorie over...", "Maak een schema van...", "Noteer...", "Bestudeer...", "Zoek op..."
+IJZEREN REGELS:
+- Je LEGT DE STOF UIT — geen instructies zoals "lees dit", "maak een schema", "bestudeer dit"
+- Gebruik echte feiten, getallen, formules uit de stof
+- Schrijf in gewone taal alsof je het uitlegt aan een vriend van 16 jaar
+- Elk onderwerp krijgt een concreet dagelijks leven voorbeeld
+- Geef specifieke ezelsbruggetjes die echt blijven hangen
 
 Geef ALLEEN JSON terug.
 
 JSON formaat:
 {
+  "samenvatting": "2-3 zinnen: wat is de rode draad van deze stof? Wat moet de student begrijpen?",
   "leerroute": [
     {
       "stap": 1,
       "onderwerp": "Naam van het onderwerp",
-      "uitleg": "Leg de stof zelf uit in 3-4 zinnen. Gebruik echte feiten, formules, getallen. Schrijf alsof je het uitlegt aan een vriend. Geef een voorbeeld uit het dagelijks leven.",
-      "onthoud": "De 1 zin die de student moet kunnen opzeggen op de toets.",
-      "ezelsbruggetje": "Een grappig geheugensteuntje.",
+      "uitleg": "Leg de stof direct uit in 4-5 zinnen. Echte feiten, getallen, formules. Voorbeeld uit dagelijks leven. Schrijf energiek en duidelijk.",
+      "onthoud": "De exacte zin die de student woordelijk moet kunnen opzeggen op de toets. Concreet en precies.",
+      "ezelsbruggetje": "Een grappig, memorabel ezelsbruggetje. Mag raar zijn, dat helpt juist.",
+      "valkuil": "De meest gemaakte fout bij dit onderwerp op toetsen.",
       "tijd": "15 min"
     }
   ],
   "herhalingsschema": [
-    {"moment": "Vanavond", "actie": "Specifiek wat herhalen, niet algemeen"},
-    {"moment": "Morgen ochtend", "actie": "..."},
-    {"moment": "Dag voor de toets", "actie": "..."}
+    {"moment": "Direct na het lezen", "actie": "Specifiek: welke onderwerpen hardop nazeggen, wat opschrijven"},
+    {"moment": "Vanavond voor het slapen", "actie": "Specifiek: welke 3 kernpunten nogmaals doorlopen"},
+    {"moment": "Morgen ochtend", "actie": "Specifiek: wat als eerste herhalen en hoe"},
+    {"moment": "1 uur voor de toets", "actie": "Specifiek: wat nog een keer doornemen, wat skippen"}
   ],
-  "geheimtip": "1 concrete tip die alleen een echte docent weet. Welk type vraag stellen ze altijd?"
+  "focuspunten": ["De 3 dingen die ZEKER in de toets komen, in volgorde van waarschijnlijkheid"],
+  "geheimtip": "1 concrete tip die alleen een echte docent weet. Bijv: welk type vraag stellen ze altijd, welke valkuil trappen studenten altijd in."
 }`
         },
         {
           role: 'user',
-          content: `Leg de volgende stof uit voor ${vakNaam}. De student heeft ${selectedTime} beschikbaar.
+          content: `Maak een persoonlijk studieplan voor ${vakNaam}. De student heeft ${selectedTime} beschikbaar.
 
-BELANGRIJK: Leg de inhoud zelf uit! Niet zeggen wat ze moeten doen — de kennis direct geven.
+BELANGRIJK: Leg de inhoud zelf uit! Geef de kennis direct — niet zeggen wat ze moeten doen.
 
-Onderwerpen:
+Onderwerpen om uit te leggen:
 ${mustTopics}
 
-Extra:
+Aanvullende onderwerpen:
 ${shouldTopics}`
         }
       ]
@@ -407,8 +416,27 @@ function renderStudieplan(studieplan, containerId) {
   if (!studieplan || !el) return;
 
   el.innerHTML = `
-    <div class="studieplan">
-      <h3>📋 Jouw persoonlijk studieplan</h3>
+    <div class="studieplan" id="studieplan-content">
+      <div class="sp-header">
+        <h3>📋 Jouw persoonlijk studieplan</h3>
+        <button class="sp-download-btn" onclick="downloadStudieplanPDF()">⬇️ Download als PDF</button>
+      </div>
+
+      ${studieplan.samenvatting ? `
+      <div class="sp-samenvatting">
+        <div class="sp-label">📖 Rode draad</div>
+        <p>${studieplan.samenvatting}</p>
+      </div>` : ''}
+
+      ${studieplan.focuspunten?.length ? `
+      <div class="sp-focuspunten">
+        <div class="sp-label">🎯 Dit komt zeker in de toets</div>
+        ${studieplan.focuspunten.map((f, i) => `
+          <div class="sp-focus-item">
+            <span class="sp-focus-num">${i + 1}</span>
+            <span>${f}</span>
+          </div>`).join('')}
+      </div>` : ''}
 
       <div class="sp-section">
         <div class="sp-label">🗺️ Leerroute — stap voor stap</div>
@@ -417,9 +445,10 @@ function renderStudieplan(studieplan, containerId) {
             <div class="sp-stap-num">Stap ${s.stap}</div>
             <div class="sp-stap-body">
               <strong>${s.onderwerp}</strong>
-              <p>${s.uitleg || s.aanpak || ''}</p>
+              <p>${s.uitleg || ''}</p>
               ${s.onthoud ? `<div class="sp-onthoud">📌 Onthoud: ${s.onthoud}</div>` : ''}
               ${s.ezelsbruggetje ? `<div class="sp-ezel">🧠 ${s.ezelsbruggetje}</div>` : ''}
+              ${s.valkuil ? `<div class="sp-valkuil">⚠️ Valkuil: ${s.valkuil}</div>` : ''}
               <span class="sp-tijd">⏱ ${s.tijd}</span>
             </div>
           </div>`).join('')}
@@ -438,7 +467,57 @@ function renderStudieplan(studieplan, containerId) {
       <div class="sp-geheimtip">
         🎯 <strong>Geheime docenttip:</strong> ${studieplan.geheimtip}
       </div>` : ''}
+
+      <button class="sp-download-btn sp-download-bottom" onclick="downloadStudieplanPDF()">⬇️ Download studieplan als PDF</button>
     </div>`;
+}
+
+// ── PDF download van studieplan ──
+function downloadStudieplanPDF() {
+  const el = document.getElementById('studieplan-content');
+  if (!el) return;
+
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>Studieplan — StudyBrain</title>
+      <style>
+        body { font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 32px; color: #1a1a2e; }
+        h3 { font-size: 22px; margin-bottom: 20px; color: #c9184a; }
+        .sp-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #888; margin: 20px 0 10px; }
+        .sp-samenvatting p { font-size: 14px; line-height: 1.7; background: #f8f8ff; padding: 12px; border-radius: 8px; }
+        .sp-focus-item { display: flex; gap: 10px; margin-bottom: 6px; font-size: 14px; }
+        .sp-focus-num { background: #c9184a; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+        .sp-stap { display: flex; gap: 14px; margin-bottom: 16px; page-break-inside: avoid; }
+        .sp-stap-num { background: #fff0f3; color: #c9184a; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; height: fit-content; white-space: nowrap; }
+        .sp-stap-body strong { font-size: 15px; display: block; margin-bottom: 4px; }
+        .sp-stap-body p { font-size: 13px; color: #444; line-height: 1.6; margin-bottom: 6px; }
+        .sp-onthoud { background: #fffde7; border-left: 3px solid #ffc107; padding: 6px 10px; font-size: 13px; margin: 6px 0; border-radius: 4px; }
+        .sp-ezel { background: #f0fff4; border-left: 3px solid #00c853; padding: 6px 10px; font-size: 13px; margin: 6px 0; border-radius: 4px; }
+        .sp-valkuil { background: #fff3e0; border-left: 3px solid #ff9800; padding: 6px 10px; font-size: 13px; margin: 6px 0; border-radius: 4px; }
+        .sp-tijd { font-size: 11px; color: #888; background: #f5f5f5; padding: 2px 8px; border-radius: 20px; }
+        .sp-herhaling { background: #f8f8ff; border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; }
+        .sp-herhaling strong { font-size: 13px; color: #c9184a; display: block; margin-bottom: 4px; }
+        .sp-herhaling p { font-size: 13px; color: #444; margin: 0; line-height: 1.5; }
+        .sp-geheimtip { background: #fffde7; border: 1px solid #ffc107; border-radius: 8px; padding: 12px 16px; font-size: 13px; margin-top: 16px; }
+        .sp-download-btn, .sp-header { display: none; }
+        .footer { margin-top: 32px; text-align: center; font-size: 11px; color: #aaa; border-top: 1px solid #eee; padding-top: 12px; }
+      </style>
+    </head>
+    <body>
+      ${el.innerHTML}
+      <div class="footer">Gegenereerd door StudyBrain — studybrain.pages.dev</div>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+  setTimeout(() => {
+    printWindow.print();
+    printWindow.close();
+  }, 500);
 }
 
 // ── Render multi-vak resultaten ──
