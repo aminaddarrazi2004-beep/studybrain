@@ -416,10 +416,9 @@ function renderStudieplan(studieplan, containerId) {
   if (!studieplan || !el) return;
 
   el.innerHTML = `
-    <div class="studieplan" id="studieplan-content">
+    <div class="studieplan" id="studieplan-content" style="display:none">
       <div class="sp-header">
         <h3>📋 Jouw persoonlijk studieplan</h3>
-        <button class="sp-download-btn" onclick="downloadStudieplanPDF()">⬇️ Download als PDF</button>
       </div>
 
       ${studieplan.samenvatting ? `
@@ -467,8 +466,15 @@ function renderStudieplan(studieplan, containerId) {
       <div class="sp-geheimtip">
         🎯 <strong>Geheime docenttip:</strong> ${studieplan.geheimtip}
       </div>` : ''}
+    </div>
 
-      <button class="sp-download-btn sp-download-bottom" onclick="downloadStudieplanPDF()">⬇️ Download studieplan als PDF</button>
+    <div class="sp-preview-card">
+      <div class="sp-preview-icon">📋</div>
+      <div class="sp-preview-text">
+        <strong>Jouw persoonlijk studieplan is klaar</strong>
+        <p>Leerroute, herhalingsschema, ezelsbruggetjes en docenttips — speciaal voor jouw stof.</p>
+      </div>
+      <button class="sp-download-btn" onclick="downloadStudieplanPDF()">⬇️ Download studieplan</button>
     </div>`;
 }
 
