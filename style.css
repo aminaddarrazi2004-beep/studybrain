@@ -587,13 +587,25 @@ h1 {
   display: flex;
   align-items: center;
   gap: 16px;
-  background: linear-gradient(135deg, rgba(255,77,109,0.1), rgba(201,24,74,0.08));
-  border: 1px solid rgba(255,77,109,0.3);
+  background: linear-gradient(135deg, rgba(0,230,118,0.08), rgba(0,200,100,0.05));
+  border: 2px solid rgba(0,230,118,0.4);
   border-radius: 16px;
-  padding: 20px 24px;
+  padding: 24px;
   flex-wrap: wrap;
+  box-shadow: 0 0 24px rgba(0,230,118,0.1);
 }
-.sp-preview-icon { font-size: 36px; flex-shrink: 0; }
+.sp-preview-icon { font-size: 40px; flex-shrink: 0; }
 .sp-preview-text { flex: 1; min-width: 180px; }
-.sp-preview-text strong { font-size: 15px; font-weight: 700; display: block; margin-bottom: 4px; }
-.sp-preview-text p { font-size: 13px; color: #6b6b8a; line-height: 1.5; margin: 0; }
+.sp-preview-text strong { font-size: 16px; font-weight: 700; display: block; margin-bottom: 6px; color: #00e676; }
+.sp-preview-text p { font-size: 13px; color: #a0a0c0; line-height: 1.5; margin: 0; }
+.sp-preview-card .sp-download-btn {
+  background: linear-gradient(135deg, #00e676, #00c853);
+  color: #0a0a0f;
+  font-size: 15px;
+  padding: 14px 24px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+.sp-preview-card .sp-download-btn:hover {
+  box-shadow: 0 8px 24px rgba(0,230,118,0.4);
+}
