@@ -11,15 +11,49 @@
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-.topbar{position:fixed;top:0;left:0;right:0;z-index:999;display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:rgba(10,10,15,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06)}
-.topbar-logo{font-family:DM Sans,sans-serif;font-size:16px;font-weight:700;color:#f0f0f8}
+/* ── Sidebar ── */
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:220px;background:rgba(10,10,15,0.98);border-right:1px solid rgba(255,255,255,0.06);z-index:998;display:flex;flex-direction:column;padding:0}
+.sidebar-logo{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:#f0f0f8;padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.sidebar-nav{flex:1;display:flex;flex-direction:column;gap:4px;padding:12px 10px;overflow-y:auto}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;font-size:14px;color:#6b6b8a;text-decoration:none;cursor:pointer;transition:all 0.2s;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif}
+.sidebar-item:hover{background:rgba(255,255,255,0.05);color:#f0f0f8}
+.sidebar-item.active{background:rgba(255,77,109,0.12);color:#ff4d6d}
+.sidebar-item .si-icon{font-size:17px;flex-shrink:0;width:22px;text-align:center}
+.sidebar-divider{height:1px;background:rgba(255,255,255,0.06);margin:6px 10px}
+.sidebar-bottom{padding:12px 10px;border-top:1px solid rgba(255,255,255,0.06)}
+.sidebar-plan{margin-bottom:8px;padding:7px 12px;border-radius:10px;font-size:12px;font-weight:700;text-align:center;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#6b6b8a;cursor:pointer}
+.sidebar-user{font-size:11px;color:#6b6b8a;padding:4px 12px 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sidebar-logout{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:13px;color:#ff4d6d;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+.sidebar-logout:hover{background:rgba(255,77,109,0.1)}
+
+/* ── Hoe het werkt panel ── */
+.hoe-panel{display:none;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;margin-bottom:24px}
+.hoe-panel.open{display:block}
+.hoe-panel h3{font-family:'Syne',sans-serif;font-size:18px;margin-bottom:16px;color:#f0f0f8}
+.hoe-stap{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
+.hoe-num{background:rgba(255,77,109,0.15);color:#ff4d6d;font-size:12px;font-weight:700;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.hoe-stap p{font-size:14px;color:#c0c0d8;line-height:1.5;margin:0}
+.hoe-stap strong{color:#f0f0f8}
+
+/* ── Layout met sidebar ── */
+body{padding-top:0;padding-left:220px}
+.container{padding-top:32px}
+
+/* ── Topbar verbergen op desktop, tonen op mobiel ── */
+.topbar{display:none}
+
+/* ── Mobile ── */
+@media(max-width:700px){
+  body{padding-left:0;padding-top:56px}
+  .sidebar{display:none}
+  .topbar{display:flex;position:fixed;top:0;left:0;right:0;z-index:999;align-items:center;justify-content:space-between;padding:12px 24px;background:rgba(10,10,15,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06)}
+}
+
+.topbar-logo{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;color:#f0f0f8}
 .topbar-right{display:flex;align-items:center;gap:12px}
 .topbar-email{font-size:12px;color:#6b6b8a}
-.home-btn{padding:7px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#6b6b8a;font-size:13px;text-decoration:none;transition:all 0.2s;display:flex;align-items:center;gap:6px}
-.home-btn:hover{border-color:rgba(255,255,255,0.25);color:#f0f0f8}
 .logout-btn{padding:7px 16px;border-radius:8px;border:1px solid rgba(255,77,109,0.3);background:rgba(255,77,109,0.1);color:#ff4d6d;font-size:13px;cursor:pointer;transition:all 0.2s}
 .logout-btn:hover{background:rgba(255,77,109,0.2)}
-body{padding-top:56px}
 
 /* ── Toetsvragen ── */
 .toetsvraag{padding:18px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,214,0,0.15);border-radius:12px;margin-bottom:14px}
@@ -41,7 +75,7 @@ body{padding-top:56px}
 .score-box{text-align:center;padding:20px;background:rgba(255,214,0,0.08);border:1px solid rgba(255,214,0,0.2);border-radius:12px;font-size:18px;font-weight:600;color:#ffd600;margin-top:16px}
 .topic-tip{display:block;margin-top:8px;font-size:12px;color:#00e676;background:rgba(0,230,118,0.08);border:1px solid rgba(0,230,118,0.2);border-radius:8px;padding:6px 10px}
 
-/* ── Multi-vak styling (Elite/Pro) ── */
+/* ── Multi-vak styling ── */
 .vak-sectie{margin-bottom:8px}
 .vak-titel{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);color:#f0f0f8}
 .vak-divider{border:none;border-top:2px solid rgba(255,255,255,0.05);margin:32px 0}
@@ -92,11 +126,37 @@ body{padding-top:56px}
 </head>
 <body>
 
-<!-- Topbar -->
+<!-- ── Zijbalk ── -->
+<div class="sidebar">
+  <div class="sidebar-logo">&#129504; StudyBrain</div>
+  <div class="sidebar-nav">
+    <a class="sidebar-item active" onclick="scrollToTop(this)">
+      <span class="si-icon">🧠</span> Nieuwe analyse
+    </a>
+    <button class="sidebar-item" onclick="toggleHoe(this)">
+      <span class="si-icon">❓</span> Hoe het werkt
+    </button>
+    <div class="sidebar-divider"></div>
+    <a href="index.html#pricing" class="sidebar-item">
+      <span class="si-icon">💎</span> Abonnementen
+    </a>
+    <a href="index.html" class="sidebar-item">
+      <span class="si-icon">🏠</span> Hoofdpagina
+    </a>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="sidebar-plan" id="sidebarPlan" onclick="window.location.href='index.html#pricing'">🆓 Gratis</div>
+    <div class="sidebar-user" id="sidebarEmail"></div>
+    <button class="sidebar-logout" onclick="doLogout()">
+      <span>🚪</span> Uitloggen
+    </button>
+  </div>
+</div>
+
+<!-- Topbar (alleen mobiel) -->
 <div class="topbar">
   <div class="topbar-logo">&#129504; StudyBrain</div>
   <div class="topbar-right">
-    <a href="index.html" class="home-btn">🏠 Home</a>
     <span class="topbar-email" id="userEmail"></span>
     <button class="logout-btn" onclick="doLogout()">Uitloggen</button>
   </div>
@@ -128,6 +188,27 @@ body{padding-top:56px}
     <h1>StudyBrain</h1>
     <p class="tagline">Upload je lesstof. Wij vertellen je <strong>precies wat je moet leren.</strong></p>
   </header>
+
+  <!-- Hoe het werkt panel -->
+  <div class="hoe-panel" id="hoePanel">
+    <h3>❓ Hoe werkt StudyBrain?</h3>
+    <div class="hoe-stap">
+      <div class="hoe-num">1</div>
+      <p><strong>Upload je PDF</strong> — sleep je samenvatting of syllabus in het uploadvak.</p>
+    </div>
+    <div class="hoe-stap">
+      <div class="hoe-num">2</div>
+      <p><strong>Kies je tijd</strong> — 30 minuten of een avond? StudyBrain past het plan aan.</p>
+    </div>
+    <div class="hoe-stap">
+      <div class="hoe-num">3</div>
+      <p><strong>Krijg je prioriteiten</strong> — Must learn, Nice to know en Skip. Geen giswerk meer.</p>
+    </div>
+    <div class="hoe-stap">
+      <div class="hoe-num">4</div>
+      <p><strong>Pro/Elite</strong> — persoonlijk studieplan met leerroute, herhalingsschema en ezelsbruggetjes.</p>
+    </div>
+  </div>
 
   <!-- Upload interface -->
   <div id="mainInterface">
@@ -212,10 +293,50 @@ body{padding-top:56px}
 <script src="app.js"></script>
 <script>
   checkAccess();
+
+  sb.auth.onAuthStateChange((event, session) => {
+    if (session) {
+      document.getElementById('userEmail').textContent = session.user.email;
+      document.getElementById('sidebarEmail').textContent = session.user.email;
+    }
+  });
+
   (async () => {
-    const r = await sb.auth.getSession();
-    if (r.data.session) document.getElementById("userEmail").textContent = r.data.session.user.email;
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
+    document.getElementById('userEmail').textContent = session.user.email;
+    document.getElementById('sidebarEmail').textContent = session.user.email;
+
+    const { data: profile } = await sb.from('profiles').select('plan').eq('id', session.user.id).single();
+    const plan = profile?.plan || 'gratis';
+    const planEl = document.getElementById('sidebarPlan');
+    if (plan === 'pro') {
+      planEl.textContent = '⭐ Pro';
+      planEl.style.cssText += 'color:#ff4d6d;border-color:rgba(255,77,109,0.3);background:rgba(255,77,109,0.08);cursor:default';
+    } else if (plan === 'elite') {
+      planEl.textContent = '👑 Elite';
+      planEl.style.cssText += 'color:#ffd600;border-color:rgba(255,214,0,0.3);background:rgba(255,214,0,0.08);cursor:default';
+    } else if (plan === 'starter') {
+      planEl.textContent = '🚀 Starter';
+      planEl.style.color = '#c0c0d8';
+    }
   })();
+
+  function scrollToTop(el) {
+    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('hoePanel').classList.remove('open');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function toggleHoe(el) {
+    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('hoePanel').classList.toggle('open');
+    if (document.getElementById('hoePanel').classList.contains('open')) {
+      document.getElementById('hoePanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
 </script>
 </body>
 </html>
