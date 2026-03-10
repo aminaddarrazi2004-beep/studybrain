@@ -2,7 +2,6 @@
 const SUPABASE_URL = 'https://wtfzqpaectqrbprmxjqp.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0ZnpxcGFlY3RxcmJwcm14anFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NzE4NDYsImV4cCI6MjA4ODE0Nzg0Nn0.LeJqnukvUpVJZyG_2pjwS0xnl24ATdV6Mi6qqZeVbJ4';
 
-// ✅ Sessie blijft bewaard tussen pagina's (localStorage)
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: {
     persistSession: true,
@@ -13,7 +12,7 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
   }
 });
 
-// ✅ Verwerk email verificatie zodra gebruiker terugkomt via de link
+// Verwerk email verificatie
 (async () => {
   const hash = window.location.hash;
   if (hash && hash.includes('access_token')) {
@@ -32,14 +31,12 @@ function showMsg(id, tekst, type) {
   el.style.display = 'block';
 }
 
-// ✅ Toon melding als gebruiker net geverifieerd is
 window.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
   if (params.get('verified') === '1') {
     showMsg('loginError', '✅ E-mail bevestigd! Je kunt nu inloggen.', 'success');
   }
 
-  // ✅ Vul opgeslagen e-mail in als "Onthoud mij" eerder was aangevinkt
   const savedEmail = localStorage.getItem('studybrain-remember-email');
   if (savedEmail) {
     const emailField = document.getElementById('loginEmail');
@@ -62,9 +59,7 @@ async function doSignup() {
   const { error } = await sb.auth.signUp({
     email,
     password: pw1,
-    options: {
-      emailRedirectTo: 'https://studybrain.pages.dev/login.html'
-    }
+    options: { emailRedirectTo: 'https://studybrain.pages.dev/login.html' }
   });
 
   if (error) {
@@ -89,13 +84,13 @@ async function doLogin() {
     showMsg('loginError', 'Verkeerd e-mailadres of wachtwoord.', 'error');
     btn.disabled = false; btn.textContent = 'Inloggen';
   } else {
-    // ✅ Sla e-mail op als "Onthoud mij" is aangevinkt
     if (remember) {
       localStorage.setItem('studybrain-remember-email', email);
     } else {
       localStorage.removeItem('studybrain-remember-email');
     }
-    window.location.href = 'app.html';
+    // ✅ Terug naar homepage met success melding
+    window.location.href = 'index.html?ingelogd=1';
   }
 }
 
