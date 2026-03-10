@@ -140,7 +140,7 @@
     <a href="voorwaarden.html" class="sidebar-link">
       <span class="icon">📄</span> Voorwaarden
     </a>
-    <a href="mailto:info@studybrain.app" class="sidebar-link">
+    <a href="/cdn-cgi/l/email-protection#0960676f66497a7d7c6d706b7b68606727687979" class="sidebar-link">
       <span class="icon">✉️</span> Contact
     </a>
   </nav>
@@ -420,7 +420,7 @@
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   // ── Init Supabase direct (niet via auth.js, zodat sb hier beschikbaar is) ──
   const SUPABASE_URL = 'https://wtfzqpaectqrbprmxjqp.supabase.co';
@@ -537,8 +537,13 @@
     localStorage.setItem('sb-cookie-consent', 'rejected');
     document.getElementById('cookieBanner').style.display = 'none';
   }
-  if (!localStorage.getItem('sb-cookie-consent')) {
-    document.getElementById('cookieBanner').style.display = 'flex';
+  // Toon cookie banner alleen als: nog nooit keuze gemaakt EN niet net ingelogd
+  const _consent = localStorage.getItem('sb-cookie-consent');
+  const _justLoggedIn = new URLSearchParams(window.location.search).get('ingelogd') === '1';
+  if (!_consent && !_justLoggedIn) {
+    setTimeout(() => {
+      document.getElementById('cookieBanner').style.display = 'flex';
+    }, 1500);
   }
 </script>
 </body>
