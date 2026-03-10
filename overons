@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Over ons — StudyBrain</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root { --bg:#0a0a0f; --surface:#12121a; --card:#1a1a26; --border:#2a2a3d; --accent:#ff4d6d; --green:#00e676; --text:#f0f0f8; --muted:#6b6b8a; }
+body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; -webkit-font-smoothing:antialiased; }
+
+nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:12px 24px; border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(10,10,15,0.9); backdrop-filter:blur(14px); display:flex; align-items:center; justify-content:space-between; }
+.nav-logo { font-family:'Syne',sans-serif; font-size:18px; font-weight:700; color:var(--text); text-decoration:none; }
+.nav-back { padding:8px 16px; border-radius:10px; border:1px solid var(--border); color:var(--muted); font-size:13px; text-decoration:none; transition:all 0.2s; }
+.nav-back:hover { border-color:var(--text); color:var(--text); }
+
+.orb { position:fixed; border-radius:50%; pointer-events:none; }
+.orb1 { width:600px; height:600px; background:radial-gradient(circle,rgba(255,77,109,0.08) 0%,transparent 70%); top:-200px; right:-100px; }
+.orb2 { width:400px; height:400px; background:radial-gradient(circle,rgba(0,230,118,0.05) 0%,transparent 70%); bottom:0; left:-100px; }
+
+.hero { padding: 140px 24px 80px; text-align:center; position:relative; }
+.hero .label { display:inline-block; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); background:rgba(255,77,109,0.1); border:1px solid rgba(255,77,109,0.25); padding:5px 14px; border-radius:100px; margin-bottom:20px; }
+.hero h1 { font-family:'Syne',sans-serif; font-size:clamp(28px,4vw,48px); font-weight:800; line-height:1.15; margin-bottom:20px; }
+.gradient-text { background:linear-gradient(135deg,#ff4d6d,#ff8fa3); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.hero p { font-size:18px; color:var(--muted); max-width:580px; margin:0 auto; line-height:1.7; }
+
+.section { max-width:900px; margin:0 auto; padding:0 24px 80px; }
+
+.story { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; margin-bottom:80px; }
+.story-text h2 { font-family:'Syne',sans-serif; font-size:28px; font-weight:700; margin-bottom:16px; }
+.story-text p { font-size:15px; color:var(--muted); line-height:1.8; margin-bottom:16px; }
+.story-visual { background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:32px; text-align:center; }
+.story-visual .big-emoji { font-size:80px; display:block; margin-bottom:16px; }
+.story-visual p { font-size:14px; color:var(--muted); line-height:1.6; }
+
+.values { margin-bottom:80px; }
+.values h2 { font-family:'Syne',sans-serif; font-size:28px; font-weight:700; margin-bottom:32px; text-align:center; }
+.values-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.value-card { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:28px; transition:border-color 0.2s,transform 0.2s; }
+.value-card:hover { border-color:rgba(255,77,109,0.3); transform:translateY(-3px); }
+.value-icon { font-size:32px; margin-bottom:14px; }
+.value-card h3 { font-family:'Syne',sans-serif; font-size:17px; font-weight:700; margin-bottom:8px; }
+.value-card p { font-size:14px; color:var(--muted); line-height:1.65; }
+
+.mission { background:var(--surface); border:1px solid rgba(255,77,109,0.2); border-radius:24px; padding:48px; text-align:center; margin-bottom:80px; position:relative; overflow:hidden; }
+.mission::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,77,109,0.06),transparent); pointer-events:none; }
+.mission h2 { font-family:'Syne',sans-serif; font-size:26px; font-weight:700; margin-bottom:16px; position:relative; }
+.mission p { font-size:16px; color:var(--muted); max-width:600px; margin:0 auto; line-height:1.8; position:relative; }
+.mission strong { color:var(--text); }
+
+.cta-section { text-align:center; padding-bottom:40px; }
+.cta-section h2 { font-family:'Syne',sans-serif; font-size:28px; font-weight:700; margin-bottom:16px; }
+.cta-section p { color:var(--muted); font-size:16px; margin-bottom:32px; }
+.btn-primary { display:inline-flex; align-items:center; gap:8px; padding:14px 28px; background:linear-gradient(135deg,#ff4d6d,#c9184a); border-radius:14px; color:white; font-family:'Syne',sans-serif; font-size:16px; font-weight:700; text-decoration:none; transition:all 0.3s; }
+.btn-primary:hover { transform:translateY(-2px); box-shadow:0 12px 32px rgba(255,77,109,0.4); }
+
+footer { border-top:1px solid var(--border); padding:40px 24px; text-align:center; }
+footer p { font-size:13px; color:var(--muted); margin-bottom:12px; }
+.footer-links { display:flex; gap:24px; justify-content:center; margin-bottom:12px; }
+.footer-links a { font-size:13px; color:var(--muted); text-decoration:none; }
+.footer-links a:hover { color:var(--text); }
+
+@media(max-width:700px) {
+  .story { grid-template-columns:1fr; gap:32px; }
+  .values-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">🧠 StudyBrain</a>
+  <a href="index.html" class="nav-back">← Terug</a>
+</nav>
+
+<div class="hero">
+  <div class="label">Over ons</div>
+  <h1>Studeren moet <span class="gradient-text">slimmer,<br>niet harder.</span></h1>
+  <p>We geloven dat elke student het verdient om gericht te leren — zonder uren te verspillen aan stof die toch niet getoetst wordt.</p>
+</div>
+
+<div class="section">
+
+  <div class="story">
+    <div class="story-text">
+      <h2>Waarom StudyBrain bestaat</h2>
+      <p>Het begon met een simpele frustratie: je hebt een toets morgen, je hebt een dikke samenvatting voor je, en je weet niet waar je moet beginnen. Je leert alles, hoopt op het beste, en voelt je daarna uitgeput.</p>
+      <p>Dat moet anders kunnen. Een ervaren leraar weet meteen welke onderwerpen echt belangrijk zijn — welke definities altijd terugkomen, welke concepten docenten graag toetsen, en wat je gerust kunt overslaan.</p>
+      <p>StudyBrain doet precies dat. Het leest je lesstof, herkent patronen, en geeft je een eerlijk overzicht van wat je <strong>moet</strong> kennen, wat <strong>handig</strong> is, en wat je <strong>kunt skippen</strong>.</p>
+    </div>
+    <div class="story-visual">
+      <span class="big-emoji">🧠</span>
+      <p>Niet meer urenlang alles doorlezen. Gewoon weten waar je moet beginnen.</p>
+    </div>
+  </div>
+
+  <div class="mission">
+    <h2>Onze missie</h2>
+    <p>Elke student — of je nu een dag van tevoren begint of een week — verdient een <strong>eerlijk studieplan</strong>. Geen vage tips, geen overbodige samenvattingen. Gewoon: dit moet je kennen, dit kun je skippen, begin hier.</p>
+  </div>
+
+  <div class="values">
+    <h2>Waar we in geloven</h2>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-icon">🎯</div>
+        <h3>Eerlijkheid</h3>
+        <p>We durven te zeggen wat je kunt overslaan. Niet alles is even belangrijk, en dat zeggen we gewoon.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">⚡</div>
+        <h3>Efficiëntie</h3>
+        <p>Jouw tijd is waardevol. Elk minuut dat je besteedt aan de verkeerde stof is verspild. Wij zorgen dat dat niet gebeurt.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🤝</div>
+        <h3>Toegankelijkheid</h3>
+        <p>Niet iedereen heeft geld voor bijlessen. StudyBrain is er voor elke student, ongeacht budget of achtergrond.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-section">
+    <h2>Klaar om slimmer te studeren?</h2>
+    <p>Maak een gratis account aan en doe je eerste analyse. Geen creditcard nodig.</p>
+    <a href="login.html#signup" class="btn-primary">Gratis starten →</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>🧠 StudyBrain — Slimmer studeren voor iedereen.</p>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy</a>
+    <a href="voorwaarden.html">Voorwaarden</a>
+    <a href="mailto:info@studybrain.app">Contact</a>
+  </div>
+  <p>© 2026 StudyBrain. Alle rechten voorbehouden.</p>
+</footer>
+
+</body>
+</html>
