@@ -130,19 +130,29 @@ body{padding-top:0;padding-left:220px}
 <div class="sidebar">
   <div class="sidebar-logo">&#129504; StudyBrain</div>
   <div class="sidebar-nav">
+
+    <!-- 1. Hoofdpagina bovenaan -->
+    <a href="index.html" class="sidebar-item">
+      <span class="si-icon">🏠</span> Hoofdpagina
+    </a>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- 2. App functies -->
     <a class="sidebar-item active" onclick="scrollToTop(this)">
       <span class="si-icon">🧠</span> Nieuwe analyse
     </a>
     <button class="sidebar-item" onclick="toggleHoe(this)">
       <span class="si-icon">❓</span> Hoe het werkt
     </button>
+
     <div class="sidebar-divider"></div>
+
+    <!-- 3. Overig -->
     <a href="index.html#pricing" class="sidebar-item">
       <span class="si-icon">💎</span> Abonnementen
     </a>
-    <a href="index.html" class="sidebar-item">
-      <span class="si-icon">🏠</span> Hoofdpagina
-    </a>
+
   </div>
   <div class="sidebar-bottom">
     <div class="sidebar-plan" id="sidebarPlan" onclick="window.location.href='index.html#pricing'">🆓 Gratis</div>
