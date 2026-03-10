@@ -74,93 +74,7 @@
   /* Nav padding when sidebar toggle is visible */
   .nav-inner { padding-left: 52px; }
 
-  /* ── BOT PREVIEW (locked) ── */
-  .bot-preview-section {
-    background: var(--bg); padding: 80px 0 100px;
-  }
-  .bot-preview-inner {
-    max-width: 860px; margin: 0 auto; padding: 0 24px;
-  }
-  .bot-preview-inner .label { display: block; margin-bottom: 16px; }
-  .bot-preview-inner h2 { margin-bottom: 8px; }
-  .bot-preview-inner .sub { color: var(--muted); font-size: 16px; margin-bottom: 40px; }
 
-  .bot-preview-wrap {
-    position: relative; border-radius: 20px; overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.08);
-  }
-  .bot-preview-ui {
-    background: var(--surface); padding: 24px; display: flex; flex-direction: column; gap: 16px;
-    filter: blur(3px); user-select: none; pointer-events: none;
-  }
-  /* Upload area mock */
-  .mock-upload {
-    border: 2px dashed rgba(255,255,255,0.12); border-radius: 14px; padding: 28px;
-    text-align: center; color: var(--muted); font-size: 14px;
-  }
-  .mock-upload .upload-icon { font-size: 32px; margin-bottom: 8px; }
-  .mock-time-row { display: flex; gap: 10px; flex-wrap: wrap; }
-  .mock-time-chip {
-    padding: 8px 16px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.1);
-    font-size: 13px; color: var(--muted); background: rgba(255,255,255,0.03);
-  }
-  .mock-time-chip.active { background: rgba(255,77,109,0.15); border-color: var(--accent); color: var(--accent); }
-  .mock-analyse-btn {
-    background: linear-gradient(135deg, #ff4d6d, #c9184a); color: white;
-    border: none; border-radius: 12px; padding: 14px 24px; font-size: 15px; font-weight: 700;
-    cursor: pointer; text-align: center;
-  }
-  .mock-results { display: flex; flex-direction: column; gap: 10px; }
-  .mock-result-card {
-    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-    border-radius: 12px; padding: 14px 16px;
-  }
-  .mock-result-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
-  .mock-result-label.must { color: #00e676; }
-  .mock-result-label.nice { color: #ff9800; }
-  .mock-result-label.skip { color: var(--accent); }
-  .mock-result-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-  .mock-result-text { font-size: 12px; color: var(--muted); }
-
-  /* Lock overlay */
-  .bot-lock-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(to bottom, rgba(10,10,15,0.1) 0%, rgba(10,10,15,0.7) 35%, rgba(10,10,15,0.96) 65%);
-    display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-    padding-bottom: 48px;
-  }
-  .lock-card {
-    background: rgba(20,20,30,0.95); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px; padding: 32px 36px; text-align: center; max-width: 420px; width: 90%;
-    backdrop-filter: blur(20px); box-shadow: 0 24px 64px rgba(0,0,0,0.6);
-  }
-  .lock-icon { font-size: 40px; margin-bottom: 12px; }
-  .lock-card h3 { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 8px; }
-  .lock-card p { font-size: 14px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
-  .lock-btns { display: flex; flex-direction: column; gap: 10px; }
-  .lock-btn-primary {
-    display: block; padding: 13px 24px; background: linear-gradient(135deg, #ff4d6d, #c9184a);
-    border-radius: 12px; color: white; font-family: 'Syne', sans-serif; font-size: 15px;
-    font-weight: 700; text-decoration: none; transition: all 0.2s;
-  }
-  .lock-btn-primary:hover { opacity: 0.88; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(255,77,109,0.35); }
-  .lock-btn-secondary {
-    display: block; padding: 13px 24px; border: 1px solid var(--border);
-    border-radius: 12px; color: var(--muted); font-size: 14px; text-decoration: none; transition: all 0.2s;
-  }
-  .lock-btn-secondary:hover { border-color: var(--text); color: var(--text); }
-
-  /* When logged in, show "go to app" instead of lock */
-  .bot-preview-wrap.unlocked .bot-lock-overlay { display: none; }
-  .bot-preview-wrap.unlocked .bot-preview-ui { filter: none; pointer-events: all; }
-  .bot-go-btn {
-    display: none; position: absolute; bottom: 24px; right: 24px;
-    background: linear-gradient(135deg, #ff4d6d, #c9184a); color: white;
-    padding: 12px 20px; border-radius: 12px; font-weight: 700; font-size: 14px;
-    text-decoration: none; transition: all 0.2s; font-family: 'Syne', sans-serif;
-  }
-  .bot-preview-wrap.unlocked .bot-go-btn { display: block; }
-  .bot-go-btn:hover { opacity: 0.88; transform: translateY(-1px); }
 
   @media (max-width: 600px) {
     .sidebar { width: 100%; max-width: 280px; }
@@ -194,9 +108,6 @@
     <a href="#pricing" class="sidebar-link" onclick="closeSidebar()">
       <span class="icon">💳</span> Abonnementen
     </a>
-    <a href="#bot-preview" class="sidebar-link" onclick="closeSidebar()">
-      <span class="icon">🤖</span> Probeer de bot
-    </a>
     <div class="sidebar-divider"></div>
     <a href="#" class="sidebar-link">
       <span class="icon">👥</span> Over ons
@@ -207,7 +118,7 @@
     <a href="voorwaarden.html" class="sidebar-link">
       <span class="icon">📄</span> Voorwaarden
     </a>
-    <a href="mailto:info@studybrain.app" class="sidebar-link">
+    <a href="/cdn-cgi/l/email-protection#0b62656d644b787f7e6f7269796a6265256a7b7b" class="sidebar-link">
       <span class="icon">✉️</span> Contact
     </a>
   </nav>
@@ -352,68 +263,7 @@
   </div>
 </section>
 
-<!-- BOT PREVIEW SECTION -->
-<section class="bot-preview-section" id="bot-preview">
-  <div class="bot-preview-inner">
-    <div class="label">Probeer het zelf</div>
-    <h2>Zo werkt de StudyBrain bot</h2>
-    <p class="sub">Upload je PDF, kies je tijd, en krijg direct een analyse. Maak een account om te starten.</p>
 
-    <div class="bot-preview-wrap" id="botPreviewWrap">
-      <!-- Blurred UI mock -->
-      <div class="bot-preview-ui">
-        <div class="mock-upload">
-          <div class="upload-icon">📄</div>
-          <div>Sleep je PDF hier naartoe of klik om te uploaden</div>
-          <div style="font-size:12px;margin-top:4px;">PDF — max 10MB</div>
-        </div>
-        <div>
-          <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">Hoeveel tijd heb je?</div>
-          <div class="mock-time-row">
-            <div class="mock-time-chip">30 min</div>
-            <div class="mock-time-chip active">1 uur</div>
-            <div class="mock-time-chip">2 uur</div>
-            <div class="mock-time-chip">Hele dag</div>
-          </div>
-        </div>
-        <div class="mock-analyse-btn">🔍 Analyseer mijn lesstof</div>
-        <div class="mock-results">
-          <div class="mock-result-card">
-            <div class="mock-result-label must">🔥 MUST LEARN</div>
-            <div class="mock-result-title">Oorzaken van WO2</div>
-            <div class="mock-result-text">Verdrag van Versailles · Economische crisis · Opkomst Hitler — wordt altijd getoetst.</div>
-          </div>
-          <div class="mock-result-card">
-            <div class="mock-result-label nice">⚡ NICE TO KNOW</div>
-            <div class="mock-result-title">D-Day (6 juni 1944)</div>
-            <div class="mock-result-text">Geallieerde landing in Normandië — handig als je extra tijd hebt.</div>
-          </div>
-          <div class="mock-result-card">
-            <div class="mock-result-label skip">⏭ SKIP</div>
-            <div class="mock-result-title">Namen van alle generaals</div>
-            <div class="mock-result-text">Nooit getoetst. Sla over en gebruik je tijd beter.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Lock overlay (shown when not logged in / no plan) -->
-      <div class="bot-lock-overlay" id="botLockOverlay">
-        <div class="lock-card">
-          <div class="lock-icon">🔒</div>
-          <h3>Maak een gratis account aan</h3>
-          <p>Doe je eerste analyse gratis. Upload je PDF en ontdek wat je echt moet leren — in 30 seconden.</p>
-          <div class="lock-btns">
-            <a href="login.html#signup" class="lock-btn-primary">Gratis starten — 1 analyse cadeau →</a>
-            <a href="login.html" class="lock-btn-secondary">Ik heb al een account</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Go-to-app button (shown when logged in) -->
-      <a href="app.html" class="bot-go-btn" id="botGoBtn">Naar de bot →</a>
-    </div>
-  </div>
-</section>
 
 <section class="pricing" id="pricing">
   <div class="section-inner">
@@ -496,13 +346,13 @@
     <div class="footer-links">
       <a href="privacy.html">Privacy</a>
       <a href="voorwaarden.html">Voorwaarden</a>
-      <a href="mailto:info@studybrain.app">Contact</a>
+      <a href="/cdn-cgi/l/email-protection#cca5a2aaa38cbfb8b9a8b5aebeada5a2e2adbcbc">Contact</a>
     </div>
     <p class="copy">&copy; 2026 StudyBrain. Alle rechten voorbehouden.</p>
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="auth.js"></script>
 <script>
   // ── Sidebar logic ──
@@ -585,13 +435,4 @@
       if (toast) {
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 4000);
-        // Clean URL
-        const url = new URL(window.location);
-        url.searchParams.delete('ingelogd');
-        window.history.replaceState({}, '', url);
-      }
-    }
-  })();
-</script>
-</body>
-</html>
+        // Clean U
