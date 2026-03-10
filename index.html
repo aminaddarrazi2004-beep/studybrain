@@ -85,7 +85,20 @@
 
 
 
-  @media (max-width: 600px) {
+  /* ── FAQ ── */
+  .faq-section { background: var(--bg); }
+  .faq-section .label, .faq-section h2 { display: block; text-align: center; }
+  .faq-section h2 { margin-bottom: 40px; }
+  .faq-list { max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+  .faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: border-color 0.2s; }
+  .faq-item:hover { border-color: rgba(255,77,109,0.3); }
+  .faq-q { width: 100%; background: none; border: none; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; padding: 18px 20px; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .faq-arrow { color: var(--muted); font-size: 12px; flex-shrink: 0; transition: transform 0.3s; }
+  .faq-item.open .faq-arrow { transform: rotate(180deg); color: var(--accent); }
+  .faq-a { font-size: 14px; color: var(--muted); line-height: 1.7; padding: 0 20px 18px; display: none; }
+  .faq-item.open .faq-a { display: block; }
+
+
     .sidebar { width: 80vw; max-width: 280px; }
     .sidebar-app-btn { font-size: 16px; padding: 15px 16px; }
     .sidebar-toggle { top: 12px; left: 12px; padding: 9px 11px; font-size: 20px; }
@@ -108,10 +121,6 @@
     <button class="sidebar-close" id="sidebarClose">✕</button>
   </div>
   <nav class="sidebar-nav">
-    <a href="app.html" class="sidebar-link highlight" style="margin-bottom:4px;font-size:15px;padding:13px 14px;">
-      <span class="icon">🧠</span> StudyBrain
-    </a>
-    <div class="sidebar-divider"></div>
     <a href="#how" class="sidebar-link" onclick="closeSidebar()">
       <span class="icon">💡</span> Hoe het werkt
     </a>
@@ -119,7 +128,11 @@
       <span class="icon">💳</span> Abonnementen
     </a>
     <div class="sidebar-divider"></div>
-    <a href="#" class="sidebar-link">
+    <a href="app.html" class="sidebar-link highlight" style="font-size:15px;padding:13px 14px;">
+      <span class="icon">🧠</span> StudyBrain
+    </a>
+    <div class="sidebar-divider"></div>
+    <a href="overons.html" class="sidebar-link">
       <span class="icon">👥</span> Over ons
     </a>
     <a href="privacy.html" class="sidebar-link">
@@ -128,7 +141,7 @@
     <a href="voorwaarden.html" class="sidebar-link">
       <span class="icon">📄</span> Voorwaarden
     </a>
-    <a href="/cdn-cgi/l/email-protection#0b62656d644b787f7e6f7269796a6265256a7b7b" class="sidebar-link">
+    <a href="mailto:info@studybrain.app" class="sidebar-link">
       <span class="icon">✉️</span> Contact
     </a>
   </nav>
@@ -172,7 +185,7 @@
         <div class="avatars">
           <div class="av">S</div><div class="av">M</div><div class="av">J</div><div class="av">L</div><div class="av">R</div>
         </div>
-        <span><strong>1.200+</strong> studenten leren al slimmer</span>
+        <span>Al door <strong>studenten</strong> gebruikt voor hun toetsen</span>
       </div>
     </div>
     <div class="hero-mockup">
@@ -337,6 +350,52 @@
   </div>
 </section>
 
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+  <div class="section-inner">
+    <div class="label">Veelgestelde vragen</div>
+    <h2>Alles wat je wil weten</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Werkt StudyBrain voor elk vak? <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">Ja. StudyBrain werkt voor alle vakken waarbij je een PDF of tekstdocument hebt — van geschiedenis en biologie tot economie en recht. Zolang je lesstof als PDF beschikbaar is, kan StudyBrain het analyseren.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Wat krijg ik met mijn gratis analyse? <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">Bij het aanmaken van een account krijg je 1 gratis analyse. Je ziet het Must Learn / Nice to Know / Skip overzicht van je lesstof. Uitleg en ezelsbruggetjes zijn beschikbaar vanaf het Starter abonnement.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Hoe groot mag mijn PDF zijn? <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">Je PDF mag maximaal 20MB zijn. Voor Pro en Elite kun je meerdere PDFs tegelijk uploaden (tot 3 of 4 bestanden).</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Hoe nauwkeurig is de analyse? <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">StudyBrain analyseert herhaling, vetgedrukte tekst, definities en de structuur van je document. Net zoals een ervaren leraar. De resultaten zijn een sterke richtlijn — controleer altijd zelf of er vakspecifieke aandachtspunten zijn die je docent heeft aangegeven.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Kan ik mijn abonnement opzeggen? <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">Ja, je kunt maandelijks opzeggen. Er zijn geen verborgen kosten of lange contracten. Je behoudt toegang tot het einde van je betaalde periode.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Is mijn lesstof veilig? <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a">Je PDFs worden alleen gebruikt voor de analyse en worden niet opgeslagen of gedeeld. Je privacy is voor ons belangrijk — lees onze privacyverklaring voor meer details.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="cta-band">
   <div class="orb cta-orb1"></div>
   <div class="orb cta-orb2"></div>
@@ -356,7 +415,7 @@
     <div class="footer-links">
       <a href="privacy.html">Privacy</a>
       <a href="voorwaarden.html">Voorwaarden</a>
-      <a href="/cdn-cgi/l/email-protection#cca5a2aaa38cbfb8b9a8b5aebeada5a2e2adbcbc">Contact</a>
+      <a href="mailto:info@studybrain.app">Contact</a>
     </div>
     <p class="copy">&copy; 2026 StudyBrain. Alle rechten voorbehouden.</p>
   </div>
@@ -447,7 +506,41 @@
         window.history.replaceState({}, '', url);
       }
     }
-  })();
+    function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    item.classList.toggle('open');
+  }
+</script>
+
+<!-- ── Cookie banner ── -->
+<div id="cookieBanner" style="
+  display:none; position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+  background:#1a1a26; border:1px solid #2a2a3d; border-radius:16px;
+  padding:20px 24px; max-width:560px; width:calc(100% - 48px);
+  z-index:9999; box-shadow:0 16px 48px rgba(0,0,0,0.5);
+  font-family:'DM Sans',sans-serif; display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+">
+  <p style="font-size:13px;color:#6b6b8a;flex:1;min-width:200px;margin:0;line-height:1.6;">
+    🍪 Wij gebruiken cookies om de site goed te laten werken en je ervaring te verbeteren.
+    <a href="privacy.html" style="color:#ff4d6d;text-decoration:none;">Meer info</a>
+  </p>
+  <div style="display:flex;gap:8px;flex-shrink:0;">
+    <button onclick="acceptCookies()" style="padding:9px 18px;background:linear-gradient(135deg,#ff4d6d,#c9184a);border:none;border-radius:10px;color:white;font-size:13px;font-weight:700;cursor:pointer;">Accepteren</button>
+    <button onclick="rejectCookies()" style="padding:9px 18px;background:none;border:1px solid #2a2a3d;border-radius:10px;color:#6b6b8a;font-size:13px;cursor:pointer;">Weigeren</button>
+  </div>
+</div>
+<script>
+  function acceptCookies() {
+    localStorage.setItem('sb-cookie-consent', 'accepted');
+    document.getElementById('cookieBanner').style.display = 'none';
+  }
+  function rejectCookies() {
+    localStorage.setItem('sb-cookie-consent', 'rejected');
+    document.getElementById('cookieBanner').style.display = 'none';
+  }
+  if (!localStorage.getItem('sb-cookie-consent')) {
+    document.getElementById('cookieBanner').style.display = 'flex';
+  }
 </script>
 </body>
 </html>
