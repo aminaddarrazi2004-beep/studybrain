@@ -218,10 +218,11 @@ nav { animation: fadeDown 0.5s ease both; }
    RESPONSIVE — MOBILE
    ===================== */
 @media (max-width: 600px) {
-  nav { padding: 10px 14px; }
-  .nav-logo { font-size: 16px; }
-  .btn-ghost { padding: 7px 11px; font-size: 12px; }
-  .btn-nav { padding: 7px 11px; font-size: 12px; }
+  nav { padding: 10px 10px; }
+  .nav-logo { font-size: 15px; }
+  .btn-ghost { padding: 6px 8px; font-size: 11px; }
+  .btn-nav { padding: 6px 8px; font-size: 11px; }
+  .nav-actions { gap: 5px; }
   .hero { min-height: auto; padding-top: 64px; align-items: flex-start; }
   .hero-inner { padding: 32px 20px 48px; gap: 0; }
   .hero-cta { flex-direction: column; gap: 10px; }
