@@ -34,13 +34,81 @@ async function loadUserPlan() {
 function getVragenCount() {
   if (userPlan === 'gratis') return 1;
   if (userPlan === 'starter') return 5;
-  return 10; // pro of elite
+  return 10;
 }
 
 function getMaxFiles() {
   if (userPlan === 'gratis' || userPlan === 'starter') return 1;
   if (userPlan === 'pro') return 3;
-  return 4; // elite — max 4 vakken
+  return 4;
+}
+
+// ── Tijdslot configuratie ──
+// Bepaalt hoeveel stof geanalyseerd wordt EN hoe lang het studieplan is
+function getTijdConfig(tijd) {
+  const configs = {
+    '30 minuten': {
+      maxChars: 4000,         // Weinig stof — kleine PDF sectie
+      must: 'MAX 2 onderwerpen — alleen het allerbelangrijkste. Wees genadeloos.',
+      should: 'MAX 1 onderwerp',
+      skip: 'ALLES wat niet in must zit',
+      planStappen: 2,
+      herhalingen: 2,
+      planBeschrijving: 'De student heeft maar 30 minuten. Geef ALLEEN de 2 meest kritieke punten. Geen overbodige info.',
+      herhalingsSchema: ['Direct nu', '10 minuten voor de toets']
+    },
+    '1 uur': {
+      maxChars: 6000,
+      must: 'MAX 3 onderwerpen',
+      should: 'MAX 2 onderwerpen',
+      skip: 'alles wat niet kritisch is voor de toets',
+      planStappen: 3,
+      herhalingen: 3,
+      planBeschrijving: 'De student heeft 1 uur. Compact en gefocust — alleen de kern.',
+      herhalingsSchema: ['Direct na het lezen', 'Over 30 minuten', '10 minuten voor de toets']
+    },
+    '2-3 uur': {
+      maxChars: 8000,
+      must: '4-5 onderwerpen',
+      should: '2-3 onderwerpen',
+      skip: 'alleen echt onbelangrijke details',
+      planStappen: 5,
+      herhalingen: 3,
+      planBeschrijving: 'De student heeft 2-3 uur. Geef een solide basis met goede uitleg.',
+      herhalingsSchema: ['Direct na het lezen', 'Na 1 uur pauze', '1 uur voor de toets']
+    },
+    'een avond': {
+      maxChars: 12000,
+      must: '5-6 onderwerpen — alles wat getoetst kan worden',
+      should: '3-4 onderwerpen',
+      skip: 'alleen randgevallen en voetnoten',
+      planStappen: 6,
+      herhalingen: 4,
+      planBeschrijving: 'De student heeft een avond. Grondige voorbereiding mogelijk.',
+      herhalingsSchema: ['Direct na het lezen', 'Na een korte pauze', 'Voor het slapen', 'Morgen ochtend vlak voor de toets']
+    },
+    '1-2 dagen': {
+      maxChars: 15000,        // Meer stof verwerken
+      must: '6-8 onderwerpen — alle toetsbare stof grondig',
+      should: '4-5 onderwerpen — verdieping en verbanden leggen',
+      skip: 'alleen de meest obscure details en voetnoten',
+      planStappen: 8,
+      herhalingen: 5,
+      planBeschrijving: 'De student heeft 1-2 dagen. Maak een gespreid leerplan met dag 1 en dag 2. Dag 1: nieuwe stof. Dag 2: herhaling en oefenen. Gebruik spaced repetition.',
+      herhalingsSchema: ['Dag 1 avond: eerste herhaling', 'Dag 2 ochtend: wat weet je nog?', 'Dag 2 middag: zwakke punten', 'Dag 2 avond: alles doorlopen', '1 uur voor de toets: focuspunten']
+    },
+    'een week': {
+      maxChars: 15000,        // Volledige PDF verwerken
+      must: 'ALLE toetsbare onderwerpen — volledig en diepgaand',
+      should: 'Verdieping, verbanden tussen onderwerpen, extra context',
+      skip: 'alleen irrelevante bijzaken — bij een week zijn er weinig skips',
+      planStappen: 10,
+      herhalingen: 6,
+      planBeschrijving: 'De student heeft een week. Maak een volledig weekplan (ma t/m zo) met spaced repetition. Dag 1-3: nieuwe stof per onderwerp. Dag 4-5: verbanden en verdieping. Dag 6: herhaling alles. Dag 7: lichte opfrissing en rust.',
+      herhalingsSchema: ['Dag 1: nieuwe stof bestuderen', 'Dag 2: herhaal dag 1, nieuwe stof', 'Dag 3: herhaal dag 2, nieuwe stof', 'Dag 4-5: verbanden leggen en oefentoetsen', 'Dag 6: alles herhalen', 'Dag 7 ochtend: lichte opfrissing, dan rust']
+    }
+  };
+  return configs[tijd] || configs['een avond'];
 }
 
 // ── File handling ──
@@ -85,7 +153,7 @@ function showError(msg) {
 function hideError() { document.getElementById('errorBox').style.display = 'none'; }
 
 // ── PDF text extraction ──
-async function extractPdfText(file) {
+async function extractPdfText(file, maxChars) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = async (e) => {
@@ -94,8 +162,12 @@ async function extractPdfText(file) {
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
         const pdf = await pdfjsLib.getDocument({ data: e.target.result }).promise;
         let fullText = '';
-        // Max 15 pagina's per PDF om context window te beschermen
-        const maxPages = Math.min(pdf.numPages, 15);
+
+        // Aantal pagina's afhankelijk van beschikbare tijd
+        const cfg = getTijdConfig(selectedTime);
+        const charsPerPage = 800;
+        const maxPages = Math.min(pdf.numPages, Math.ceil((maxChars || cfg.maxChars) / charsPerPage));
+
         for (let i = 1; i <= maxPages; i++) {
           const page = await pdf.getPage(i);
           const content = await page.getTextContent();
@@ -128,6 +200,8 @@ async function markAnalysisUsed() {
 
 // ── API call helper ──
 async function callAnalyzeAPI(text, vakNaam, vragenCount) {
+  const cfg = getTijdConfig(selectedTime);
+
   const res = await fetch('https://analyze.aminaddarrazi2004.workers.dev', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -163,22 +237,24 @@ JSON formaat:
           content: `Analyseer deze leerstof (${vakNaam}) voor een student met ${selectedTime} beschikbaar.
 
 TIJDSLOT REGELS — VOLG DIT STRIKT:
-${selectedTime === '30 minuten' ? `
-- Must: MAX 2 onderwerpen — alleen het allerbelangrijkste
-- Should: MAX 1 onderwerp
-- Skip: ALLES wat niet in must zit — wees genadeloos` : ''}
-${selectedTime === '1 uur' ? `
-- Must: MAX 3 onderwerpen
-- Should: MAX 2 onderwerpen
-- Skip: alles wat niet kritisch is` : ''}
-${selectedTime === '2-3 uur' ? `
-- Must: 4-5 onderwerpen
-- Should: 2-3 onderwerpen
-- Skip: alleen echt onbelangrijke details` : ''}
-${selectedTime === 'een avond' ? `
-- Must: 5-6 onderwerpen — alles wat getoetst kan worden
-- Should: 3-4 onderwerpen
-- Skip: alleen randgevallen en voetnoten` : ''}
+- Must: ${cfg.must}
+- Should: ${cfg.should}
+- Skip: ${cfg.skip}
+
+${selectedTime === '1-2 dagen' ? `
+EXTRA VOOR 1-2 DAGEN:
+- De student kan de stof GESPREID leren — geef meer must-onderwerpen
+- Markeer bij elk must-item of het dag 1 of dag 2 stof is in het reason-veld
+- Dag 1: fundamenten en basisconcepten
+- Dag 2: verbanden, toepassing en herhaling` : ''}
+
+${selectedTime === 'een week' ? `
+EXTRA VOOR EEN WEEK:
+- De student heeft RUIM DE TIJD — analyseer de volledige stof grondig
+- Geef bij elk must-item aan in welke dag van de week het het best past (dag 1-7)
+- Maak verbanden tussen onderwerpen expliciet in de summary
+- Should bevat echt verdiepende stof, niet alleen "handig"
+- Skip is bijna leeg — bij een week kun je bijna alles leren` : ''}
 
 TOETSVRAGEN: Genereer precies ${vragenCount} toetsvragen met 4 opties (a,b,c,d).
 
@@ -192,7 +268,6 @@ ${text}`
   if (!res.ok) { const err = await res.json(); throw new Error(err.error?.message || 'API fout'); }
   const data = await res.json();
   const raw = data.choices?.[0]?.message?.content || '';
-  // Verwijder markdown code blocks als Groq die teruggeeft
   const cleaned = raw.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
   const match = cleaned.match(/\{[\s\S]*\}/);
   if (!match) throw new Error('Kon resultaten niet verwerken.');
@@ -201,7 +276,7 @@ ${text}`
 
 // ── Gecombineerd studieplan (Elite/Pro met meerdere vakken) ──
 async function buildCombinedStudieplan(vakResultaten) {
-  // Maak een compact overzicht van alle must-items per vak
+  const cfg = getTijdConfig(selectedTime);
   const overzicht = vakResultaten.map(({ vakNaam, result }) => {
     const mustTopics = result.must.map(m => m.topic).join(', ');
     return `Vak: ${vakNaam}\nBelangrijkste onderwerpen: ${mustTopics}`;
@@ -214,7 +289,7 @@ async function buildCombinedStudieplan(vakResultaten) {
       messages: [
         {
           role: 'system',
-          content: `Je bent een studiecoach die weekplanningen maakt voor studenten. Geef ALLEEN JSON terug.
+          content: `Je bent een studiecoach die studieplanningen maakt. Geef ALLEEN JSON terug.
 
 JSON formaat:
 {
@@ -222,12 +297,16 @@ JSON formaat:
     {"dag": "Maandag", "taken": ["Vak X — onderwerp A (30 min)", "Vak Y — onderwerp B (45 min)"]},
     {"dag": "Dinsdag", "taken": ["..."]}
   ],
-  "tips": ["Algemene studietip 1", "Tip 2", "Tip 3"]
+  "tips": ["Studietip 1", "Tip 2", "Tip 3"]
 }`
         },
         {
           role: 'user',
-          content: `Maak een weekplanning voor deze student die ${selectedTime} per dag beschikbaar heeft.
+          content: `Maak een studieplanning voor deze student.
+
+TIJDSLOT: ${selectedTime}
+INSTRUCTIE: ${cfg.planBeschrijving}
+HERHALINGSSCHEMA: Verwerk deze momenten: ${cfg.herhalingsSchema.join(', ')}
 
 Verwerk spaced repetition: belangrijke onderwerpen meerdere keren inplannen.
 
@@ -258,47 +337,41 @@ async function analyze() {
   document.getElementById('loadingState').style.display = 'block';
 
   const isMultiVak = files.length > 1 && (userPlan === 'pro' || userPlan === 'elite');
+
+  // Laadberichten afhankelijk van tijdskeuze
+  const tijdLabel = selectedTime === 'een week' ? 'week' : selectedTime === '1-2 dagen' ? '2 dagen' : selectedTime;
   const msgs = isMultiVak
-    ? ['Vakken verwerken...', 'Elk vak analyseren...', 'Prioriteiten bepalen...', 'Weekplanning maken...', 'Cheatsheets genereren...']
-    : ['Lesstof aan het verwerken...', 'Toetspatronen herkennen...', 'Prioriteiten bepalen...', 'Cheatsheet genereren...'];
+    ? ['Vakken verwerken...', 'Elk vak analyseren...', 'Prioriteiten bepalen...', `Planning voor ${tijdLabel} maken...`, 'Cheatsheets genereren...']
+    : [`Lesstof verwerken voor ${tijdLabel}...`, 'Toetspatronen herkennen...', 'Prioriteiten bepalen...', 'Cheatsheet genereren...'];
 
   let mi = 0;
   const iv = setInterval(() => { document.getElementById('loadingMsg').textContent = msgs[mi++ % msgs.length]; }, 2500);
 
   const vragenCount = getVragenCount();
+  const cfg = getTijdConfig(selectedTime);
 
   try {
     if (isMultiVak) {
-      // ── Multi-vak: elk bestand apart analyseren ──
       const vakResultaten = [];
-
       for (const file of files) {
         const vakNaam = file.name.replace('.pdf', '');
         let text = await extractPdfText(file);
-        // Max 10.000 tekens per vak zodat kwaliteit hoog blijft
-        if (text.length > 10000) text = text.slice(0, 10000) + '\n\n[... afgekapt ...]';
+        if (text.length > cfg.maxChars) text = text.slice(0, cfg.maxChars) + '\n\n[... afgekapt ...]';
         const result = await callAnalyzeAPI(text, vakNaam, vragenCount);
         vakResultaten.push({ vakNaam, result });
       }
-
-      // Gecombineerd weekplan bouwen
       const weekplan = await buildCombinedStudieplan(vakResultaten);
-
       clearInterval(iv);
       await markAnalysisUsed();
       showMultiResults(vakResultaten, weekplan);
-
     } else {
-      // ── Enkel bestand ──
       let text = await extractPdfText(files[0]);
-      if (text.length > 12000) text = text.slice(0, 12000) + '\n\n[... afgekapt ...]';
+      if (text.length > cfg.maxChars) text = text.slice(0, cfg.maxChars) + '\n\n[... afgekapt ...]';
       const result = await callAnalyzeAPI(text, files[0].name, vragenCount);
-
       clearInterval(iv);
       await markAnalysisUsed();
       showResults(result, files[0].name.replace('.pdf',''));
     }
-
   } catch (err) {
     clearInterval(iv);
     document.getElementById('mainInterface').style.display = 'block';
@@ -308,12 +381,8 @@ async function analyze() {
 }
 
 // ── Upgrade modal ──
-function showUpgradeModal() {
-  document.getElementById('upgradeModal').style.display = 'flex';
-}
-function hideUpgradeModal() {
-  document.getElementById('upgradeModal').style.display = 'none';
-}
+function showUpgradeModal() { document.getElementById('upgradeModal').style.display = 'flex'; }
+function hideUpgradeModal() { document.getElementById('upgradeModal').style.display = 'none'; }
 
 // ── Render enkel vak ──
 function renderTopics(list, containerId, isSkip = false) {
@@ -340,6 +409,7 @@ function renderTopics(list, containerId, isSkip = false) {
 
 // ── Persoonlijk studieplan (Pro/Elite) ──
 async function buildStudieplan(result, vakNaam) {
+  const cfg = getTijdConfig(selectedTime);
   const mustTopics = result.must.map(m => `- ${m.topic}: ${m.summary || ''}`).join('\n');
   const shouldTopics = result.should.map(s => `- ${s.topic}`).join('\n');
 
@@ -363,35 +433,41 @@ Geef ALLEEN JSON terug.
 
 JSON formaat:
 {
-  "samenvatting": "2-3 zinnen: wat is de rode draad van deze stof? Wat moet de student begrijpen?",
+  "samenvatting": "2-3 zinnen: wat is de rode draad van deze stof?",
   "leerroute": [
     {
       "stap": 1,
       "onderwerp": "Naam van het onderwerp",
-      "uitleg": "Leg de stof direct uit in 4-5 zinnen. Echte feiten, getallen, formules. Voorbeeld uit dagelijks leven. Schrijf energiek en duidelijk.",
-      "onthoud": "De exacte zin die de student woordelijk moet kunnen opzeggen op de toets. Concreet en precies.",
-      "ezelsbruggetje": "Een grappig, memorabel ezelsbruggetje. Mag raar zijn, dat helpt juist.",
-      "valkuil": "De meest gemaakte fout bij dit onderwerp op toetsen.",
-      "tijd": "15 min"
+      "timing": "Wanneer leren (bijv. Dag 1 - ochtend of Maandag)",
+      "uitleg": "Leg de stof direct uit in 4-5 zinnen. Echte feiten, getallen, formules.",
+      "onthoud": "De exacte zin die de student woordelijk moet kunnen opzeggen op de toets.",
+      "ezelsbruggetje": "Een grappig, memorabel ezelsbruggetje.",
+      "valkuil": "De meest gemaakte fout bij dit onderwerp.",
+      "tijd": "geschatte studietijd bijv. 20 min"
     }
   ],
   "herhalingsschema": [
-    {"moment": "Direct na het lezen", "actie": "Specifiek: welke onderwerpen hardop nazeggen, wat opschrijven"},
-    {"moment": "Vanavond voor het slapen", "actie": "Specifiek: welke 3 kernpunten nogmaals doorlopen"},
-    {"moment": "Morgen ochtend", "actie": "Specifiek: wat als eerste herhalen en hoe"},
-    {"moment": "1 uur voor de toets", "actie": "Specifiek: wat nog een keer doornemen, wat skippen"}
+    {"moment": "...", "actie": "Specifiek: welke onderwerpen, wat doen"}
   ],
-  "focuspunten": ["De 3 dingen die ZEKER in de toets komen, in volgorde van waarschijnlijkheid"],
-  "geheimtip": "1 concrete tip die alleen een echte docent weet. Bijv: welk type vraag stellen ze altijd, welke valkuil trappen studenten altijd in."
+  "focuspunten": ["De 3 dingen die ZEKER in de toets komen"],
+  "geheimtip": "1 concrete tip die alleen een echte docent weet."
 }`
         },
         {
           role: 'user',
-          content: `Maak een persoonlijk studieplan voor ${vakNaam}. De student heeft ${selectedTime} beschikbaar.
+          content: `Maak een persoonlijk studieplan voor ${vakNaam}.
 
-BELANGRIJK: Leg de inhoud zelf uit! Geef de kennis direct — niet zeggen wat ze moeten doen.
+TIJDSLOT: ${selectedTime}
+INSTRUCTIE: ${cfg.planBeschrijving}
+AANTAL STAPPEN: Maak precies ${cfg.planStappen} stappen in de leerroute.
+HERHALINGSSCHEMA: Gebruik deze momenten: ${cfg.herhalingsSchema.join(' → ')}
 
-Onderwerpen om uit te leggen:
+${selectedTime === '1-2 dagen' ? `SPREIDING: Verdeel de stappen over dag 1 (fundamenten) en dag 2 (verdieping + herhaling). Vermeld "Dag 1" of "Dag 2" in het timing-veld.` : ''}
+${selectedTime === 'een week' ? `SPREIDING: Verdeel de stappen over de week (ma t/m zo). Vermeld de dag in het timing-veld. Dag 1-3 nieuwe stof, dag 4-5 verdieping, dag 6 herhaling, dag 7 rust.` : ''}
+
+BELANGRIJK: Leg de inhoud zelf uit! Geef de kennis direct.
+
+Onderwerpen:
 ${mustTopics}
 
 Aanvullende onderwerpen:
@@ -444,6 +520,7 @@ function renderStudieplan(studieplan, containerId) {
             <div class="sp-stap-num">Stap ${s.stap}</div>
             <div class="sp-stap-body">
               <strong>${s.onderwerp}</strong>
+              ${s.timing ? `<div class="sp-timing">⏰ ${s.timing}</div>` : ''}
               <p>${s.uitleg || ''}</p>
               ${s.onthoud ? `<div class="sp-onthoud">📌 Onthoud: ${s.onthoud}</div>` : ''}
               ${s.ezelsbruggetje ? `<div class="sp-ezel">🧠 ${s.ezelsbruggetje}</div>` : ''}
@@ -472,7 +549,7 @@ function renderStudieplan(studieplan, containerId) {
       <div class="sp-preview-icon">📋</div>
       <div class="sp-preview-text">
         <strong>Jouw persoonlijk studieplan is klaar</strong>
-        <p>Leerroute, herhalingsschema, ezelsbruggetjes en docenttips — speciaal voor jouw stof.</p>
+        <p>Leerroute voor ${selectedTime}, herhalingsschema en docenttips.</p>
       </div>
       <button class="sp-download-btn" onclick="downloadStudieplanPDF()">⬇️ Download studieplan</button>
     </div>`;
@@ -498,6 +575,7 @@ function downloadStudieplanPDF() {
     .sp-focus-num { background: #c9184a; color: white; border-radius: 50%; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
     .sp-stap { display: flex; gap: 14px; margin-bottom: 16px; page-break-inside: avoid; }
     .sp-stap-num { background: #fff0f3; color: #c9184a; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; white-space: nowrap; }
+    .sp-timing { font-size: 11px; color: #ff4d6d; font-weight: 600; margin-bottom: 4px; }
     .sp-stap-body strong { font-size: 15px; display: block; margin-bottom: 4px; }
     .sp-stap-body p { font-size: 13px; color: #444; line-height: 1.6; margin-bottom: 6px; }
     .sp-onthoud { background: #fffde7; border-left: 3px solid #ffc107; padding: 6px 10px; font-size: 13px; margin: 6px 0; }
@@ -531,12 +609,10 @@ function showMultiResults(vakResultaten, weekplan) {
   document.getElementById('resultsSection').style.display = 'block';
   document.getElementById('resultsSubtitle').textContent = `${files.length} vakken geanalyseerd · ${selectedTime} beschikbaar`;
 
-  // Toon elk vak apart als tab of sectie
   const container = document.getElementById('mustList');
   container.innerHTML = vakResultaten.map(({ vakNaam, result }) => `
     <div class="vak-sectie">
       <h3 class="vak-titel">📚 ${vakNaam}</h3>
-
       <div class="vak-blok must-blok">
         <div class="blok-label">🔥 MUST LEARN</div>
         ${result.must.map(item => `
@@ -547,7 +623,6 @@ function showMultiResults(vakResultaten, weekplan) {
             ${item.tip ? `<span class="topic-tip">💡 ${item.tip}</span>` : ''}
           </div>`).join('')}
       </div>
-
       <div class="vak-blok should-blok">
         <div class="blok-label">⚡ NICE TO KNOW</div>
         ${result.should.map(item => `
@@ -557,7 +632,6 @@ function showMultiResults(vakResultaten, weekplan) {
             ${item.tip ? `<span class="topic-tip">💡 ${item.tip}</span>` : ''}
           </div>`).join('')}
       </div>
-
       <div class="vak-blok skip-blok">
         <div class="blok-label">⏭ SKIP</div>
         ${result.skip.map(item => `
@@ -566,7 +640,6 @@ function showMultiResults(vakResultaten, weekplan) {
             <span class="topic-reason">${item.reason || ''}</span>
           </div>`).join('')}
       </div>
-
       <div class="vak-cheatsheet">
         <div class="blok-label">📝 Cheatsheet</div>
         <pre>${result.cheatsheet || ''}</pre>
@@ -574,12 +647,11 @@ function showMultiResults(vakResultaten, weekplan) {
     </div>
   `).join('<hr class="vak-divider">');
 
-  // Weekplan tonen als het er is
   if (weekplan?.weekplan) {
     const weekContainer = document.getElementById('shouldList');
     weekContainer.innerHTML = `
       <div class="weekplan">
-        <h3>📅 Jouw weekplanning</h3>
+        <h3>📅 Jouw studieplanning (${selectedTime})</h3>
         ${weekplan.weekplan.map(dag => `
           <div class="dag-item">
             <strong>${dag.dag}</strong>
@@ -593,7 +665,6 @@ function showMultiResults(vakResultaten, weekplan) {
       </div>`;
   }
 
-  // Alle toetsvragen samenvoegen
   const alleVragen = vakResultaten.flatMap(({ vakNaam, result }) =>
     (result.toetsvragen || []).map(v => ({ ...v, vakNaam }))
   );
@@ -680,12 +751,11 @@ async function showResults(data, vakNaam) {
   document.getElementById('cheatsheetContent').textContent = data.cheatsheet || '';
   renderToetsvragen(data.toetsvragen || []);
 
-  // Persoonlijk studieplan voor Pro en Elite
   if (userPlan === 'pro' || userPlan === 'elite') {
     const studieplanSection = document.getElementById('toetsvragenSection');
     const planContainer = document.createElement('div');
     planContainer.id = 'studieplanContainer';
-    planContainer.innerHTML = `<div style="padding:20px;text-align:center;color:#6b6b8a">📋 Studieplan wordt gegenereerd...</div>`;
+    planContainer.innerHTML = `<div style="padding:20px;text-align:center;color:#6b6b8a">📋 Studieplan voor ${selectedTime} wordt gegenereerd...</div>`;
     studieplanSection.parentNode.insertBefore(planContainer, studieplanSection);
 
     const studieplan = await buildStudieplan(data, vakNaam || files[0]?.name?.replace('.pdf','') || 'dit vak');
