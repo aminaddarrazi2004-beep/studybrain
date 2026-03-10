@@ -7,40 +7,16 @@
 <meta name="description" content="De AI-studiecoach die vertelt wat je MOET leren.">
 <link rel="stylesheet" href="landing.css">
 <style>
-  .plan-price {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 38px;
-    font-weight: 700;
-    font-synthesis: none;
-    line-height: 1;
-    margin-bottom: 8px;
-    letter-spacing: -1px;
-  }
+  .plan-price { font-family: 'DM Sans', sans-serif; font-size: 38px; font-weight: 700; line-height: 1; margin-bottom: 8px; letter-spacing: -1px; }
   .plan-price .euro { font-size: 22px; font-weight: 500; vertical-align: super; margin-right: 1px; }
   .plan-price .cents { font-size: 18px; font-weight: 400; color: var(--muted); }
   .plan-price .per { font-size: 13px; font-weight: 400; color: var(--muted); margin-left: 2px; letter-spacing: 0; }
-  .pricing-compare {
-    text-align: center;
-    background: rgba(255,77,109,0.07);
-    border: 1px solid rgba(255,77,109,0.2);
-    border-radius: 14px;
-    padding: 14px 24px;
-    font-size: 14px;
-    color: var(--muted);
-    margin-bottom: 36px;
-    max-width: 560px;
-    margin-left: auto;
-    margin-right: auto;
-  }
+  .pricing-compare { text-align: center; background: rgba(255,77,109,0.07); border: 1px solid rgba(255,77,109,0.2); border-radius: 14px; padding: 14px 24px; font-size: 14px; color: var(--muted); margin-bottom: 36px; max-width: 560px; margin-left: auto; margin-right: auto; }
   .pricing-compare strong { color: var(--text); }
   .nav-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; margin-right: auto; }
-  .nav-logo img { height: 30px; width: auto; display: block; }
   .nav-logo-text { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: var(--text); white-space: nowrap; }
   .footer-logo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; }
-  .footer-logo img { height: 26px; width: auto; }
   .footer-logo-text { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; color: var(--text); }
-  .hero-logo { display: flex; align-items: center; justify-content: center; margin-bottom: 32px; }
-  .hero-logo img { height: 80px; width: auto; filter: drop-shadow(0 0 24px rgba(255,77,109,0.4)); }
 </style>
 </head>
 <body>
@@ -54,7 +30,7 @@
       <a href="#how">Hoe het werkt</a>
       <a href="#pricing">Abonnementen</a>
     </div>
-    <div class="nav-actions">
+    <div class="nav-actions" id="navActions">
       <a href="login.html" class="btn-ghost">Inloggen</a>
       <a href="login.html#signup" class="btn-nav">Gratis proberen</a>
     </div>
@@ -96,13 +72,13 @@
           </div>
           <div class="m-card">
             <div class="m-title">De Holocaust</div>
-            <div class="m-text"><strong>6 miljoen</strong> Joden vermoord. Systematisch via concentratiekampen. Begon met Neurenbergwetten (1935) → definitieve rechten afgenomen. &#128161; <em>1935 = rechten weg, 1942 = Wannsee = uitroeiingsplan</em></div>
+            <div class="m-text"><strong>6 miljoen</strong> Joden vermoord. Systematisch via concentratiekampen. Begon met Neurenbergwetten (1935). &#128161; <em>1935 = rechten weg, 1942 = Wannsee = uitroeiingsplan</em></div>
             <div class="m-expand">&#128214; Volledige uitleg + ezelsbruggetjes &#9660;</div>
           </div>
-          <div class="m-badge" style="background:rgba(255,152,0,0.12);color:#ff9800;display:inline-block;padding:4px 12px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:0.1em;width:fit-content;margin-top:4px;">&#9889; NICE TO KNOW — leer dit als je nog tijd hebt</div>
+          <div class="m-badge" style="background:rgba(255,152,0,0.12);color:#ff9800;display:inline-block;padding:4px 12px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:0.1em;width:fit-content;margin-top:4px;">&#9889; NICE TO KNOW</div>
           <div class="m-card" style="opacity:0.85">
             <div class="m-title">D-Day (6 juni 1944)</div>
-            <div class="m-text">Geallieerde landing in Normandië → keerpunt van de oorlog. Niet de oorzaak maar het begin van het einde. &#128161; <em>D-Day = De Dag dat het kantelde</em></div>
+            <div class="m-text">Geallieerde landing in Normandië → keerpunt van de oorlog. &#128161; <em>D-Day = De Dag dat het kantelde</em></div>
             <div class="m-expand">&#128214; Volledige uitleg + ezelsbruggetjes &#9660;</div>
           </div>
           <div class="m-badge red-badge">&#9197; SKIP — geen tijd aan verspillen</div>
@@ -184,11 +160,9 @@
     <div class="label">Abonnementen</div>
     <h2>Kies jouw plan</h2>
     <p class="pricing-sub">Begin gratis met 1 analyse. Upgrade wanneer je wil.</p>
-
     <div class="pricing-compare">
       &#128161; Een bijles kost gemiddeld <strong>€30 per uur</strong>. StudyBrain Pro kost <strong>€9,99 per maand</strong> — en is er altijd, voor elk vak.
     </div>
-
     <div class="plans">
       <div class="plan">
         <div class="plan-name">Starter</div>
@@ -205,7 +179,6 @@
         </ul>
         <a href="https://buy.stripe.com/test_14A00b6fA3uqeWi85h1wY00" target="_blank" class="plan-cta ghost-cta">Begin met Starter</a>
       </div>
-
       <div class="plan plan-hot">
         <div class="hot-label">&#11088; Meest gekozen</div>
         <div class="plan-name">Pro</div>
@@ -223,7 +196,6 @@
         </ul>
         <a href="https://buy.stripe.com/test_14A9AL1Zkd50cOaetF1wY01" target="_blank" class="plan-cta hot-cta">Begin met Pro</a>
       </div>
-
       <div class="plan">
         <div class="plan-name">Elite</div>
         <div class="plan-price"><span class="euro">€</span>15<span class="cents">,99</span><span class="per">/mnd</span></div>
@@ -264,6 +236,28 @@
     <div class="footer-links">
       <a href="privacy.html">Privacy</a>
       <a href="voorwaarden.html">Voorwaarden</a>
-      <a href="/cdn-cgi/l/email-protection#1d74737b725d6e696879647f6f7c7473337c6d6d">Contact</a>
+      <a href="mailto:info@studybrain.app">Contact</a>
     </div>
-    <p class="copy">&copy; 2026 StudyBrain. Alle rechten voorbehoude
+    <p class="copy">&copy; 2026 StudyBrain. Alle rechten voorbehouden.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script>
+  (async () => {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) {
+      const actions = document.getElementById('navActions');
+      if (actions) {
+        actions.innerHTML = `
+          <span style="font-size:13px;color:#6b6b8a">${session.user.email}</span>
+          <a href="app.html" class="btn-nav">Naar de app &#8594;</a>
+        `;
+      }
+    }
+  })();
+</script>
+
+</body>
+</html>
