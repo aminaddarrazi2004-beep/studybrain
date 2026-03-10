@@ -141,7 +141,7 @@
     <a href="voorwaarden.html" class="sidebar-link">
       <span class="icon">📄</span> Voorwaarden
     </a>
-    <a href="mailto:info@studybrain.app" class="sidebar-link">
+    <a href="/cdn-cgi/l/email-protection#f59c9b939ab5868180918c9787949c9bdb948585" class="sidebar-link">
       <span class="icon">✉️</span> Contact
     </a>
   </nav>
@@ -415,7 +415,7 @@
     <div class="footer-links">
       <a href="privacy.html">Privacy</a>
       <a href="voorwaarden.html">Voorwaarden</a>
-      <a href="mailto:info@studybrain.app">Contact</a>
+      <a href="/cdn-cgi/l/email-protection#f1989f979eb18285849588938390989fdf908181">Contact</a>
     </div>
     <p class="copy">&copy; 2026 StudyBrain. Alle rechten voorbehouden.</p>
   </div>
@@ -506,9 +506,11 @@
         window.history.replaceState({}, '', url);
       }
     }
-    function toggleFaq(btn) {
-    const item = btn.closest('.faq-item');
-    item.classList.toggle('open');
+  }
+  })();
+
+  function toggleFaq(btn) {
+    btn.closest('.faq-item').classList.toggle('open');
   }
 </script>
 
