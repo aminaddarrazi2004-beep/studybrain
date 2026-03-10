@@ -28,9 +28,11 @@ body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif
 .field input { width:100%; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:13px 16px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:15px; outline:none; transition:border-color 0.2s; }
 .field input:focus { border-color:var(--accent); }
 .field input::placeholder { color:var(--muted); }
-.remember-row { display:flex; align-items:center; gap:10px; margin-bottom:16px; cursor:pointer; }
-.remember-row input[type=checkbox] { width:18px; height:18px; accent-color:var(--accent); cursor:pointer; border-radius:4px; }
+.remember-row { display:flex; align-items:center; gap:10px; margin-bottom:4px; cursor:pointer; }
+.remember-row input[type=checkbox] { width:18px; height:18px; accent-color:var(--accent); cursor:pointer; }
 .remember-row span { font-size:13px; color:var(--muted); }
+.forgot-link { display:block; text-align:right; font-size:13px; color:var(--accent); text-decoration:none; margin-bottom:16px; cursor:pointer; }
+.forgot-link:hover { text-decoration:underline; }
 .submit-btn { width:100%; padding:15px; background:linear-gradient(135deg,#ff4d6d,#c9184a); border:none; border-radius:14px; color:white; font-family:'Syne',sans-serif; font-size:17px; font-weight:700; cursor:pointer; transition:all 0.3s; margin-top:8px; }
 .submit-btn:hover { transform:translateY(-2px); box-shadow:0 12px 32px rgba(255,77,109,0.4); }
 .submit-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; box-shadow:none; }
@@ -45,7 +47,7 @@ body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif
 <div class="orb orb1"></div>
 <div class="orb orb2"></div>
 
-<a href="index.html" class="logo">&#129504; StudyBrain</a>
+<a href="index.html" class="logo">🧠 StudyBrain</a>
 
 <div class="auth-box">
   <div class="tab-row">
@@ -53,22 +55,25 @@ body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif
     <button class="tab" id="tabSignup" onclick="showTab('signup')">Account aanmaken</button>
   </div>
 
+  <!-- LOGIN -->
   <div id="formLogin">
     <div class="auth-title">Welkom terug</div>
     <div class="auth-sub">Log in om door te gaan met studeren.</div>
     <div class="msg error" id="loginError"></div>
     <div class="msg success" id="loginSuccess"></div>
     <div class="field"><label>E-mailadres</label><input type="email" id="loginEmail" placeholder="jouw@email.nl"></div>
-    <div class="field"><label>Wachtwoord</label><input type="password" id="loginPassword" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <div class="field"><label>Wachtwoord</label><input type="password" id="loginPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <label class="remember-row">
       <input type="checkbox" id="rememberMe">
       <span>Onthoud mij</span>
     </label>
-    <button class="submit-btn" onclick="doLogin()" id="loginBtn">Inloggen &#8594;</button>
+    <span class="forgot-link" onclick="showTab('forgot')">Wachtwoord vergeten?</span>
+    <button class="submit-btn" onclick="doLogin()" id="loginBtn">Inloggen →</button>
   </div>
 
+  <!-- SIGNUP -->
   <div id="formSignup" style="display:none">
-    <div class="free-badge">&#127873; 1 gratis analyse bij aanmaken &mdash; geen creditcard nodig</div>
+    <div class="free-badge">🎁 1 gratis analyse bij aanmaken — geen creditcard nodig</div>
     <div class="auth-title">Account aanmaken</div>
     <div class="auth-sub">Begin gratis. Upgrade wanneer je wil.</div>
     <div class="msg error" id="signupError"></div>
@@ -76,20 +81,52 @@ body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif
     <div class="field"><label>E-mailadres</label><input type="email" id="signupEmail" placeholder="jouw@email.nl"></div>
     <div class="field"><label>Wachtwoord</label><input type="password" id="signupPassword" placeholder="Minimaal 6 tekens"></div>
     <div class="field"><label>Wachtwoord herhalen</label><input type="password" id="signupPassword2" placeholder="Herhaal wachtwoord" onkeydown="if(event.key==='Enter')doSignup()"></div>
-    <button class="submit-btn" onclick="doSignup()" id="signupBtn">Account aanmaken &#8594;</button>
+    <button class="submit-btn" onclick="doSignup()" id="signupBtn">Account aanmaken →</button>
+  </div>
+
+  <!-- FORGOT PASSWORD -->
+  <div id="formForgot" style="display:none">
+    <div class="auth-title">Wachtwoord vergeten</div>
+    <div class="auth-sub">Vul je e-mailadres in. We sturen je een link om je wachtwoord te herstellen.</div>
+    <div class="msg error" id="forgotError"></div>
+    <div class="msg success" id="forgotSuccess"></div>
+    <div class="field"><label>E-mailadres</label><input type="email" id="forgotEmail" placeholder="jouw@email.nl" onkeydown="if(event.key==='Enter')doForgot()"></div>
+    <button class="submit-btn" onclick="doForgot()" id="forgotBtn">Stuur herstelmail →</button>
+    <span class="forgot-link" style="text-align:left;margin-top:12px;display:block;" onclick="showTab('login')">← Terug naar inloggen</span>
   </div>
 </div>
 
-<div class="back-link"><a href="index.html">&#8592; Terug naar hoofdpagina</a></div>
+<div class="back-link"><a href="index.html">← Terug naar hoofdpagina</a></div>
 
 <script src="auth.js"></script>
 <script>
   if (window.location.hash === '#signup') showTab('signup');
+
   function showTab(tab) {
     document.getElementById('formLogin').style.display = tab === 'login' ? 'block' : 'none';
     document.getElementById('formSignup').style.display = tab === 'signup' ? 'block' : 'none';
+    document.getElementById('formForgot').style.display = tab === 'forgot' ? 'block' : 'none';
     document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
     document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
+  }
+
+  async function doForgot() {
+    const email = document.getElementById('forgotEmail').value.trim();
+    if (!email) return showMsg('forgotError', 'Vul je e-mailadres in.', 'error');
+    const btn = document.getElementById('forgotBtn');
+    btn.disabled = true; btn.textContent = 'Bezig...';
+
+    const { error } = await sb.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://studybrain.pages.dev/reset-password.html'
+    });
+
+    if (error) {
+      showMsg('forgotError', 'Er ging iets mis. Probeer het opnieuw.', 'error');
+      btn.disabled = false; btn.textContent = 'Stuur herstelmail →';
+    } else {
+      showMsg('forgotSuccess', '✅ Herstelmail verstuurd! Controleer je inbox.', 'success');
+      btn.textContent = 'Verstuurd!';
+    }
   }
 </script>
 </body>
