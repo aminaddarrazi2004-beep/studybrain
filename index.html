@@ -500,13 +500,11 @@
       if (toast) {
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 4000);
-        // Clean URL
         const url = new URL(window.location);
         url.searchParams.delete('ingelogd');
         window.history.replaceState({}, '', url);
       }
     }
-  }
   })();
 
   function toggleFaq(btn) {
