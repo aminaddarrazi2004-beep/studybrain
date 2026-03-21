@@ -7,33 +7,37 @@
 <meta name="description" content="Upload je lesstof. StudyBrain analyseert wat sowieso in de toets komt, wat handig is, en wat je veilig kunt overslaan.">
 <link rel="canonical" href="https://studybrain.app/">
 
-<!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
 
-<!-- Open Graph (WhatsApp, Facebook, LinkedIn) -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://studybrain.app/">
 <meta property="og:title" content="StudyBrain — Leer slimmer, niet harder">
-<meta property="og:description" content="Upload je lesstof. Weet in 30 seconden wat je MOET leren, wat handig is, en wat je kunt overslaan. Al door studenten gebruikt voor hun toetsen.">
+<meta property="og:description" content="Upload je lesstof. Weet in 30 seconden wat je MOET leren, wat handig is, en wat je kunt overslaan.">
 <meta property="og:image" content="https://studybrain.app/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="nl_NL">
 <meta property="og:site_name" content="StudyBrain">
 
-<!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="StudyBrain — Leer slimmer, niet harder">
 <meta name="twitter:description" content="Upload je lesstof. Weet in 30 seconden wat je MOET leren voor je toets.">
 <meta name="twitter:image" content="https://studybrain.app/og-image.png">
 
-<!-- Zoekmachines -->
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#ff4d6d">
 
+<!-- Fonts preloaden zodat ze NOOIT stretchen -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
 <link rel="stylesheet" href="landing.css">
 <style>
+  /* Voorkom font stretching globaal */
+  * { font-synthesis: none; }
+
   .plan-price { font-family: 'DM Sans', sans-serif; font-size: 38px; font-weight: 700; line-height: 1; margin-bottom: 8px; letter-spacing: -1px; }
   .plan-price .euro { font-size: 22px; font-weight: 500; vertical-align: super; margin-right: 1px; }
   .plan-price .cents { font-size: 18px; font-weight: 400; color: var(--muted); }
@@ -46,42 +50,18 @@
   .footer-logo-text { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; color: var(--text); }
 
   /* ── Login toast ── */
-  .login-toast {
-    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px);
-    background: rgba(0,230,118,0.12); border: 1px solid rgba(0,230,118,0.3);
-    color: #00e676; padding: 14px 24px; border-radius: 14px; font-size: 14px; font-weight: 600;
-    z-index: 9999; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s;
-    opacity: 0; pointer-events: none; white-space: nowrap;
-  }
+  .login-toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: rgba(0,230,118,0.12); border: 1px solid rgba(0,230,118,0.3); color: #00e676; padding: 14px 24px; border-radius: 14px; font-size: 14px; font-weight: 600; z-index: 9999; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s; opacity: 0; pointer-events: none; white-space: nowrap; }
   .login-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
   /* ── SIDEBAR ── */
-  .sidebar {
-    position: fixed; top: 56px; left: 0; height: calc(100vh - 56px); width: 240px;
-    background: rgba(10,10,15,0.97); border-right: 1px solid rgba(255,255,255,0.07);
-    backdrop-filter: blur(20px); z-index: 200; display: flex; flex-direction: column;
-    padding: 0; transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-  }
+  .sidebar { position: fixed; top: 56px; left: 0; height: calc(100vh - 56px); width: 240px; background: rgba(10,10,15,0.97); border-right: 1px solid rgba(255,255,255,0.07); backdrop-filter: blur(20px); z-index: 200; display: flex; flex-direction: column; padding: 0; transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); }
   .sidebar.open { transform: translateX(0); }
   .sidebar-logo { display: none; }
   .sidebar-logo-text { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; color: var(--text); }
-  .sidebar-app-btn {
-    display: flex; align-items: center; gap: 10px; margin: 14px 12px 0;
-    padding: 13px 16px; border-radius: 12px;
-    background: linear-gradient(135deg, rgba(255,77,109,0.18), rgba(255,77,109,0.08));
-    border: 1px solid rgba(255,77,109,0.35); color: var(--accent);
-    font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
-    text-decoration: none; transition: all 0.2s;
-  }
-  .sidebar-app-btn:hover { background: linear-gradient(135deg, rgba(255,77,109,0.28), rgba(255,77,109,0.15)); border-color: var(--accent); }
   .sidebar-close { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 20px; padding: 4px; line-height: 1; transition: color 0.2s; }
   .sidebar-close:hover { color: var(--text); }
   .sidebar-nav { padding: 16px 12px; flex: 1; display: flex; flex-direction: column; gap: 4px; }
-  .sidebar-link {
-    display: flex; align-items: center; gap: 10px; padding: 11px 12px;
-    border-radius: 10px; text-decoration: none; color: var(--muted); font-size: 14px;
-    transition: all 0.18s; border: none; background: none; cursor: pointer; width: 100%; text-align: left;
-  }
+  .sidebar-link { display: flex; align-items: center; gap: 10px; padding: 11px 12px; border-radius: 10px; text-decoration: none; color: var(--muted); font-size: 14px; transition: all 0.18s; border: none; background: none; cursor: pointer; width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; }
   .sidebar-link:hover { background: rgba(255,255,255,0.05); color: var(--text); }
   .sidebar-link.highlight { background: rgba(255,77,109,0.12); color: var(--accent); font-weight: 600; }
   .sidebar-link.highlight:hover { background: rgba(255,77,109,0.2); }
@@ -89,36 +69,26 @@
   .sidebar-divider { height: 1px; background: rgba(255,255,255,0.07); margin: 8px 12px; }
   .sidebar-footer { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,0.07); }
   .sidebar-plan-badge { display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: rgba(255,77,109,0.15); color: var(--accent); border: 1px solid rgba(255,77,109,0.3); margin-bottom: 10px; }
-
-  /* Sidebar toggle button (hamburger) */
-  .sidebar-toggle {
-    position: fixed; top: 14px; left: 16px; z-index: 300;
-    background: rgba(10,10,15,0.9); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 10px; color: var(--text); cursor: pointer; padding: 8px 10px;
-    font-size: 18px; line-height: 1; backdrop-filter: blur(10px); transition: all 0.2s;
-    display: flex; align-items: center; justify-content: center;
-  }
+  .sidebar-toggle { position: fixed; top: 14px; left: 16px; z-index: 300; background: rgba(10,10,15,0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: var(--text); cursor: pointer; padding: 8px 10px; font-size: 18px; line-height: 1; backdrop-filter: blur(10px); transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
   .sidebar-toggle:hover { border-color: rgba(255,77,109,0.5); color: var(--accent); }
-
-  /* Overlay behind sidebar */
-  .sidebar-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 190;
-    opacity: 0; pointer-events: none; transition: opacity 0.3s;
-  }
+  .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 190; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
   .sidebar-overlay.visible { opacity: 1; pointer-events: all; }
-
-  /* Nav padding when sidebar toggle is visible */
   .nav-inner { padding-left: 52px; }
+
+  /* step-num fix — geen Syne, geen stretch */
+  .step-num { font-family: 'Arial Black', 'Impact', Arial, sans-serif !important; font-style: normal !important; font-stretch: normal !important; }
+  h1, h2, h3, .step h3, .plan-name, .feat-card h3 { font-family: 'Syne', Arial, sans-serif !important; font-stretch: normal !important; font-style: normal !important; }
 
   @media (max-width: 600px) {
     .nav-inner { padding-left: 48px; }
     .nav-logo-text { font-size: 14px; }
     .btn-ghost { padding: 5px 8px; font-size: 11px; border-radius: 8px; }
-    .btn-nav  { padding: 5px 8px; font-size: 11px; border-radius: 8px; }
+    .btn-nav { padding: 5px 8px; font-size: 11px; border-radius: 8px; }
     .nav-actions { gap: 4px; }
     .sidebar { width: 80vw; max-width: 280px; }
     .sidebar-toggle { top: 10px; left: 10px; padding: 7px 9px; font-size: 17px; }
   }
+
   .faq-section { background: var(--bg); }
   .faq-section .label, .faq-section h2 { display: block; text-align: center; }
   .faq-section h2 { margin-bottom: 40px; }
@@ -134,13 +104,9 @@
 </head>
 <body>
 
-<!-- SIDEBAR TOGGLE -->
 <button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">☰</button>
-
-<!-- SIDEBAR OVERLAY -->
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <span class="sidebar-logo-text">🧠 StudyBrain</span>
@@ -157,22 +123,17 @@
       <span class="icon">💳</span> Abonnementen
     </a>
     <div class="sidebar-divider"></div>
-    <a href="overons.html" class="sidebar-link">
-      <span class="icon">👥</span> Over ons
-    </a>
     <a href="privacy.html" class="sidebar-link">
       <span class="icon">🔒</span> Privacy
     </a>
     <a href="voorwaarden.html" class="sidebar-link">
       <span class="icon">📄</span> Voorwaarden
     </a>
-    <a href="/cdn-cgi/l/email-protection#0960676f66497a7d7c6d706b7b68606727687979" class="sidebar-link">
+    <a href="mailto:info@studybrain.app" class="sidebar-link">
       <span class="icon">✉️</span> Contact
     </a>
   </nav>
-  <div class="sidebar-footer" id="sidebarFooter">
-    <!-- filled by JS -->
-  </div>
+  <div class="sidebar-footer" id="sidebarFooter"></div>
 </aside>
 
 <nav>
@@ -311,8 +272,6 @@
   </div>
 </section>
 
-
-
 <section class="pricing" id="pricing">
   <div class="section-inner">
     <div class="label">Abonnementen</div>
@@ -375,46 +334,33 @@
   </div>
 </section>
 
-<!-- FAQ -->
 <section class="faq-section" id="faq">
   <div class="section-inner">
     <div class="label">Veelgestelde vragen</div>
     <h2>Alles wat je wil weten</h2>
     <div class="faq-list">
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          Werkt StudyBrain voor elk vak? <span class="faq-arrow">▼</span>
-        </button>
+        <button class="faq-q" onclick="toggleFaq(this)">Werkt StudyBrain voor elk vak? <span class="faq-arrow">▼</span></button>
         <div class="faq-a">Ja. StudyBrain werkt voor alle vakken waarbij je een PDF of tekstdocument hebt — van geschiedenis en biologie tot economie en recht. Zolang je lesstof als PDF beschikbaar is, kan StudyBrain het analyseren.</div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          Wat krijg ik met mijn gratis analyse? <span class="faq-arrow">▼</span>
-        </button>
+        <button class="faq-q" onclick="toggleFaq(this)">Wat krijg ik met mijn gratis analyse? <span class="faq-arrow">▼</span></button>
         <div class="faq-a">Bij het aanmaken van een account krijg je 1 gratis analyse. Je ziet het Must Learn / Nice to Know / Skip overzicht van je lesstof. Uitleg en ezelsbruggetjes zijn beschikbaar vanaf het Starter abonnement.</div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          Hoe groot mag mijn PDF zijn? <span class="faq-arrow">▼</span>
-        </button>
+        <button class="faq-q" onclick="toggleFaq(this)">Hoe groot mag mijn PDF zijn? <span class="faq-arrow">▼</span></button>
         <div class="faq-a">Je PDF mag maximaal 20MB zijn. Voor Pro en Elite kun je meerdere PDFs tegelijk uploaden (tot 3 of 4 bestanden).</div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          Hoe nauwkeurig is de analyse? <span class="faq-arrow">▼</span>
-        </button>
-        <div class="faq-a">StudyBrain analyseert herhaling, vetgedrukte tekst, definities en de structuur van je document. Net zoals een ervaren leraar. De resultaten zijn een sterke richtlijn — controleer altijd zelf of er vakspecifieke aandachtspunten zijn die je docent heeft aangegeven.</div>
+        <button class="faq-q" onclick="toggleFaq(this)">Hoe nauwkeurig is de analyse? <span class="faq-arrow">▼</span></button>
+        <div class="faq-a">StudyBrain analyseert herhaling, vetgedrukte tekst, definities en de structuur van je document. De resultaten zijn een sterke richtlijn — controleer altijd zelf of er vakspecifieke aandachtspunten zijn die je docent heeft aangegeven.</div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          Kan ik mijn abonnement opzeggen? <span class="faq-arrow">▼</span>
-        </button>
+        <button class="faq-q" onclick="toggleFaq(this)">Kan ik mijn abonnement opzeggen? <span class="faq-arrow">▼</span></button>
         <div class="faq-a">Ja, je kunt maandelijks opzeggen. Er zijn geen verborgen kosten of lange contracten. Je behoudt toegang tot het einde van je betaalde periode.</div>
       </div>
       <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          Is mijn lesstof veilig? <span class="faq-arrow">▼</span>
-        </button>
+        <button class="faq-q" onclick="toggleFaq(this)">Is mijn lesstof veilig? <span class="faq-arrow">▼</span></button>
         <div class="faq-a">Je PDFs worden alleen gebruikt voor de analyse en worden niet opgeslagen of gedeeld. Je privacy is voor ons belangrijk — lees onze privacyverklaring voor meer details.</div>
       </div>
     </div>
@@ -440,22 +386,21 @@
     <div class="footer-links">
       <a href="privacy.html">Privacy</a>
       <a href="voorwaarden.html">Voorwaarden</a>
-      <a href="/cdn-cgi/l/email-protection#f1989f979eb18285849588938390989fdf908181">Contact</a>
+      <a href="mailto:info@studybrain.app">Contact</a>
     </div>
     <p class="copy">&copy; 2026 StudyBrain. Alle rechten voorbehouden.</p>
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // ── Init Supabase direct (niet via auth.js, zodat sb hier beschikbaar is) ──
   const SUPABASE_URL = 'https://wtfzqpaectqrbprmxjqp.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0ZnpxcGFlY3RxcmJwcm14anFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NzE4NDYsImV4cCI6MjA4ODE0Nzg0Nn0.LeJqnukvUpVJZyG_2pjwS0xnl24ATdV6Mi6qqZeVbJ4';
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
     auth: { persistSession: true, storageKey: 'studybrain-auth', storage: window.localStorage, autoRefreshToken: true, detectSessionInUrl: false }
   });
 
-  // ── Sidebar logic ──
+  // Sidebar
   function openSidebar() {
     document.getElementById('sidebar').classList.add('open');
     document.getElementById('sidebarOverlay').classList.add('visible');
@@ -470,107 +415,82 @@
   document.getElementById('sidebarClose').addEventListener('click', closeSidebar);
   document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
 
-  // ── Auth state ──
+  // Auth
+  sb.auth.onAuthStateChange((event, session) => {
+    updateNav(session);
+  });
+
   (async () => {
     const { data: { session } } = await sb.auth.getSession();
+    updateNav(session);
 
     if (session) {
-      const user = session.user;
-      const email = user.email;
-
-      // Update nav
-      const actions = document.getElementById('navActions');
-      if (actions) {
-        actions.innerHTML = `
-          <span style="font-size:13px;color:#6b6b8a">${email}</span>
-          <a href="app.html" class="btn-nav">Naar de app →</a>
-        `;
-      }
-
-      // Fetch plan
       let plan = 'gratis';
       try {
-        const { data } = await sb.from('profiles').select('plan').eq('id', user.id).single();
-        if (data && data.plan) plan = data.plan;
-      } catch (e) {}
+        const { data } = await sb.from('profiles').select('plan').eq('id', session.user.id).single();
+        if (data?.plan) plan = data.plan;
+      } catch(e) {}
 
-      // Sidebar footer — ingelogd
-      const sidebarFooter = document.getElementById('sidebarFooter');
-      if (sidebarFooter) {
-        sidebarFooter.innerHTML = `
-          <div class="sidebar-plan-badge">${plan.toUpperCase()}</div>
-          <div style="font-size:12px;color:var(--muted);margin-bottom:10px;word-break:break-all;">${email}</div>
-          <button onclick="sb.auth.signOut().then(()=>location.reload())"
-            style="background:none;border:1px solid rgba(255,255,255,0.1);color:var(--muted);padding:8px 12px;border-radius:8px;cursor:pointer;font-size:13px;width:100%;">
-            Uitloggen
-          </button>
-        `;
-      }
-
+      document.getElementById('sidebarFooter').innerHTML = `
+        <div class="sidebar-plan-badge">${plan.toUpperCase()}</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px;word-break:break-all;">${session.user.email}</div>
+        <button onclick="sb.auth.signOut().then(()=>location.reload())" style="background:none;border:1px solid rgba(255,255,255,0.1);color:var(--muted);padding:8px 12px;border-radius:8px;cursor:pointer;font-size:13px;width:100%;">Uitloggen</button>
+      `;
     } else {
-      // Sidebar footer — niet ingelogd
-      const sidebarFooter = document.getElementById('sidebarFooter');
-      if (sidebarFooter) {
-        sidebarFooter.innerHTML = `
-          <a href="login.html" style="display:block;text-align:center;padding:10px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--muted);font-size:13px;text-decoration:none;margin-bottom:8px;">Inloggen</a>
-          <a href="login.html#signup" style="display:block;text-align:center;padding:10px;background:linear-gradient(135deg,#ff4d6d,#c9184a);border-radius:8px;color:white;font-size:13px;font-weight:700;text-decoration:none;">Gratis proberen</a>
-        `;
-      }
+      document.getElementById('sidebarFooter').innerHTML = `
+        <a href="login.html" style="display:block;text-align:center;padding:10px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--muted);font-size:13px;text-decoration:none;margin-bottom:8px;">Inloggen</a>
+        <a href="login.html#signup" style="display:block;text-align:center;padding:10px;background:linear-gradient(135deg,#ff4d6d,#c9184a);border-radius:8px;color:white;font-size:13px;font-weight:700;text-decoration:none;">Gratis proberen</a>
+      `;
     }
 
-    // ── Login toast ──
+    // Toast
     const params = new URLSearchParams(window.location.search);
     if (params.get('ingelogd') === '1' && session) {
       const toast = document.getElementById('loginToast');
-      if (toast) {
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 4000);
-        const url = new URL(window.location);
-        url.searchParams.delete('ingelogd');
-        window.history.replaceState({}, '', url);
-      }
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 4000);
+      const url = new URL(window.location);
+      url.searchParams.delete('ingelogd');
+      window.history.replaceState({}, '', url);
     }
   })();
+
+  function updateNav(session) {
+    const actions = document.getElementById('navActions');
+    if (!actions) return;
+    if (session) {
+      actions.innerHTML = `
+        <span style="font-size:13px;color:#6b6b8a">${session.user.email}</span>
+        <a href="app.html" class="btn-nav">Naar de app →</a>
+      `;
+    } else {
+      actions.innerHTML = `
+        <a href="login.html" class="btn-ghost">Inloggen</a>
+        <a href="login.html#signup" class="btn-nav">Gratis proberen</a>
+      `;
+    }
+  }
 
   function toggleFaq(btn) {
     btn.closest('.faq-item').classList.toggle('open');
   }
 </script>
 
-<!-- ── Cookie banner ── -->
-<div id="cookieBanner" style="
-  display:none; position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
-  background:#1a1a26; border:1px solid #2a2a3d; border-radius:16px;
-  padding:20px 24px; max-width:560px; width:calc(100% - 48px);
-  z-index:9999; box-shadow:0 16px 48px rgba(0,0,0,0.5);
-  font-family:'DM Sans',sans-serif; align-items:center; gap:16px; flex-wrap:wrap;
-">
-  <p style="font-size:13px;color:#6b6b8a;flex:1;min-width:200px;margin:0;line-height:1.6;">
-    🍪 Wij gebruiken cookies om de site goed te laten werken en je ervaring te verbeteren.
-    <a href="privacy.html" style="color:#ff4d6d;text-decoration:none;">Meer info</a>
-  </p>
+<!-- Cookie banner -->
+<div id="cookieBanner" style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a26;border:1px solid #2a2a3d;border-radius:16px;padding:20px 24px;max-width:560px;width:calc(100% - 48px);z-index:9999;box-shadow:0 16px 48px rgba(0,0,0,0.5);font-family:'DM Sans',sans-serif;align-items:center;gap:16px;flex-wrap:wrap;">
+  <p style="font-size:13px;color:#6b6b8a;flex:1;min-width:200px;margin:0;line-height:1.6;">🍪 Wij gebruiken cookies om de site goed te laten werken. <a href="privacy.html" style="color:#ff4d6d;text-decoration:none;">Meer info</a></p>
   <div style="display:flex;gap:8px;flex-shrink:0;">
     <button onclick="acceptCookies()" style="padding:9px 18px;background:linear-gradient(135deg,#ff4d6d,#c9184a);border:none;border-radius:10px;color:white;font-size:13px;font-weight:700;cursor:pointer;">Accepteren</button>
     <button onclick="rejectCookies()" style="padding:9px 18px;background:none;border:1px solid #2a2a3d;border-radius:10px;color:#6b6b8a;font-size:13px;cursor:pointer;">Weigeren</button>
   </div>
 </div>
 <script>
-  function acceptCookies() {
-    localStorage.setItem('sb-cookie-consent', 'accepted');
-    document.getElementById('cookieBanner').style.display = 'none';
-  }
-  function rejectCookies() {
-    localStorage.setItem('sb-cookie-consent', 'rejected');
-    document.getElementById('cookieBanner').style.display = 'none';
-  }
-  // Toon cookie banner alleen als: nog nooit keuze gemaakt EN niet net ingelogd
+  function acceptCookies() { localStorage.setItem('sb-cookie-consent','accepted'); document.getElementById('cookieBanner').style.display='none'; }
+  function rejectCookies() { localStorage.setItem('sb-cookie-consent','rejected'); document.getElementById('cookieBanner').style.display='none'; }
   const _consent = localStorage.getItem('sb-cookie-consent');
   const _justLoggedIn = new URLSearchParams(window.location.search).get('ingelogd') === '1';
-  if (!_consent && !_justLoggedIn) {
-    setTimeout(() => {
-      document.getElementById('cookieBanner').style.display = 'flex';
-    }, 1500);
-  }
+  if (!_consent && !_justLoggedIn) { setTimeout(() => { document.getElementById('cookieBanner').style.display='flex'; }, 1500); }
 </script>
+
 </body>
 </html>
