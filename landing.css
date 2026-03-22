@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; font-synthesis: none; }
 
@@ -12,7 +12,7 @@
   --yellow: #ffd600;
   --text: #f0f0f8;
   --muted: #6b6b8a;
-  --font-head: 'Syne', Arial, sans-serif;
+  --font-head: 'DM Sans', Arial, sans-serif;
   --font-body: 'DM Sans', Arial, sans-serif;
 }
 
@@ -25,9 +25,9 @@ body {
   overflow-x: hidden;
 }
 
-/* Alle headings: Syne, nooit stretchen */
+/* Alle headings: bold DM Sans */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-head);
+  font-family: var(--font-body);
   font-synthesis: none;
   font-stretch: normal;
   font-style: normal;
@@ -43,7 +43,7 @@ p, a, li, span, button, input, label, div {
 /* NAV */
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(10,10,15,0.88); backdrop-filter: blur(14px); }
 .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 16px; }
-.nav-logo { font-family: var(--font-head); font-size: 18px; font-weight: 700; color: var(--text); text-decoration: none; margin-right: auto; white-space: nowrap; }
+.nav-logo { font-family: var(--font-body); font-size: 18px; font-weight: 700; color: var(--text); text-decoration: none; margin-right: auto; white-space: nowrap; }
 .nav-links { display: flex; gap: 28px; }
 .nav-links a { font-family: var(--font-body); color: var(--muted); font-size: 14px; text-decoration: none; transition: color 0.2s; }
 .nav-links a:hover { color: var(--text); }
@@ -139,7 +139,7 @@ h2 { font-size: clamp(22px, 3vw, 36px); font-weight: 700; line-height: 1.2; lett
 .plan:hover { transform: translateY(-4px); }
 .plan-hot { background: linear-gradient(160deg, #1a1a2e, #0f0f1a); border-color: var(--accent); box-shadow: 0 0 48px rgba(255,77,109,0.18); }
 .hot-label { font-family: var(--font-body); background: var(--accent); color: white; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 14px; margin: -32px -32px 24px -32px; text-align: center; }
-.plan-name { font-family: var(--font-head); font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+.plan-name { font-family: var(--font-body); font-size: 22px; font-weight: 700; margin-bottom: 8px; }
 .plan-price { font-family: var(--font-body); font-size: 42px; font-weight: 700; line-height: 1; margin-bottom: 8px; }
 .cents { font-size: 20px; }
 .per { font-size: 14px; font-weight: 400; color: var(--muted); }
@@ -178,7 +178,7 @@ h2 { font-size: clamp(22px, 3vw, 36px); font-weight: 700; line-height: 1.2; lett
 /* FOOTER */
 footer { border-top: 1px solid var(--border); padding: 48px 24px; text-align: center; }
 .footer-inner { max-width: 600px; margin: 0 auto; }
-.footer-logo { font-family: var(--font-head); font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+.footer-logo { font-family: var(--font-body); font-size: 22px; font-weight: 700; margin-bottom: 8px; }
 footer p { font-family: var(--font-body); font-size: 13px; color: var(--muted); margin-bottom: 16px; }
 .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 16px; }
 .footer-links a { font-family: var(--font-body); font-size: 13px; color: var(--muted); text-decoration: none; }
