@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>StudyBrain — Analyseer je lesstof</title>
-<meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#ff4d6d">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<title>StudyBrain — Leer slimmer, niet harder</title>
+<meta name="description" content="Upload je lesstof en ontdek wat je écht moet leren voor je toets. AI-powered studiecoach.">
+<meta property="og:title" content="StudyBrain — Leer slimmer, niet harder">
+<meta property="og:description" content="Upload je PDF, krijg een prioriteitenlijst. Weet wat je MOET leren, wat handig is, en wat je kunt skippen.">
+<meta property="og:type" content="website">
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -129,29 +130,19 @@ body{padding-top:0;padding-left:220px}
 <div class="sidebar">
   <div class="sidebar-logo">&#129504; StudyBrain</div>
   <div class="sidebar-nav">
-
-    <!-- 1. Hoofdpagina bovenaan -->
-    <a href="index.html" class="sidebar-item">
-      <span class="si-icon">🏠</span> Hoofdpagina
-    </a>
-
-    <div class="sidebar-divider"></div>
-
-    <!-- 2. App functies -->
     <a class="sidebar-item active" onclick="scrollToTop(this)">
       <span class="si-icon">🧠</span> Nieuwe analyse
     </a>
     <button class="sidebar-item" onclick="toggleHoe(this)">
       <span class="si-icon">❓</span> Hoe het werkt
     </button>
-
     <div class="sidebar-divider"></div>
-
-    <!-- 3. Overig -->
     <a href="index.html#pricing" class="sidebar-item">
       <span class="si-icon">💎</span> Abonnementen
     </a>
-
+    <a href="index.html" class="sidebar-item">
+      <span class="si-icon">🏠</span> Hoofdpagina
+    </a>
   </div>
   <div class="sidebar-bottom">
     <div class="sidebar-plan" id="sidebarPlan" onclick="window.location.href='index.html#pricing'">🆓 Gratis</div>
@@ -178,9 +169,9 @@ body{padding-top:0;padding-left:220px}
     <h2>Je gratis analyse is op</h2>
     <p>Upgrade naar een abonnement om onbeperkt te blijven analyseren en je persoonlijk studieplan te krijgen.</p>
     <div class="upgrade-plans">
-      <a href="https://buy.stripe.com/test_14A00b6fA3uqeWi85h1wY00" target="_blank" class="upgrade-plan-btn starter">Starter — €6,99/mnd · 10 analyses · cheatsheet</a>
-      <a href="https://buy.stripe.com/test_14A9AL1Zkd50cOaetF1wY01" target="_blank" class="upgrade-plan-btn pro">⭐ Pro — €9,99/mnd · onbeperkt + studieplan</a>
-      <a href="https://buy.stripe.com/test_fZu14f0Vg3uq3dAetF1wY02" target="_blank" class="upgrade-plan-btn elite">Elite — €15,99/mnd · 4 vakken combineren</a>
+      <a href="https://buy.stripe.com/test_14A00b6fA3uqeWi85h1wY00" target="_blank" class="upgrade-plan-btn starter">Starter — €12,99/mnd · 10 analyses · cheatsheet</a>
+      <a href="https://buy.stripe.com/test_14A9AL1Zkd50cOaetF1wY01" target="_blank" class="upgrade-plan-btn pro">⭐ Pro — €14,99/mnd · onbeperkt + studieplan</a>
+      <a href="https://buy.stripe.com/test_fZu14f0Vg3uq3dAetF1wY02" target="_blank" class="upgrade-plan-btn elite">Elite — €27,99/mnd · 4 vakken combineren</a>
     </div>
     <span class="upgrade-close" onclick="hideUpgradeModal()">Nee bedankt, terug naar de app</span>
   </div>
@@ -238,8 +229,6 @@ body{padding-top:0;padding-left:220px}
         <button class="time-btn" data-time="1 uur"><span class="tb-emoji">😰</span>1 uur</button>
         <button class="time-btn" data-time="2-3 uur"><span class="tb-emoji">😬</span>2-3 uur</button>
         <button class="time-btn active" data-time="een avond"><span class="tb-emoji">🌙</span>Een avond</button>
-        <button class="time-btn" data-time="1-2 dagen"><span class="tb-emoji">📅</span>1-2 dagen</button>
-        <button class="time-btn" data-time="een week"><span class="tb-emoji">🗓️</span>Een week</button>
       </div>
     </div>
 
