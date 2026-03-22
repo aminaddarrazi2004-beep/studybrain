@@ -31,7 +31,7 @@
 <!-- Fonts preloaden zodat ze NOOIT stretchen -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="landing.css">
 <style>
@@ -45,9 +45,9 @@
   .pricing-compare { text-align: center; background: rgba(255,77,109,0.07); border: 1px solid rgba(255,77,109,0.2); border-radius: 14px; padding: 14px 24px; font-size: 14px; color: var(--muted); margin-bottom: 36px; max-width: 560px; margin-left: auto; margin-right: auto; }
   .pricing-compare strong { color: var(--text); }
   .nav-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; margin-right: auto; }
-  .nav-logo-text { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: var(--text); white-space: nowrap; }
+  .nav-logo-text { font-family: 'DM Sans', Arial, sans-serif; font-size: 18px; font-weight: 700; color: var(--text); white-space: nowrap; }
   .footer-logo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; }
-  .footer-logo-text { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; color: var(--text); }
+  .footer-logo-text { font-family: 'DM Sans', Arial, sans-serif; font-size: 20px; font-weight: 700; color: var(--text); }
 
   /* ── Login toast ── */
   .login-toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: rgba(0,230,118,0.12); border: 1px solid rgba(0,230,118,0.3); color: #00e676; padding: 14px 24px; border-radius: 14px; font-size: 14px; font-weight: 600; z-index: 9999; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s; opacity: 0; pointer-events: none; white-space: nowrap; }
@@ -57,7 +57,7 @@
   .sidebar { position: fixed; top: 56px; left: 0; height: calc(100vh - 56px); width: 240px; background: rgba(10,10,15,0.97); border-right: 1px solid rgba(255,255,255,0.07); backdrop-filter: blur(20px); z-index: 200; display: flex; flex-direction: column; padding: 0; transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); }
   .sidebar.open { transform: translateX(0); }
   .sidebar-logo { display: none; }
-  .sidebar-logo-text { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; color: var(--text); }
+  .sidebar-logo-text { font-family: 'DM Sans', Arial, sans-serif; font-size: 17px; font-weight: 700; color: var(--text); }
   .sidebar-close { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 20px; padding: 4px; line-height: 1; transition: color 0.2s; }
   .sidebar-close:hover { color: var(--text); }
   .sidebar-nav { padding: 16px 12px; flex: 1; display: flex; flex-direction: column; gap: 4px; }
@@ -75,9 +75,9 @@
   .sidebar-overlay.visible { opacity: 1; pointer-events: all; }
   .nav-inner { padding-left: 52px; }
 
-  /* step-num fix — geen Syne, geen stretch */
+  /* step-num fix — geen stretch, geen stretch */
   .step-num { font-family: 'Arial Black', 'Impact', Arial, sans-serif !important; font-style: normal !important; font-stretch: normal !important; }
-  h1, h2, h3, .step h3, .plan-name, .feat-card h3 { font-family: 'Syne', Arial, sans-serif !important; font-stretch: normal !important; font-style: normal !important; }
+  h1, h2, h3, .step h3, .plan-name, .feat-card h3 { font-family: 'DM Sans', Arial, sans-serif !important; font-stretch: normal !important; font-style: normal !important; }
 
   @media (max-width: 600px) {
     .nav-inner { padding-left: 48px; }
@@ -129,7 +129,7 @@
     <a href="voorwaarden.html" class="sidebar-link">
       <span class="icon">📄</span> Voorwaarden
     </a>
-    <a href="mailto:info@studybrain.app" class="sidebar-link">
+    <a href="/cdn-cgi/l/email-protection#7d14131b123d0e090819041f0f1c1413531c0d0d" class="sidebar-link">
       <span class="icon">✉️</span> Contact
     </a>
   </nav>
@@ -171,7 +171,7 @@
         <div class="avatars">
           <div class="av">S</div><div class="av">M</div><div class="av">J</div><div class="av">L</div><div class="av">R</div>
         </div>
-        <span>Al door <strong>studenten</strong> gebruikt voor hun toetsen</span>
+        <span>Door <strong>studenten</strong> gebruikt voor hun toetsen</span>
       </div>
     </div>
     <div class="hero-mockup">
@@ -386,13 +386,13 @@
     <div class="footer-links">
       <a href="privacy.html">Privacy</a>
       <a href="voorwaarden.html">Voorwaarden</a>
-      <a href="mailto:info@studybrain.app">Contact</a>
+      <a href="/cdn-cgi/l/email-protection#70191e161f300304051409120211191e5e110000">Contact</a>
     </div>
     <p class="copy">&copy; 2026 StudyBrain. Alle rechten voorbehouden.</p>
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const SUPABASE_URL = 'https://wtfzqpaectqrbprmxjqp.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0ZnpxcGFlY3RxcmJwcm14anFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NzE4NDYsImV4cCI6MjA4ODE0Nzg0Nn0.LeJqnukvUpVJZyG_2pjwS0xnl24ATdV6Mi6qqZeVbJ4';
@@ -488,9 +488,4 @@
   function acceptCookies() { localStorage.setItem('sb-cookie-consent','accepted'); document.getElementById('cookieBanner').style.display='none'; }
   function rejectCookies() { localStorage.setItem('sb-cookie-consent','rejected'); document.getElementById('cookieBanner').style.display='none'; }
   const _consent = localStorage.getItem('sb-cookie-consent');
-  const _justLoggedIn = new URLSearchParams(window.location.search).get('ingelogd') === '1';
-  if (!_consent && !_justLoggedIn) { setTimeout(() => { document.getElementById('cookieBanner').style.display='flex'; }, 1500); }
-</script>
-
-</body>
-</html>
+  const _justLoggedIn = new URLSearchParams(window.locatio
