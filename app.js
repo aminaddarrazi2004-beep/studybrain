@@ -338,6 +338,73 @@ function renderTopics(list, containerId, isSkip = false) {
   }
 }
 
+// ── Tijdslot configuratie ──
+function getTijdConfig(tijd) {
+  const configs = {
+    '30 minuten': {
+      maxChars: 4000,
+      must: 'MAX 2 onderwerpen — alleen het allerbelangrijkste.',
+      should: 'MAX 1 onderwerp',
+      skip: 'ALLES wat niet in must zit',
+      planStappen: 2,
+      herhalingen: 2,
+      planBeschrijving: 'De student heeft maar 30 minuten. Geef ALLEEN de 2 meest kritieke punten.',
+      herhalingsSchema: ['Direct nu', '10 minuten voor de toets']
+    },
+    '1 uur': {
+      maxChars: 6000,
+      must: 'MAX 3 onderwerpen',
+      should: 'MAX 2 onderwerpen',
+      skip: 'alles wat niet kritisch is',
+      planStappen: 3,
+      herhalingen: 3,
+      planBeschrijving: 'De student heeft 1 uur. Compact en gefocust.',
+      herhalingsSchema: ['Direct na het lezen', 'Over 30 minuten', '10 minuten voor de toets']
+    },
+    '2-3 uur': {
+      maxChars: 8000,
+      must: '4-5 onderwerpen',
+      should: '2-3 onderwerpen',
+      skip: 'alleen echt onbelangrijke details',
+      planStappen: 5,
+      herhalingen: 3,
+      planBeschrijving: 'De student heeft 2-3 uur. Geef een solide basis met goede uitleg.',
+      herhalingsSchema: ['Direct na het lezen', 'Na 1 uur pauze', '1 uur voor de toets']
+    },
+    'een avond': {
+      maxChars: 12000,
+      must: '5-6 onderwerpen — alles wat getoetst kan worden',
+      should: '3-4 onderwerpen',
+      skip: 'alleen randgevallen en voetnoten',
+      planStappen: 6,
+      herhalingen: 4,
+      planBeschrijving: 'De student heeft een avond. Grondige voorbereiding mogelijk.',
+      herhalingsSchema: ['Direct na het lezen', 'Na een korte pauze', 'Voor het slapen', 'Morgen ochtend vlak voor de toets']
+    },
+    '1-2 dagen': {
+      maxChars: 15000,
+      must: '6-8 onderwerpen',
+      should: '4-5 onderwerpen',
+      skip: 'alleen de meest obscure details',
+      planStappen: 8,
+      herhalingen: 5,
+      planBeschrijving: 'De student heeft 1-2 dagen. Dag 1: nieuwe stof. Dag 2: herhaling en oefenen.',
+      herhalingsSchema: ['Dag 1 avond: eerste herhaling', 'Dag 2 ochtend: wat weet je nog?', 'Dag 2 middag: zwakke punten', 'Dag 2 avond: alles doorlopen', '1 uur voor de toets']
+    },
+    'een week': {
+      maxChars: 15000,
+      must: 'ALLE toetsbare onderwerpen — volledig en diepgaand',
+      should: 'Verdieping en verbanden',
+      skip: 'alleen irrelevante bijzaken',
+      planStappen: 10,
+      herhalingen: 6,
+      planBeschrijving: 'De student heeft een week. Volledig weekplan met spaced repetition.',
+      herhalingsSchema: ['Dag 1: nieuwe stof', 'Dag 2: herhaal dag 1 + nieuwe stof', 'Dag 3: herhaal + nieuwe stof', 'Dag 4-5: verbanden en oefentoetsen', 'Dag 6: alles herhalen', 'Dag 7: lichte opfrissing']
+    }
+  };
+  return configs[tijd] || configs['een avond'];
+}
+
 // ── Persoonlijk studieplan (Pro/Elite) ──
 async function buildStudieplan(result, vakNaam) {
   const cfg = getTijdConfig(selectedTime);
