@@ -1,4 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap');
+
+/* Variabelen voor consistente fonts */
+:root {
+  --font-head: 'Syne', Arial, sans-serif;
+  --font-body: 'DM Sans', Arial, sans-serif;
+}
 
 :root {
   --bg: #0a0a0f;
@@ -18,7 +24,9 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
   min-height: 100vh;
   overflow-x: hidden;
 }
@@ -98,7 +106,7 @@ header {
 @keyframes blink { 50% { opacity: 0; } }
 
 h1 {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-head); font-synthesis: none;
   font-size: clamp(36px, 6vw, 56px);
   font-weight: 800;
   line-height: 1;
@@ -175,7 +183,7 @@ h1 {
 .upload-zone.drag-over { border-color: var(--accent); background: rgba(255,77,109,0.08); }
 
 .upload-icon { font-size: 48px; margin-bottom: 16px; display: block; }
-.upload-zone h3 { font-family: 'Syne', sans-serif; font-size: 20px; margin-bottom: 8px; }
+.upload-zone h3 { font-family: var(--font-body); font-weight: 700; font-size: 20px; margin-bottom: 8px; }
 .upload-zone p { color: var(--muted); font-size: 14px; }
 
 #fileInput { display: none; }
@@ -216,7 +224,7 @@ h1 {
   animation: fadeUp 0.6s 0.2s ease both;
 }
 .time-section h3 {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-body);
   font-size: 16px;
   margin-bottom: 16px;
   color: var(--muted);
@@ -262,7 +270,7 @@ h1 {
   border: none;
   border-radius: 16px;
   color: white;
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
   cursor: pointer;
@@ -313,7 +321,7 @@ h1 {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.15); }
 }
-.loading h3 { font-family: 'Syne', sans-serif; font-size: 22px; margin-bottom: 8px; }
+.loading h3 { font-family: var(--font-head); font-synthesis: none; font-size: 22px; margin-bottom: 8px; }
 .loading p { color: var(--muted); font-size: 15px; }
 .loading-dots { display: inline-flex; gap: 6px; margin-top: 20px; }
 .loading-dots span {
@@ -337,7 +345,7 @@ h1 {
   margin-bottom: 36px;
   animation: fadeDown 0.5s ease both;
 }
-.results-header h2 { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; }
+.results-header h2 { font-family: var(--font-head); font-synthesis: none; font-size: 32px; font-weight: 800; }
 .results-header p { color: var(--muted); margin-top: 8px; }
 
 .priority-card {
@@ -380,7 +388,7 @@ h1 {
 .should .card-badge { background: rgba(255,214,0,0.15); color: var(--yellow); }
 .skip .card-badge { background: rgba(255,77,109,0.15); color: var(--red); }
 
-.card-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+.card-title { font-family: var(--font-head); font-synthesis: none; font-size: 22px; font-weight: 800; margin-bottom: 6px; }
 .card-subtitle { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
 
 .topic-list { display: flex; flex-direction: column; gap: 12px; }
@@ -411,7 +419,7 @@ h1 {
   border-radius: 20px;
   padding: 28px;
 }
-.cheatsheet-section h3 { font-family: 'Syne', sans-serif; font-size: 20px; margin-bottom: 16px; }
+.cheatsheet-section h3 { font-family: var(--font-head); font-synthesis: none; font-size: 20px; margin-bottom: 16px; }
 .cheatsheet-content {
   font-size: 14px;
   line-height: 1.8;
@@ -428,7 +436,7 @@ h1 {
   border: 1px solid var(--border);
   border-radius: 12px;
   color: var(--muted);
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-body);
   font-size: 15px;
   cursor: pointer;
   transition: all 0.2s;
@@ -478,7 +486,7 @@ h1 {
 
 /* ── Persoonlijk studieplan ── */
 .studieplan { padding: 4px 0; }
-.studieplan h3 { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 20px; }
+.studieplan h3 { font-family: var(--font-head); font-synthesis: none; font-size: 20px; font-weight: 700; margin-bottom: 20px; }
 .sp-section { margin-bottom: 24px; }
 .sp-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #6b6b8a; margin-bottom: 12px; }
 .sp-stap { display: flex; gap: 14px; margin-bottom: 12px; }
@@ -494,7 +502,7 @@ h1 {
 
 /* ── Multi-vak styling (Elite/Pro) ── */
 .vak-sectie { margin-bottom: 8px; }
-.vak-titel { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); color: #f0f0f8; }
+.vak-titel { font-family: var(--font-head); font-synthesis: none; font-size: 20px; font-weight: 700; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); color: #f0f0f8; }
 .vak-divider { border: none; border-top: 2px solid rgba(255,255,255,0.05); margin: 32px 0; }
 .vak-blok { margin-bottom: 16px; border-radius: 14px; padding: 16px; border: 1px solid; }
 .must-blok { background: rgba(0,230,118,0.04); border-color: rgba(0,230,118,0.15); }
@@ -509,7 +517,7 @@ h1 {
 
 /* ── Weekplan ── */
 .weekplan { padding: 4px 0; }
-.weekplan h3 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+.weekplan h3 { font-family: var(--font-head); font-synthesis: none; font-size: 18px; font-weight: 700; margin-bottom: 20px; }
 .dag-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
 .dag-item strong { font-size: 14px; font-weight: 700; color: #ff8fa3; display: block; margin-bottom: 8px; }
 .dag-item ul { list-style: none; display: flex; flex-direction: column; gap: 5px; }
@@ -536,7 +544,7 @@ h1 {
 .vr-feedback { font-size: 13px; border-radius: 10px; padding: 10px 14px; line-height: 1.5; margin-top: 8px; }
 .correct-feedback { color: #00e676; background: rgba(0,230,118,0.08); border: 1px solid rgba(0,230,118,0.2); }
 .incorrect-feedback { color: #ff8fa3; background: rgba(255,77,109,0.08); border: 1px solid rgba(255,77,109,0.2); }
-.submit-toets-btn { width: 100%; padding: 14px; background: linear-gradient(135deg,#ffd600,#ff9500); border: none; border-radius: 12px; color: #0a0a0f; font-family: Syne,sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 16px; transition: all 0.2s; }
+.submit-toets-btn { width: 100%; padding: 14px; background: linear-gradient(135deg,#ffd600,#ff9500); border: none; border-radius: 12px; color: #0a0a0f; font-family: var(--font-body); font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 16px; transition: all 0.2s; }
 .submit-toets-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,214,0,0.3); }
 .score-box { text-align: center; padding: 20px; background: rgba(255,214,0,0.08); border: 1px solid rgba(255,214,0,0.2); border-radius: 12px; font-size: 18px; font-weight: 600; color: #ffd600; margin-top: 16px; }
 .topic-tip { display: block; margin-top: 8px; font-size: 12px; color: #00e676; background: rgba(0,230,118,0.08); border: 1px solid rgba(0,230,118,0.2); border-radius: 8px; padding: 6px 10px; }
