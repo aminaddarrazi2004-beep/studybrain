@@ -2,6 +2,7 @@
 const files = [];
 let selectedTime = 'een avond';
 let userPlan = 'gratis';
+let lastExtractedText = ''; // Raw PDF tekst voor studieplan
 
 // ── DOM refs ──
 const zone = document.getElementById('uploadZone');
@@ -292,6 +293,7 @@ async function analyze() {
       // ── Enkel bestand ──
       let text = await extractPdfText(files[0]);
       if (text.length > 12000) text = text.slice(0, 12000) + '\n\n[... afgekapt ...]';
+      lastExtractedText = text;
       const result = await callAnalyzeAPI(text, files[0].name, vragenCount);
 
       clearInterval(iv);
@@ -406,7 +408,7 @@ function getTijdConfig(tijd) {
 }
 
 // ── Persoonlijk studieplan (Pro/Elite) ──
-async function buildStudieplan(result, vakNaam) {
+async function buildStudieplan(result, vakNaam, rawText = '') {
   const cfg = getTijdConfig(selectedTime);
   const mustTopics = result.must.map(m => `- ${m.topic}: ${m.summary || ''}`).join('\n');
   const shouldTopics = result.should.map(s => `- ${s.topic}: ${s.summary || ''}`).join('\n');
@@ -477,7 +479,10 @@ MUST-onderwerpen (verplicht uitleggen, dit staat in de toets):
 ${mustTopics}
 
 SHOULD-onderwerpen (verwerk dit ook):
-${shouldTopics}`
+${shouldTopics}
+
+ORIGINELE LESSTOF — gebruik deze exacte feiten, begrippen, getallen en details in je uitleg. Verzin NIETS:
+${lastExtractedText ? lastExtractedText.slice(0, 8000) : 'Niet beschikbaar'}`
         }
       ]
     })
@@ -770,7 +775,7 @@ async function showResults(data, vakNaam) {
     planContainer.innerHTML = `<div style="padding:20px;text-align:center;color:#6b6b8a">📋 Studieplan wordt gegenereerd...</div>`;
     studieplanSection.parentNode.insertBefore(planContainer, studieplanSection);
 
-    const studieplan = await buildStudieplan(data, vakNaam || files[0]?.name?.replace('.pdf','') || 'dit vak');
+    const studieplan = await buildStudieplan(data, vakNaam || files[0]?.name?.replace('.pdf','') || 'dit vak', lastExtractedText);
     renderStudieplan(studieplan, 'studieplanContainer');
   }
 }
