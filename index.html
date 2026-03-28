@@ -86,7 +86,10 @@
     .sidebar-toggle { top: 10px; left: 10px; padding: 7px 9px; font-size: 17px; }
   }
 
-  .faq-section { background: var(--bg); }
+  .faq-section { background: var(--bg); padding-top: 80px; }
+  /* Fix 2: ghost plan buttons beter zichtbaar */
+  .ghost-cta { border: 1.5px solid rgba(255,255,255,0.2) !important; color: var(--text) !important; opacity: 1 !important; transition: all 0.2s !important; }
+  .ghost-cta:hover { border-color: rgba(255,77,109,0.5) !important; color: var(--accent) !important; background: rgba(255,77,109,0.06) !important; }
   .faq-section .label, .faq-section h2 { display: block; text-align: center; }
   .faq-section h2 { margin-bottom: 40px; }
   .faq-list { max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
@@ -254,7 +257,7 @@
   <div class="social-proof-inner">
     <div class="social-proof-top">
       <div class="sp-stat">
-        <div class="sp-stat-num">200<span>+</span></div>
+        <div class="sp-stat-num">50<span>+</span></div>
         <div class="sp-stat-label">Studenten gingen je voor</div>
       </div>
       <div class="sp-divider"></div>
@@ -433,7 +436,7 @@
         <div class="plan-desc">Toets morgen? Weet in 30 seconden wat je moet leren.</div>
         <ul class="plan-list">
           <li class="yes">10 analyses per maand</li>
-          <li class="yes">Must / Should / Skip overzicht</li>
+          <li class="yes">Must / Nice to Know / Skip overzicht</li>
           <li class="yes">Cheatsheet overzicht</li>
           <li class="yes">5 oefenvragen per analyse</li>
           <li class="no">Volledige uitleg + ezelsbruggetjes</li>
@@ -449,7 +452,7 @@
         <div class="plan-desc">Analyse + studieplan. Volledig voorbereid op elke toets.</div>
         <ul class="plan-list">
           <li class="yes"><strong>Onbeperkt</strong> analyses</li>
-          <li class="yes">Must / Should / Skip overzicht</li>
+          <li class="yes">Must / Nice to Know / Skip overzicht</li>
           <li class="yes">Cheatsheet overzicht</li>
           <li class="yes"><strong>Volledige uitleg + ezelsbruggetjes</strong></li>
           <li class="yes"><strong>10 oefenvragen per analyse</strong></li>
@@ -465,7 +468,7 @@
         <div class="plan-desc">Voor wie meerdere vakken tegelijk wil aanpakken en niks aan het toeval overlaat.</div>
         <ul class="plan-list">
           <li class="yes"><strong>Onbeperkt</strong> analyses</li>
-          <li class="yes">Must / Should / Skip overzicht</li>
+          <li class="yes">Must / Nice to Know / Skip overzicht</li>
           <li class="yes">Cheatsheet overzicht</li>
           <li class="yes">Volledige uitleg + ezelsbruggetjes</li>
           <li class="yes"><strong>20 oefenvragen per analyse</strong></li>
