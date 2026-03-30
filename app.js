@@ -247,6 +247,21 @@ ${overzicht}`
   return JSON.parse(match[0]);
 }
 
+
+// ── Sla analyse op in localStorage voor dashboard ──
+function slaAnalyseOp(naam, result) {
+  const analyses = JSON.parse(localStorage.getItem('studybrain-analyses') || '[]');
+  const nu = new Date();
+  const maanden = ['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'];
+  analyses.unshift({
+    naam: naam,
+    datum: nu.getDate() + ' ' + maanden[nu.getMonth()],
+    tijd: selectedTime,
+    mustCount: result.must?.length || 0,
+  });
+  localStorage.setItem('studybrain-analyses', JSON.stringify(analyses.slice(0, 10)));
+}
+
 // ── Main analyze ──
 async function analyze() {
   hideError();
@@ -298,7 +313,9 @@ async function analyze() {
 
       clearInterval(iv);
       await markAnalysisUsed();
-      showResults(result, files[0].name.replace('.pdf',''));
+      const vakNaamClean = files[0].name.replace('.pdf','').replace('.PDF','');
+      slaAnalyseOp(vakNaamClean, result);
+      showResults(result, vakNaamClean);
     }
 
   } catch (err) {
@@ -420,7 +437,49 @@ async function buildStudieplan(result, vakNaam, rawText = '') {
       messages: [
         {
           role: 'system',
-          content: `Je bent een ervaren docent die een student persoonlijk voorbereidt op een toets. Je schrijft een studieplan dat de stof VOLLEDIG EN DUIDELIJK UITLEGT zodat de student na het lezen ervan de toets haalt.
+          content: `Je bent een ervaren eindexamendocent die een student in één sessie volledig voorbereidt op een toets. Je taak: schrijf een studieplan dat zo gedetailleerd en volledig is dat de student na het lezen ZEKER een voldoende haalt.
+
+IJZEREN REGELS — ELK PUNT IS VERPLICHT:
+1. GEEN instructies. Nooit "lees dit", "bestudeer dit", "maak een schema". JIJ LEGT HET UIT.
+2. ELKE uitleg is minimaal 8-10 zinnen. Oppervlakkige uitleg is VERBODEN.
+3. Gebruik ALLEEN feiten uit de meegestuurde lesstof. Geen algemene kennis verzinnen.
+4. Verwerk alle specifieke begrippen, getallen, formules en namen uit de lesstof.
+5. Schrijf alsof je naast een 16-jarige zit en het voor de eerste keer uitlegt.
+6. Elk onderwerp eindigt met een concreet dagelijks leven voorbeeld: "Denk aan..."
+7. Het "onthoud" veld bevat de EXACTE definitie zoals die op de toets gevraagd wordt — minimaal 2 zinnen.
+8. Ezelsbruggetjes zijn GRAPPIG en UNIEK — geen saaie afkortingen.
+9. Valkuil = de meest gemaakte fout + waarom leerlingen die fout maken.
+10. Focuspunten bevatten het exacte type vraag + een voorbeeldvraag zoals op de toets.
+
+MINIMALE LENGTE PER STAP: uitleg = minimaal 8 zinnen, onthoud = 2 zinnen, ezelsbruggetje = uitleg hoe het werkt.
+
+Geef ALLEEN JSON terug.
+
+JSON formaat:
+{
+  "samenvatting": "3-4 zinnen die de rode draad uitleggen. Wat is het grote plaatje? Waarom hangt dit samen?",
+  "leerroute": [
+    {
+      "stap": 1,
+      "onderwerp": "Exacte naam van het onderwerp uit de lesstof",
+      "timing": "Wanneer leren",
+      "uitleg": "MINIMAAL 8 zinnen. Leg het onderwerp volledig uit met alle begrippen, getallen en formules uit de lesstof. Gebruik simpele taal. Maak verbanden tussen begrippen. Eindig met: Denk aan [concreet dagelijks leven voorbeeld].",
+      "onthoud": "2 volledige zinnen met de exacte definitie en de belangrijkste getallen/formules. Dit is wat letterlijk op de toets gevraagd wordt.",
+      "ezelsbruggetje": "Een grappig, memorabel geheugensteuntje. Leg in 1 zin uit hoe je het ezelsbruggetje gebruikt.",
+      "valkuil": "De specifieke fout + waarom leerlingen die fout maken + hoe je hem vermijdt.",
+      "tijd": "Geschatte studietijd"
+    }
+  ],
+  "herhalingsschema": [
+    {"moment": "Exact moment", "actie": "Specifieke opdracht: welke onderwerpen, wat exact doen, hoe lang"}
+  ],
+  "focuspunten": [
+    "Onderwerp X — type vraag: [definitievraag/rekenvraag/vergelijkingsvraag] — Voorbeeldvraag: [exacte vraagstelling zoals op toets]",
+    "Focuspunt 2",
+    "Focuspunt 3"
+  ],
+  "geheimtip": "Een concrete tip die alleen een docent weet: over hoe de toets beoordeeld wordt, welke fouten direct punten kosten, of wat docenten echt willen zien in een antwoord."
+}
 
 ABSOLUTE REGELS — NOOIT BREKEN:
 1. Geef de INHOUD direct. Nooit zeggen "lees dit", "bestudeer dit", "maak een schema" — JIJ legt het uit.
@@ -473,7 +532,12 @@ HERHALINGSSCHEMA: Gebruik exact deze momenten: ${cfg.herhalingsSchema.join(' →
 ${selectedTime === '1-2 dagen' ? 'SPREIDING: Dag 1 = fundamenten en basisconcepten. Dag 2 = verdieping, verbanden en herhaling. Vermeld Dag 1 of Dag 2 in het timing-veld.' : ''}
 ${selectedTime === 'een week' ? 'SPREIDING: Dag 1-3 = nieuwe stof. Dag 4-5 = verbanden en verdieping. Dag 6 = alles herhalen. Dag 7 = lichte opfrissing. Vermeld de dag in het timing-veld.' : ''}
 
-KRITIEKE EIS: De uitleg bij elke stap moet zo volledig zijn dat de leerling het onderwerp ECHT BEGRIJPT na het lezen. Gebruik alle feiten, getallen en verbanden uit de onderstaande stof. Geef de kennis direct — niet als instructie maar als uitleg.
+KRITIEKE EISEN — ELKE EIS IS VERPLICHT:
+1. Elke uitleg is MINIMAAL 8 zinnen. Korter = afgekeurd.
+2. Gebruik ALLEEN feiten uit de meegestuurde ORIGINELE LESSTOF hieronder. Verzin niets.
+3. Verwerk alle begrippen, getallen, namen en formules die in de lesstof staan.
+4. Maak verbanden tussen onderwerpen expliciet zichtbaar.
+5. Het studieplan moet zo compleet zijn dat iemand die de originele PDF NIET heeft gelezen, de toets alsnog haalt.
 
 MUST-onderwerpen (verplicht uitleggen, dit staat in de toets):
 ${mustTopics}
@@ -505,18 +569,18 @@ function renderStudieplan(studieplan, containerId) {
   el.innerHTML = `
     <div class="studieplan" id="studieplan-content" style="display:none">
       <div class="sp-header">
-        <h3>📋 Jouw persoonlijk studieplan</h3>
+        <h3>Jouw persoonlijk studieplan</h3>
       </div>
 
       ${studieplan.samenvatting ? `
       <div class="sp-samenvatting">
-        <div class="sp-label">📖 Rode draad</div>
+        <div class="sp-label">Rode draad</div>
         <p>${studieplan.samenvatting}</p>
       </div>` : ''}
 
       ${studieplan.focuspunten?.length ? `
       <div class="sp-focuspunten">
-        <div class="sp-label">🎯 Dit komt zeker in de toets</div>
+        <div class="sp-label">Dit komt zeker in de toets</div>
         ${studieplan.focuspunten.map((f, i) => `
           <div class="sp-focus-item">
             <span class="sp-focus-num">${i + 1}</span>
@@ -525,23 +589,23 @@ function renderStudieplan(studieplan, containerId) {
       </div>` : ''}
 
       <div class="sp-section">
-        <div class="sp-label">🗺️ Leerroute — stap voor stap</div>
+        <div class="sp-label">Leerroute — stap voor stap</div>
         ${studieplan.leerroute.map(s => `
           <div class="sp-stap">
             <div class="sp-stap-num">Stap ${s.stap}</div>
             <div class="sp-stap-body">
               <strong>${s.onderwerp}</strong>
               <p>${s.uitleg || ''}</p>
-              ${s.onthoud ? `<div class="sp-onthoud">📌 Onthoud: ${s.onthoud}</div>` : ''}
-              ${s.ezelsbruggetje ? `<div class="sp-ezel">🧠 ${s.ezelsbruggetje}</div>` : ''}
-              ${s.valkuil ? `<div class="sp-valkuil">⚠️ Valkuil: ${s.valkuil}</div>` : ''}
-              <span class="sp-tijd">⏱ ${s.tijd}</span>
+              ${s.onthoud ? `<div class="sp-onthoud">Onthoud: ${s.onthoud}</div>` : ''}
+              ${s.ezelsbruggetje ? `<div class="sp-ezel">${s.ezelsbruggetje}</div>` : ''}
+              ${s.valkuil ? `<div class="sp-valkuil">Let op: ${s.valkuil}</div>` : ''}
+              <span class="sp-tijd">${s.tijd}</span>
             </div>
           </div>`).join('')}
       </div>
 
       <div class="sp-section">
-        <div class="sp-label">🔁 Herhalingsschema</div>
+        <div class="sp-label">Herhalingsschema</div>
         ${studieplan.herhalingsschema.map(h => `
           <div class="sp-herhaling">
             <strong>${h.moment}</strong>
@@ -551,7 +615,7 @@ function renderStudieplan(studieplan, containerId) {
 
       ${studieplan.geheimtip ? `
       <div class="sp-geheimtip">
-        🎯 <strong>Geheime docenttip:</strong> ${studieplan.geheimtip}
+        <strong>Docenttip:</strong> ${studieplan.geheimtip}
       </div>` : ''}
     </div>
 
@@ -561,7 +625,7 @@ function renderStudieplan(studieplan, containerId) {
         <strong>Jouw persoonlijk studieplan is klaar</strong>
         <p>Leerroute, herhalingsschema, ezelsbruggetjes en docenttips — speciaal voor jouw stof.</p>
       </div>
-      <button class="sp-download-btn" onclick="downloadStudieplanPDF()">⬇️ Download studieplan</button>
+      <button class="sp-download-btn" onclick="downloadStudieplanPDF()">Download studieplan</button>
     </div>`;
 }
 
@@ -622,7 +686,7 @@ function showMultiResults(vakResultaten, weekplan) {
   const container = document.getElementById('mustList');
   container.innerHTML = vakResultaten.map(({ vakNaam, result }) => `
     <div class="vak-sectie">
-      <h3 class="vak-titel">📚 ${vakNaam}</h3>
+      <h3 class="vak-titel">${vakNaam}</h3>
 
       <div class="vak-blok must-blok">
         <div class="blok-label">🔥 MUST LEARN</div>
@@ -740,10 +804,10 @@ function submitToets() {
 
     if (gekozen === correct) {
       goed++;
-      feedback.innerHTML = `✅ Goed! ${v.uitleg}`;
+      feedback.innerHTML = `Goed — ${v.uitleg}`;
       feedback.className = 'vr-feedback correct-feedback';
     } else {
-      feedback.innerHTML = `❌ Fout. Juist antwoord: <strong>${correct}</strong> — ${v.uitleg}`;
+      feedback.innerHTML = `Fout. Juist antwoord: <strong>${correct}</strong> — ${v.uitleg}`;
       feedback.className = 'vr-feedback incorrect-feedback';
     }
     feedback.style.display = 'block';
@@ -751,8 +815,8 @@ function submitToets() {
 
   document.getElementById('toetsScore').innerHTML = `
     <div class="score-box">
-      🎯 Jouw score: <strong>${goed}/${toetsvragenData.length}</strong>
-      ${goed === toetsvragenData.length ? ' — Perfect! 🔥' : goed >= toetsvragenData.length/2 ? ' — Goed bezig! 💪' : ' — Nog even oefenen! 📚'}
+      Score: <strong>${goed}/${toetsvragenData.length}</strong>
+      ${goed === toetsvragenData.length ? ' — Perfect!' : goed >= toetsvragenData.length/2 ? ' — Goed bezig!' : ' — Nog even oefenen!'}
     </div>`;
   document.getElementById('submitToets').style.display = 'none';
 }
