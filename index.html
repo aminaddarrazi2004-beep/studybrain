@@ -189,15 +189,18 @@ h1, h2, h3, .step h3, .plan-name, .feat-card h3 { font-family: 'DM Sans', Arial,
     <button class="sidebar-close" id="sidebarClose">✕</button>
   </div>
   <nav class="sidebar-nav">
+    <a href="app.html" class="sidebar-link" style="background:rgba(255,77,109,0.08);border:1px solid rgba(255,77,109,0.2);border-radius:10px;color:#ff4d6d;font-weight:600;margin-bottom:4px;">
+      <span class="icon">→</span> Open de app
+    </a>
+    <div class="sidebar-divider"></div>
     <a href="#how" class="sidebar-link" onclick="closeSidebar()">
       <span class="icon">·</span> Hoe het werkt
     </a>
     <a href="#pricing" class="sidebar-link" onclick="closeSidebar()">
-      <span class="icon">◈</span> Abonnementen
+      <span class="icon">·</span> Abonnementen
     </a>
-    <div class="sidebar-divider"></div>
-    <a href="app.html" class="sidebar-link" style="background:rgba(255,77,109,0.08);border:1px solid rgba(255,77,109,0.2);border-radius:10px;color:#ff4d6d;font-weight:600;">
-      <span class="icon">→</span> Open de app
+    <a href="#faq" class="sidebar-link" onclick="closeSidebar()">
+      <span class="icon">·</span> Veelgestelde vragen
     </a>
     <div class="sidebar-divider"></div>
     <a href="privacy.html" class="sidebar-link"><span class="icon">·</span> Privacy</a>
@@ -238,10 +241,7 @@ h1, h2, h3, .step h3, .plan-name, .feat-card h3 { font-family: 'DM Sans', Arial,
         <a href="#how" class="btn-secondary">Hoe werkt het?</a>
       </div>
       <div class="social-proof">
-        <div class="avatars">
-          <div class="av">S</div><div class="av">M</div><div class="av">J</div><div class="av">L</div><div class="av">R</div>
-        </div>
-        <span>Door <strong>studenten</strong> gebruikt voor hun toetsen</span>
+        <span style="font-size:13px;color:var(--muted);">Gratis te proberen &middot; Geen creditcard nodig &middot; Direct resultaat</span>
       </div>
     </div>
     <div class="hero-mockup">
@@ -270,56 +270,6 @@ h1, h2, h3, .step h3, .plan-name, .feat-card h3 { font-family: 'DM Sans', Arial,
               <div class="m-text">1x genoemd in de tekst, nooit getoetst. Sla over.</div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SOCIAL PROOF -->
-<section class="social-proof-section">
-  <div class="section-inner">
-    <div class="sp-stats">
-      <div class="sp-stat">
-        <div class="sp-stat-num">50<span>+</span></div>
-        <div class="sp-stat-label">Studenten gingen je voor</div>
-      </div>
-      <div class="sp-stat">
-        <div class="sp-stat-num">4.8<span>/5</span></div>
-        <div class="sp-stat-label">Gemiddelde beoordeling</div>
-      </div>
-      <div class="sp-stat">
-        <div class="sp-stat-num">3x</div>
-        <div class="sp-stat-label">Sneller dan normaal studeren</div>
-      </div>
-      <div class="sp-stat">
-        <div class="sp-stat-num">1<span>e</span></div>
-        <div class="sp-stat-label">Analyse altijd gratis</div>
-      </div>
-    </div>
-    <div class="sp-reviews">
-      <div class="sp-review">
-        <div class="sp-stars">★★★★★</div>
-        <div class="sp-text">Ik had 2 uur voor mijn toets geschiedenis. StudyBrain gaf me precies wat ik moest weten. Een 7,5 gehaald.</div>
-        <div class="sp-author">
-          <div class="sp-avatar" style="background:linear-gradient(135deg,#ff4d6d,#c9184a)">S</div>
-          <div><div class="sp-name">Selin, 16</div><div class="sp-meta">VWO 4 · Geschiedenis</div></div>
-        </div>
-      </div>
-      <div class="sp-review">
-        <div class="sp-stars">★★★★★</div>
-        <div class="sp-text">Eindelijk weet ik wat ik kan overslaan. Geen paniek meer de avond voor een toets. Dit is echt een must.</div>
-        <div class="sp-author">
-          <div class="sp-avatar" style="background:linear-gradient(135deg,#6366f1,#4f46e5)">M</div>
-          <div><div class="sp-name">Milan, 17</div><div class="sp-meta">HAVO 5 · Economie</div></div>
-        </div>
-      </div>
-      <div class="sp-review">
-        <div class="sp-stars">★★★★★</div>
-        <div class="sp-text">De ezelsbruggetjes zijn geniaal. Ik onthou dingen nu veel makkelijker dan met gewoon lezen.</div>
-        <div class="sp-author">
-          <div class="sp-avatar" style="background:linear-gradient(135deg,#f59e0b,#d97706)">J</div>
-          <div><div class="sp-name">Jasmijn, 15</div><div class="sp-meta">HAVO 3 · Biologie</div></div>
         </div>
       </div>
     </div>
@@ -387,23 +337,20 @@ h1, h2, h3, .step h3, .plan-name, .feat-card h3 { font-family: 'DM Sans', Arial,
             5–6 must-learn onderwerpen · herhalingsschema voor 4 momenten
           </div>
         </div>
-        <!-- Stap 3: Resultaat -->
+        <!-- Stap 3: Resultaat met uitleg -->
         <div class="how-preview-pane" id="howPane2">
           <div class="prev-result">
             <div class="prev-badge must">Must Learn — 5 onderwerpen</div>
-            <div class="prev-result-item">
+            <div class="prev-result-item" style="border-left:2px solid rgba(0,230,118,0.4);padding-left:12px;">
               <strong>Oorzaken WO2</strong>
-              <span>Verdrag van Versailles, economische crisis, opkomst Hitler · ezelsbruggetje: VEH</span>
+              <span style="display:block;margin-bottom:6px;">Verdrag van Versailles, economische crisis, opkomst Hitler.</span>
+              <span style="display:block;background:rgba(0,230,118,0.08);border:1px solid rgba(0,230,118,0.15);border-radius:6px;padding:5px 8px;font-size:11px;color:#00e676;">Onthoud: VEH = Versailles → Economie → Hitler</span>
             </div>
-            <div class="prev-result-item">
-              <strong>De Holocaust</strong>
-              <span>Neurenbergwetten 1935 → Wannsee 1942 · 6 miljoen slachtoffers</span>
-            </div>
-            <div style="height:8px"></div>
+            <div style="height:6px"></div>
             <div class="prev-badge skip">Skip — 4 onderwerpen</div>
-            <div class="prev-result-item" style="opacity:0.6">
+            <div class="prev-result-item" style="opacity:0.5;border-left:2px solid rgba(255,77,109,0.3);padding-left:12px;">
               <strong>Namen van alle generaals</strong>
-              <span>1x genoemd, nooit getoetst. Sla over.</span>
+              <span>1x genoemd in de tekst, nooit getoetst.</span>
             </div>
           </div>
         </div>
@@ -499,6 +446,57 @@ h1, h2, h3, .step h3, .plan-name, .feat-card h3 { font-family: 'DM Sans', Arial,
     </div>
   </div>
 </section>
+
+<!-- SOCIAL PROOF -->
+<section class="social-proof-section">
+  <div class="section-inner">
+    <div class="sp-stats">
+      <div class="sp-stat">
+        <div class="sp-stat-num">50<span>+</span></div>
+        <div class="sp-stat-label">Studenten gingen je voor</div>
+      </div>
+      <div class="sp-stat">
+        <div class="sp-stat-num">4.8<span>/5</span></div>
+        <div class="sp-stat-label">Gemiddelde beoordeling</div>
+      </div>
+      <div class="sp-stat">
+        <div class="sp-stat-num">3x</div>
+        <div class="sp-stat-label">Sneller dan normaal studeren</div>
+      </div>
+      <div class="sp-stat">
+        <div class="sp-stat-num">1<span>e</span></div>
+        <div class="sp-stat-label">Analyse altijd gratis</div>
+      </div>
+    </div>
+    <div class="sp-reviews">
+      <div class="sp-review">
+        <div class="sp-stars">★★★★★</div>
+        <div class="sp-text">Ik had 2 uur voor mijn toets geschiedenis. StudyBrain gaf me precies wat ik moest weten. Een 7,5 gehaald.</div>
+        <div class="sp-author">
+          <div class="sp-avatar" style="background:linear-gradient(135deg,#ff4d6d,#c9184a)">S</div>
+          <div><div class="sp-name">Selin, 16</div><div class="sp-meta">VWO 4 · Geschiedenis</div></div>
+        </div>
+      </div>
+      <div class="sp-review">
+        <div class="sp-stars">★★★★★</div>
+        <div class="sp-text">Eindelijk weet ik wat ik kan overslaan. Geen paniek meer de avond voor een toets. Dit is echt een must.</div>
+        <div class="sp-author">
+          <div class="sp-avatar" style="background:linear-gradient(135deg,#6366f1,#4f46e5)">M</div>
+          <div><div class="sp-name">Milan, 17</div><div class="sp-meta">HAVO 5 · Economie</div></div>
+        </div>
+      </div>
+      <div class="sp-review">
+        <div class="sp-stars">★★★★★</div>
+        <div class="sp-text">De ezelsbruggetjes zijn geniaal. Ik onthou dingen nu veel makkelijker dan met gewoon lezen.</div>
+        <div class="sp-author">
+          <div class="sp-avatar" style="background:linear-gradient(135deg,#f59e0b,#d97706)">J</div>
+          <div><div class="sp-name">Jasmijn, 15</div><div class="sp-meta">HAVO 3 · Biologie</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <!-- PRICING -->
 <section class="pricing" id="pricing">
