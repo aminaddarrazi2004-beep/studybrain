@@ -12,18 +12,16 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
   }
 });
 
-// Verwerk email verificatie — alleen op login.html uitvoeren
-if (window.location.pathname.includes('login')) {
-  (async () => {
-    const hash = window.location.hash;
-    if (hash && hash.includes('access_token')) {
-      const { error } = await sb.auth.getSession();
-      if (!error) {
-        window.location.href = 'login.html?verified=1';
-      }
+// Verwerk email verificatie
+(async () => {
+  const hash = window.location.hash;
+  if (hash && hash.includes('access_token')) {
+    const { error } = await sb.auth.getSession();
+    if (!error) {
+      window.location.href = 'login.html?verified=1';
     }
-  })();
-}
+  }
+})();
 
 function showMsg(id, tekst, type) {
   const el = document.getElementById(id);
@@ -34,9 +32,6 @@ function showMsg(id, tekst, type) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  // Alleen op login.html uitvoeren
-  if (!window.location.pathname.includes('login')) return;
-
   const params = new URLSearchParams(window.location.search);
   if (params.get('verified') === '1') {
     showMsg('loginError', '✅ E-mail bevestigd! Je kunt nu inloggen.', 'success');
@@ -69,7 +64,7 @@ async function doSignup() {
 
   if (error) {
     showMsg('signupError', 'Fout: ' + error.message, 'error');
-    btn.disabled = false; btn.textContent = 'Account aanmaken →';
+    btn.disabled = false; btn.textContent = 'Account aanmaken';
   } else {
     showMsg('signupSuccess', 'Gelukt! Controleer je e-mail om je account te bevestigen.', 'success');
     btn.textContent = 'E-mail verstuurd!';
@@ -87,7 +82,7 @@ async function doLogin() {
   const { error } = await sb.auth.signInWithPassword({ email, password });
   if (error) {
     showMsg('loginError', 'Verkeerd e-mailadres of wachtwoord.', 'error');
-    btn.disabled = false; btn.textContent = 'Inloggen →';
+    btn.disabled = false; btn.textContent = 'Inloggen';
   } else {
     if (remember) {
       localStorage.setItem('studybrain-remember-email', email);
@@ -95,7 +90,7 @@ async function doLogin() {
       localStorage.removeItem('studybrain-remember-email');
     }
     // ✅ Terug naar homepage met success melding
-    window.location.href = 'index.html?ingelogd=1';
+    window.location.href = 'dashboard.html';
   }
 }
 
