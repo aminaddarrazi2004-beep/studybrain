@@ -3,111 +3,65 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Privacyverklaring — StudyBrain</title>
-<meta name="description" content="Lees hoe StudyBrain omgaat met jouw gegevens.">
-<meta name="theme-color" content="#ff4d6d">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<title>Privacybeleid — StudyBrain</title>
+<link rel="stylesheet" href="landing.css">
 <style>
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-:root { --bg:#0a0a0f; --surface:#12121a; --border:#2a2a3d; --accent:#ff4d6d; --text:#f0f0f8; --muted:#6b6b8a; }
-body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; -webkit-font-smoothing:antialiased; }
-nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:12px 24px; border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(10,10,15,0.9); backdrop-filter:blur(14px); display:flex; align-items:center; justify-content:space-between; }
-.nav-logo { font-family:'Syne',sans-serif; font-size:18px; font-weight:700; color:var(--text); text-decoration:none; }
-.nav-back { padding:8px 16px; border-radius:10px; border:1px solid var(--border); color:var(--muted); font-size:13px; text-decoration:none; transition:all 0.2s; }
-.nav-back:hover { border-color:var(--text); color:var(--text); }
-.page { max-width:740px; margin:0 auto; padding:120px 24px 80px; }
-.label { display:inline-block; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); background:rgba(255,77,109,0.1); border:1px solid rgba(255,77,109,0.25); padding:5px 14px; border-radius:100px; margin-bottom:20px; }
-h1 { font-family:'Syne',sans-serif; font-size:clamp(26px,4vw,40px); font-weight:700; line-height:1.2; margin-bottom:12px; }
-.intro { font-size:16px; color:var(--muted); line-height:1.7; margin-bottom:48px; }
-.intro strong { color:var(--text); }
-.section { margin-bottom:40px; padding:28px; background:var(--surface); border:1px solid var(--border); border-radius:18px; }
-.section h2 { font-family:'Syne',sans-serif; font-size:18px; font-weight:700; margin-bottom:12px; }
-.section p, .section li { font-size:14px; color:var(--muted); line-height:1.8; }
-.section ul { padding-left:20px; margin-top:8px; }
-.section ul li { margin-bottom:6px; }
-.section a { color:var(--accent); text-decoration:none; }
-.section a:hover { text-decoration:underline; }
-.highlight { background:rgba(255,77,109,0.07); border-color:rgba(255,77,109,0.2); }
-.highlight h2 { color:var(--accent); }
-footer { border-top:1px solid var(--border); padding:32px 24px; text-align:center; font-size:13px; color:var(--muted); }
+  .legal-page { max-width: 720px; margin: 0 auto; padding: 120px 24px 80px; }
+  .legal-page h1 { font-family: 'DM Sans', sans-serif; font-size: 36px; font-weight: 700; margin-bottom: 8px; }
+  .legal-page .meta { color: var(--muted); font-size: 14px; margin-bottom: 48px; border-bottom: 1px solid var(--border); padding-bottom: 24px; }
+  .legal-page h2 { font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 700; margin: 32px 0 10px; color: var(--text); text-transform: uppercase; letter-spacing: 0.04em; }
+  .legal-page p { font-size: 15px; color: #c0c0d8; line-height: 1.8; margin-bottom: 12px; }
+  .legal-page ul { padding-left: 20px; margin-bottom: 12px; }
+  .legal-page ul li { font-size: 15px; color: #c0c0d8; line-height: 1.8; margin-bottom: 4px; }
+  .legal-page a { color: var(--accent); text-decoration: none; }
+  .legal-page a:hover { text-decoration: underline; }
+  .back-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; text-decoration: none; margin-bottom: 32px; transition: color 0.2s; }
+  .back-btn:hover { color: var(--text); }
 </style>
 </head>
 <body>
+
 <nav>
-  <a href="index.html" class="nav-logo">🧠 StudyBrain</a>
-  <a href="index.html" class="nav-back">← Terug</a>
+  <div class="nav-inner">
+    <a href="index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;margin-right:auto;">
+      <span style="font-family:'DM Sans',sans-serif;font-size:18px;font-weight:700;color:var(--text);"> StudyBrain</span>
+    </a>
+    <div class="nav-actions">
+      <a href="login.html" class="btn-ghost">Inloggen</a>
+      <a href="login.html#signup" class="btn-nav">Gratis proberen</a>
+    </div>
+  </div>
 </nav>
 
-<div class="page">
-  <span class="label">Privacy</span>
-  <h1>Privacyverklaring</h1>
-  <p class="intro">Laatste update: maart 2025. StudyBrain gaat zorgvuldig om met jouw gegevens. We verzamelen zo <strong>min mogelijk</strong> en delen nooit iets met derden voor commerciële doeleinden.</p>
+<div class="legal-page">
+  <a href="index.html" class="back-btn">← Terug naar homepage</a>
+  <h1>Privacybeleid</h1>
+  <p class="meta">Laatste update: maart 2026 &nbsp;·&nbsp; StudyBrain, Nederland &nbsp;·&nbsp; <a href="/cdn-cgi/l/email-protection#036a6d656c43707776677a6171626a6d2d627373"><span class="__cf_email__" data-cfemail="dab3b4bcb59aa9aeafbea3b8a8bbb3b4f4bbaaaa">[email&#160;protected]</span></a></p>
 
-  <div class="section highlight">
-    <h2>🔒 Kort samengevat</h2>
-    <ul>
-      <li>Je PDFs worden <strong>niet opgeslagen</strong> — ze worden alleen gebruikt voor de analyse en daarna weggegooid</li>
-      <li>We verkopen jouw gegevens <strong>nooit</strong> aan derden</li>
-      <li>Je kunt je account en alle gegevens altijd verwijderen</li>
-      <li>We gebruiken cookies alleen voor inloggen en basisfunctionaliteit</li>
-    </ul>
-  </div>
+  <h2>1. Gegevens die wij verzamelen</h2>
+  <p>Bij het aanmaken van een account verzamelen wij je e-mailadres. Je wachtwoord wordt versleuteld opgeslagen — wij hebben hier nooit inzage in. Wij slaan je abonnementsstatus op om toegang tot de juiste functies te bieden. PDF-bestanden die je uploadt worden uitsluitend gebruikt om de analyse uit te voeren en daarna direct verwijderd — wij bewaren de inhoud nooit.</p>
 
-  <div class="section">
-    <h2>1. Wie zijn wij?</h2>
-    <p>StudyBrain is een product van een Nederlandse student-ondernemer. Vragen over privacy? Stuur een mail naar <a href="/cdn-cgi/l/email-protection#264f48404966555253425f4454474f4808475656"><span class="__cf_email__" data-cfemail="acc5c2cac3ecdfd8d9c8d5cedecdc5c282cddcdc">[email&#160;protected]</span></a>.</p>
-  </div>
+  <h2>2. Hoe wij je gegevens gebruiken</h2>
+  <p>Wij verwerken je gegevens uitsluitend om de dienst te leveren: accountbeheer, het uitvoeren van analyses en het verwerken van betalingen. Je gegevens worden vertrouwelijk behandeld en niet gedeeld met derden.</p>
 
-  <div class="section">
-    <h2>2. Welke gegevens verzamelen we?</h2>
-    <ul>
-      <li><strong>E-mailadres</strong> — voor je account en om in te loggen</li>
-      <li><strong>Plan-informatie</strong> — welk abonnement je hebt (gratis/starter/pro/elite)</li>
-      <li><strong>Analyse-gebruik</strong> — of je je gratis analyse al hebt gebruikt</li>
-      <li><strong>Cookies</strong> — alleen voor het bewaren van je inlogsessie</li>
-    </ul>
-    <p style="margin-top:12px;">We verzamelen <strong>geen</strong> naam, telefoonnummer, adres of betalingsgegevens. Betalingen worden verwerkt door Stripe.</p>
-  </div>
+  <h2>3. Bewaartermijn</h2>
+  <p>Wij bewaren je accountgegevens zolang je account actief is. Na het verwijderen van je account worden alle gegevens binnen 30 dagen gewist.</p>
 
-  <div class="section">
-    <h2>3. Hoe gebruiken we je gegevens?</h2>
-    <ul>
-      <li>Je e-mailadres gebruiken we om je account te beheren en je in te laten loggen</li>
-      <li>Je PDFs verwerken we alleen lokaal in je browser en via de StudyBrain-analyse — ze worden daarna niet bewaard</li>
-      <li>We sturen je geen marketing e-mails tenzij je daar toestemming voor geeft</li>
-    </ul>
-  </div>
+  <h2>4. Beveiliging</h2>
+  <p>Alle verbindingen zijn versleuteld. Wachtwoorden worden nooit in leesbare vorm opgeslagen. Wij nemen passende technische en organisatorische maatregelen om je gegevens te beschermen.</p>
 
-  <div class="section">
-    <h2>4. Met wie delen we gegevens?</h2>
-    <ul>
-      <li><strong>Supabase</strong> — voor het opslaan van je account (servers in de EU)</li>
-      <li><strong>Stripe</strong> — voor betalingsverwerking (zij bewaren je betaalgegevens, wij niet)</li>
-      <li><strong>StudyBrain analyse</strong> — de tekst uit je PDF wordt verwerkt voor de analyse. De PDF zelf wordt niet opgeslagen</li>
-    </ul>
-    <p style="margin-top:12px;">We delen <strong>nooit</strong> gegevens met adverteerders of andere commerciële partijen.</p>
-  </div>
+  <h2>5. Cookies</h2>
+  <p>StudyBrain maakt geen gebruik van advertentiecookies.</p>
 
-  <div class="section">
-    <h2>5. Cookies</h2>
-    <p>We gebruiken alleen functionele cookies — dit zijn cookies die nodig zijn om in te loggen en de site te laten werken. We gebruiken geen tracking- of advertentiecookies.</p>
-  </div>
+  <h2>6. Jouw rechten</h2>
+  <p>Voor vragen over je gegevens of een verzoek tot inzage, correctie of verwijdering kun je contact opnemen via <a href="/cdn-cgi/l/email-protection#0d64636b624d7e797869746f7f6c6463236c7d7d"><span class="__cf_email__" data-cfemail="c6afa8a0a986b5b2b3a2bfa4b4a7afa8e8a7b6b6">[email&#160;protected]</span></a>.</p>
 
-  <div class="section">
-    <h2>6. Jouw rechten</h2>
-    <ul>
-      <li>Je kunt je account en alle gegevens op elk moment verwijderen via je accountinstellingen</li>
-      <li>Je kunt een kopie van je gegevens opvragen via <a href="/cdn-cgi/l/email-protection#70191e161f300304051409120211191e5e110000"><span class="__cf_email__" data-cfemail="4f262129200f3c3b3a2b362d3d2e2621612e3f3f">[email&#160;protected]</span></a></li>
-      <li>Je kunt bezwaar maken tegen de verwerking van je gegevens</li>
-    </ul>
-  </div>
+  <h2>7. Wijzigingen</h2>
+  <p>Bij wezenlijke wijzigingen in dit beleid informeren wij je via e-mail. De actuele versie staat altijd op deze pagina.</p>
+</div>
 
-  <div class="section">
-    <h2>7. Beveiliging</h2>
-    <p>Je wachtwoord wordt nooit opgeslagen in leesbare tekst. Alle verbindingen zijn beveiligd met HTTPS. We gebruiken Supabase voor veilige authenticatie.</p>
-  </div>
-
-  <div class="section">
-    <h2>8. Wijzigingen</h2>
-    <p>Als we deze privacyverklaring aanpassen, vermelden we de datum bovenaan deze pagina. Bij grote wijzigingen sturen we een e-mail.
+<footer>
+  <div class="footer-inner">
+    <div style="font-family:'DM Sans',sans-serif;font-size:20px;font-weight:700;margin-bottom:8px;"> StudyBrain</div>
+    <p>Slimmer studeren voor iedereen.</p>
+    <div class="footer-links
