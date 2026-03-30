@@ -28,12 +28,14 @@
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#ff4d6d">
 
+<!-- Fonts preloaden zodat ze NOOIT stretchen -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="landing.css">
 <style>
+  /* Voorkom font stretching globaal */
   * { font-synthesis: none; }
 
   .plan-price { font-family: 'DM Sans', sans-serif; font-size: 38px; font-weight: 700; line-height: 1; margin-bottom: 8px; letter-spacing: -1px; }
@@ -73,6 +75,7 @@
   .sidebar-overlay.visible { opacity: 1; pointer-events: all; }
   .nav-inner { padding-left: 52px; }
 
+  /* step-num fix — geen stretch, geen stretch */
   .step-num { font-family: 'Arial Black', 'Impact', Arial, sans-serif !important; font-style: normal !important; font-stretch: normal !important; }
   h1, h2, h3, .step h3, .plan-name, .feat-card h3 { font-family: 'DM Sans', Arial, sans-serif !important; font-stretch: normal !important; font-style: normal !important; }
 
@@ -86,10 +89,7 @@
     .sidebar-toggle { top: 10px; left: 10px; padding: 7px 9px; font-size: 17px; }
   }
 
-  .faq-section { background: var(--bg); padding-top: 80px; }
-  /* Fix 2: ghost plan buttons beter zichtbaar */
-  .ghost-cta { border: 1.5px solid rgba(255,255,255,0.2) !important; color: var(--text) !important; opacity: 1 !important; transition: all 0.2s !important; }
-  .ghost-cta:hover { border-color: rgba(255,77,109,0.5) !important; color: var(--accent) !important; background: rgba(255,77,109,0.06) !important; }
+  .faq-section { background: var(--bg); }
   .faq-section .label, .faq-section h2 { display: block; text-align: center; }
   .faq-section h2 { margin-bottom: 40px; }
   .faq-list { max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
@@ -100,49 +100,6 @@
   .faq-item.open .faq-arrow { transform: rotate(180deg); color: var(--accent); }
   .faq-a { font-size: 14px; color: var(--muted); line-height: 1.7; padding: 0 20px 18px; display: none; }
   .faq-item.open .faq-a { display: block; }
-
-  /* ── FIX 1: Email verborgen in navbar — alleen via updateNav zichtbaar als ingelogd, stijl netter ── */
-  .nav-user-email { font-size: 12px; color: var(--muted); max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-  /* ── FIX 2: Social proof sectie ── */
-  .social-proof-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 48px 0; }
-  .social-proof-inner { max-width: 900px; margin: 0 auto; padding: 0 24px; }
-  .social-proof-top { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; margin-bottom: 48px; }
-  .sp-stat { text-align: center; }
-  .sp-stat-num { font-family: 'DM Sans', sans-serif; font-size: 36px; font-weight: 800; color: var(--text); letter-spacing: -1px; line-height: 1; margin-bottom: 4px; }
-  .sp-stat-num span { color: var(--accent); }
-  .sp-stat-label { font-size: 13px; color: var(--muted); }
-  .sp-divider { width: 1px; background: var(--border); align-self: stretch; }
-  .sp-reviews { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-  .sp-review { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 16px; padding: 20px; transition: border-color 0.2s; }
-  .sp-review:hover { border-color: rgba(255,77,109,0.25); }
-  .sp-stars { color: #f59e0b; font-size: 13px; margin-bottom: 10px; letter-spacing: 2px; }
-  .sp-text { font-size: 14px; color: var(--text); line-height: 1.6; margin-bottom: 14px; font-style: italic; }
-  .sp-author { display: flex; align-items: center; gap: 10px; }
-  .sp-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: white; flex-shrink: 0; }
-  .sp-name { font-size: 13px; font-weight: 600; color: var(--text); }
-  .sp-meta { font-size: 11px; color: var(--muted); }
-  @media (max-width: 600px) {
-    .sp-divider { display: none; }
-    .sp-stat-num { font-size: 28px; }
-  }
-
-  /* ── FIX 3: Gratis tier in pricing ── */
-  .plan-free-banner { background: rgba(0,230,118,0.06); border: 1px solid rgba(0,230,118,0.2); border-radius: 16px; padding: 20px 24px; max-width: 600px; margin: 0 auto 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-  .plan-free-badge { background: rgba(0,230,118,0.15); color: #00e676; border: 1px solid rgba(0,230,118,0.3); border-radius: 100px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; padding: 4px 12px; text-transform: uppercase; flex-shrink: 0; }
-  .plan-free-text { font-size: 14px; color: var(--muted); flex: 1; line-height: 1.5; }
-  .plan-free-text strong { color: var(--text); }
-  .plan-free-cta { background: rgba(0,230,118,0.12); border: 1px solid rgba(0,230,118,0.25); color: #00e676; border-radius: 10px; padding: 9px 18px; font-size: 13px; font-weight: 700; text-decoration: none; white-space: nowrap; transition: all 0.2s; }
-  .plan-free-cta:hover { background: rgba(0,230,118,0.2); }
-
-  /* ── FIX 4: Verbeterde "Hoe het werkt" sectie ── */
-  .step-screen { margin-top: 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 12px; color: var(--muted); line-height: 1.6; text-align: left; }
-  .step-screen-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 6px; margin-bottom: 8px; }
-  .step-screen-tag.upload { background: rgba(99,102,241,0.15); color: #818cf8; }
-  .step-screen-tag.time { background: rgba(245,158,11,0.15); color: #f59e0b; }
-  .step-screen-tag.result { background: rgba(0,230,118,0.12); color: #00e676; }
-  .step-screen-line { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
-  .step-screen-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -152,28 +109,28 @@
 
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <span class="sidebar-logo-text">🧠 StudyBrain</span>
+    <span class="sidebar-logo-text">StudyBrain</span>
     <button class="sidebar-close" id="sidebarClose">✕</button>
   </div>
   <nav class="sidebar-nav">
     <a href="app.html" class="sidebar-link highlight" style="font-size:15px;padding:13px 14px;">
-      <span class="icon">🧠</span> StudyBrain
+      <span class="icon">→</span> StudyBrain
     </a>
     <a href="#how" class="sidebar-link" onclick="closeSidebar()">
-      <span class="icon">💡</span> Hoe het werkt
+      <span class="icon">·</span> Hoe het werkt
     </a>
     <a href="#pricing" class="sidebar-link" onclick="closeSidebar()">
-      <span class="icon">💳</span> Abonnementen
+      <span class="icon">◈</span> Abonnementen
     </a>
     <div class="sidebar-divider"></div>
     <a href="privacy.html" class="sidebar-link">
-      <span class="icon">🔒</span> Privacy
+      <span class="icon">·</span> Privacy
     </a>
     <a href="voorwaarden.html" class="sidebar-link">
-      <span class="icon">📄</span> Voorwaarden
+      <span class="icon">·</span> Voorwaarden
     </a>
-    <a href="mailto:contact@studybrain.app" class="sidebar-link">
-      <span class="icon">✉️</span> Contact
+    <a href="/cdn-cgi/l/email-protection#7d14131b123d0e090819041f0f1c1413531c0d0d" class="sidebar-link">
+      <span class="icon">·</span> Contact
     </a>
   </nav>
   <div class="sidebar-footer" id="sidebarFooter"></div>
@@ -182,7 +139,7 @@
 <nav>
   <div class="nav-inner">
     <a href="/" class="nav-logo">
-      <span class="nav-logo-text">🧠 StudyBrain</span>
+      <span class="nav-logo-text">StudyBrain</span>
     </a>
     <div class="nav-links">
       <a href="#how">Hoe het werkt</a>
@@ -195,7 +152,7 @@
   </div>
 </nav>
 
-<div class="login-toast" id="loginToast">✅ Succesvol ingelogd! Welkom bij StudyBrain.</div>
+<div class="login-toast" id="loginToast">Succesvol ingelogd — welkom bij StudyBrain.</div>
 
 <section class="hero">
   <div class="orb orb1"></div>
@@ -224,89 +181,27 @@
           <span class="mockup-url">studybrain.app</span>
         </div>
         <div class="mockup-content">
-          <div class="m-badge green-badge">🔥 MUST LEARN — start hier</div>
+          <div class="m-badge green-badge">MUST LEARN — start hier</div>
           <div class="m-card">
             <div class="m-title">Oorzaken WO2</div>
-            <div class="m-text">3 hoofdoorzaken: <strong>verdrag van Versailles</strong> (vernedering Duitsland), <strong>economische crisis</strong> (1929), <strong>opkomst Hitler</strong> (1933). Docenten toetsen dit ALTIJD. 💡 <em>VEH = Versailles → Economie → Hitler</em></div>
-            <div class="m-expand">📖 Volledige uitleg + ezelsbruggetjes &#9660;</div>
+            <div class="m-text">3 hoofdoorzaken: <strong>verdrag van Versailles</strong> (vernedering Duitsland), <strong>economische crisis</strong> (1929), <strong>opkomst Hitler</strong> (1933). Docenten toetsen dit ALTIJD. <em>VEH = Versailles → Economie → Hitler</em></div>
+            <div class="m-expand">Volledige uitleg + ezelsbruggetjes &#9660;</div>
           </div>
           <div class="m-card">
             <div class="m-title">De Holocaust</div>
-            <div class="m-text"><strong>6 miljoen</strong> Joden vermoord. Systematisch via concentratiekampen. Begon met Neurenbergwetten (1935). 💡 <em>1935 = rechten weg, 1942 = Wannsee = uitroeiingsplan</em></div>
-            <div class="m-expand">📖 Volledige uitleg + ezelsbruggetjes &#9660;</div>
+            <div class="m-text"><strong>6 miljoen</strong> Joden vermoord. Systematisch via concentratiekampen. Begon met Neurenbergwetten (1935). <em>1935 = rechten weg, 1942 = Wannsee = uitroeiingsplan</em></div>
+            <div class="m-expand">Volledige uitleg + ezelsbruggetjes &#9660;</div>
           </div>
-          <div class="m-badge" style="background:rgba(255,152,0,0.12);color:#ff9800;display:inline-block;padding:4px 12px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:0.1em;width:fit-content;margin-top:4px;">⚡ NICE TO KNOW</div>
+          <div class="m-badge" style="background:rgba(255,152,0,0.12);color:#ff9800;display:inline-block;padding:4px 12px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:0.1em;width:fit-content;margin-top:4px;">NICE TO KNOW</div>
           <div class="m-card" style="opacity:0.85">
             <div class="m-title">D-Day (6 juni 1944)</div>
-            <div class="m-text">Geallieerde landing in Normandië → keerpunt van de oorlog. 💡 <em>D-Day = De Dag dat het kantelde</em></div>
-            <div class="m-expand">📖 Volledige uitleg + ezelsbruggetjes &#9660;</div>
+            <div class="m-text">Geallieerde landing in Normandië → keerpunt van de oorlog. <em>D-Day = De Dag dat het kantelde</em></div>
+            <div class="m-expand">Volledige uitleg + ezelsbruggetjes &#9660;</div>
           </div>
-          <div class="m-badge red-badge">⏮ SKIP — geen tijd aan verspillen</div>
+          <div class="m-badge red-badge">SKIP — geen tijd aan verspillen</div>
           <div class="m-card m-card-skip">
             <div class="m-title">Namen van alle generaals</div>
-            <div class="m-text">1x genoemd in de tekst, nooit getoetst. Sla over. ✂️</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── FIX 2: SOCIAL PROOF SECTIE ── -->
-<section class="social-proof-section">
-  <div class="social-proof-inner">
-    <div class="social-proof-top">
-      <div class="sp-stat">
-        <div class="sp-stat-num">50<span>+</span></div>
-        <div class="sp-stat-label">Studenten gingen je voor</div>
-      </div>
-      <div class="sp-divider"></div>
-      <div class="sp-stat">
-        <div class="sp-stat-num">4.8<span>★</span></div>
-        <div class="sp-stat-label">Gemiddelde beoordeling</div>
-      </div>
-      <div class="sp-divider"></div>
-      <div class="sp-stat">
-        <div class="sp-stat-num">3x<span></span></div>
-        <div class="sp-stat-label">Sneller dan normaal studeren</div>
-      </div>
-      <div class="sp-divider"></div>
-      <div class="sp-stat">
-        <div class="sp-stat-num">1<span>e</span></div>
-        <div class="sp-stat-label">Analyse altijd gratis</div>
-      </div>
-    </div>
-    <div class="sp-reviews">
-      <div class="sp-review">
-        <div class="sp-stars">★★★★★</div>
-        <div class="sp-text">"Ik had 2 uur voor mijn toets geschiedenis. StudyBrain gaf me precies wat ik moest weten. Een 7,5 gehaald."</div>
-        <div class="sp-author">
-          <div class="sp-avatar" style="background:linear-gradient(135deg,#ff4d6d,#c9184a)">S</div>
-          <div>
-            <div class="sp-name">Selin, 16</div>
-            <div class="sp-meta">VWO 4 · Geschiedenis</div>
-          </div>
-        </div>
-      </div>
-      <div class="sp-review">
-        <div class="sp-stars">★★★★★</div>
-        <div class="sp-text">"Eindelijk weet ik wat ik kan overslaan. Geen paniek meer de avond voor een toets. Dit is echt een must."</div>
-        <div class="sp-author">
-          <div class="sp-avatar" style="background:linear-gradient(135deg,#6366f1,#4f46e5)">M</div>
-          <div>
-            <div class="sp-name">Milan, 17</div>
-            <div class="sp-meta">HAVO 5 · Economie</div>
-          </div>
-        </div>
-      </div>
-      <div class="sp-review">
-        <div class="sp-stars">★★★★★</div>
-        <div class="sp-text">"De ezelsbruggetjes zijn geniaal. Ik onthou dingen nu veel makkelijker dan met gewoon lezen."</div>
-        <div class="sp-author">
-          <div class="sp-avatar" style="background:linear-gradient(135deg,#f59e0b,#d97706)">J</div>
-          <div>
-            <div class="sp-name">Jasmijn, 15</div>
-            <div class="sp-meta">HAVO 3 · Biologie</div>
+            <div class="m-text">1x genoemd in de tekst, nooit getoetst. Sla over. </div>
           </div>
         </div>
       </div>
@@ -319,62 +214,25 @@
     <div class="label">Zo simpel is het</div>
     <h2>3 stappen naar een hogere cijfer</h2>
     <div class="steps">
-      <!-- ── FIX 4: Steps met visuele context ── -->
       <div class="step">
         <div class="step-num">01</div>
-        <div class="step-icon">📄</div>
+        
         <h3>Upload je PDF</h3>
         <p>Sleep je samenvattingen of syllabi erin. Meerdere bestanden tegelijk mag.</p>
-        <div class="step-screen">
-          <div class="step-screen-tag upload">Uploaden</div>
-          <div class="step-screen-line">
-            <div class="step-screen-dot" style="background:#818cf8"></div>
-            <span>geschiedenis_h4_samenvatting.pdf</span>
-          </div>
-          <div class="step-screen-line">
-            <div class="step-screen-dot" style="background:#818cf8"></div>
-            <span>economie_hoofdstuk7.pdf</span>
-          </div>
-          <div style="margin-top:8px;font-size:11px;color:#4ade80;">✓ 2 bestanden klaar om te analyseren</div>
-        </div>
       </div>
       <div class="step-line"></div>
       <div class="step">
         <div class="step-num">02</div>
-        <div class="step-icon">⏰</div>
+        
         <h3>Kies je tijd</h3>
         <p>30 minuten of een avond? StudyBrain past het plan aan op jouw situatie.</p>
-        <div class="step-screen">
-          <div class="step-screen-tag time">Hoeveel tijd heb je?</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <span style="background:rgba(255,77,109,0.15);color:#ff4d6d;border:1px solid rgba(255,77,109,0.3);border-radius:8px;padding:4px 10px;font-size:11px;font-weight:600;">30 min ⚡</span>
-            <span style="background:rgba(255,255,255,0.04);color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:4px 10px;font-size:11px;">1 uur</span>
-            <span style="background:rgba(255,255,255,0.04);color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:4px 10px;font-size:11px;">Een avond</span>
-          </div>
-          <div style="margin-top:8px;font-size:11px;color:var(--muted);">Plan wordt aangepast op jouw deadline ✓</div>
-        </div>
       </div>
       <div class="step-line"></div>
       <div class="step">
         <div class="step-num">03</div>
-        <div class="step-icon">🧠</div>
+        
         <h3>Leer wat telt</h3>
         <p>Uitleg, ezelsbruggetjes en een spiekbriefje van alleen de stof die ertoe doet.</p>
-        <div class="step-screen">
-          <div class="step-screen-tag result">Jouw studieplan</div>
-          <div class="step-screen-line">
-            <div class="step-screen-dot" style="background:#ef4444"></div>
-            <span><strong style="color:var(--text)">Must Learn</strong> — 4 onderwerpen</span>
-          </div>
-          <div class="step-screen-line">
-            <div class="step-screen-dot" style="background:#f59e0b"></div>
-            <span><strong style="color:var(--text)">Nice to Know</strong> — 2 onderwerpen</span>
-          </div>
-          <div class="step-screen-line">
-            <div class="step-screen-dot" style="background:#6b6b8a"></div>
-            <span><strong style="color:var(--text)">Skip</strong> — 6 onderwerpen</span>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -386,27 +244,27 @@
     <h2>Niet gewoon een samenvatting.<br><span class="gradient-text">Een studieplan.</span></h2>
     <div class="feat-grid">
       <div class="feat-card feat-big">
-        <div class="feat-icon">🔥</div>
+        <div class="feat-tag feat-tag-must">Must Learn</div>
         <h3>Weet precies wat in de toets komt</h3>
         <p>StudyBrain analyseert herhaling, definities, vetgedrukte tekst en structuur. Precies zoals een ervaren leraar. Geen giswerk meer.</p>
       </div>
       <div class="feat-card">
-        <div class="feat-icon">📖</div>
+        <div class="feat-tag feat-tag-blue">Uitleg</div>
         <h3>Echte uitleg</h3>
         <p>Elk onderwerp krijgt uitleg in gewone taal, met een voorbeeld uit het dagelijks leven.</p>
       </div>
       <div class="feat-card">
-        <div class="feat-icon">⚡</div>
+        <div class="feat-tag feat-tag-yellow">Onthoud</div>
         <h3>Ezelsbruggetjes</h3>
         <p>Trucjes zodat het blijft hangen, ook met maar 30 minuten studeren.</p>
       </div>
       <div class="feat-card">
-        <div class="feat-icon">⏮</div>
+        <div class="feat-tag feat-tag-red">Skip</div>
         <h3>Durft te skippen</h3>
         <p>Eerlijk advies over wat niet de moeite waard is met jouw beschikbare tijd.</p>
       </div>
       <div class="feat-card">
-        <div class="feat-icon">📝</div>
+        <div class="feat-tag feat-tag-orange">Oefentoets</div>
         <h3>Oefentoets</h3>
         <p>Maak een echte oefentoets na het leren en check daarna pas je antwoorden.</p>
       </div>
@@ -419,16 +277,9 @@
     <div class="label">Abonnementen</div>
     <h2>Kies jouw plan</h2>
     <p class="pricing-sub">Begin gratis met 1 analyse. Upgrade wanneer je wil.</p>
-
-    <!-- ── FIX 3: Gratis tier duidelijk uitgelegd ── -->
-    <div class="plan-free-banner">
-      <div class="plan-free-badge">Gratis</div>
-      <div class="plan-free-text">
-        Maak een account aan en doe je <strong>eerste analyse gratis</strong>. Je ziet direct je Must Learn / Nice to Know / Skip overzicht. <strong>Geen creditcard nodig.</strong>
-      </div>
-      <a href="login.html#signup" class="plan-free-cta">Start gratis →</a>
+    <div class="pricing-compare">
+      💡 Een bijles kost gemiddeld <strong>€30 per uur</strong>. StudyBrain Pro kost <strong>€14,99 per maand</strong> — en is er altijd, voor elk vak.
     </div>
-
     <div class="plans">
       <div class="plan">
         <div class="plan-name">Starter</div>
@@ -436,7 +287,7 @@
         <div class="plan-desc">Toets morgen? Weet in 30 seconden wat je moet leren.</div>
         <ul class="plan-list">
           <li class="yes">10 analyses per maand</li>
-          <li class="yes">Must / Nice to Know / Skip overzicht</li>
+          <li class="yes">Must / Should / Skip overzicht</li>
           <li class="yes">Cheatsheet overzicht</li>
           <li class="yes">5 oefenvragen per analyse</li>
           <li class="no">Volledige uitleg + ezelsbruggetjes</li>
@@ -446,13 +297,13 @@
         <a href="https://buy.stripe.com/test_14A00b6fA3uqeWi85h1wY00" target="_blank" class="plan-cta ghost-cta">Begin met Starter</a>
       </div>
       <div class="plan plan-hot">
-        <div class="hot-label">⭐ Meest gekozen</div>
+        <div class="hot-label">Meest gekozen</div>
         <div class="plan-name">Pro</div>
         <div class="plan-price"><span class="euro">€</span>14<span class="cents">,99</span><span class="per">/mnd</span></div>
         <div class="plan-desc">Analyse + studieplan. Volledig voorbereid op elke toets.</div>
         <ul class="plan-list">
           <li class="yes"><strong>Onbeperkt</strong> analyses</li>
-          <li class="yes">Must / Nice to Know / Skip overzicht</li>
+          <li class="yes">Must / Should / Skip overzicht</li>
           <li class="yes">Cheatsheet overzicht</li>
           <li class="yes"><strong>Volledige uitleg + ezelsbruggetjes</strong></li>
           <li class="yes"><strong>10 oefenvragen per analyse</strong></li>
@@ -468,7 +319,7 @@
         <div class="plan-desc">Voor wie meerdere vakken tegelijk wil aanpakken en niks aan het toeval overlaat.</div>
         <ul class="plan-list">
           <li class="yes"><strong>Onbeperkt</strong> analyses</li>
-          <li class="yes">Must / Nice to Know / Skip overzicht</li>
+          <li class="yes">Must / Should / Skip overzicht</li>
           <li class="yes">Cheatsheet overzicht</li>
           <li class="yes">Volledige uitleg + ezelsbruggetjes</li>
           <li class="yes"><strong>20 oefenvragen per analyse</strong></li>
@@ -479,7 +330,7 @@
         <a href="https://buy.stripe.com/test_fZu14f0Vg3uq3dAetF1wY02" target="_blank" class="plan-cta ghost-cta">Begin met Elite</a>
       </div>
     </div>
-    <p class="pricing-note">🔒 Veilig betalen &middot; Maandelijks opzegbaar &middot; Geen verborgen kosten</p>
+    <p class="pricing-note">Veilig betalen &middot; Maandelijks opzegbaar &middot; Geen verborgen kosten</p>
   </div>
 </section>
 
@@ -529,19 +380,19 @@
 <footer>
   <div class="footer-inner">
     <div class="footer-logo">
-      <span class="footer-logo-text">🧠 StudyBrain</span>
+      <span class="footer-logo-text">StudyBrain</span>
     </div>
     <p>Slimmer studeren voor iedereen.</p>
     <div class="footer-links">
       <a href="privacy.html">Privacy</a>
       <a href="voorwaarden.html">Voorwaarden</a>
-      <a href="mailto:contact@studybrain.app">Contact</a>
+      <a href="/cdn-cgi/l/email-protection#70191e161f300304051409120211191e5e110000">Contact</a>
     </div>
     <p class="copy">&copy; 2026 StudyBrain. Alle rechten voorbehouden.</p>
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const SUPABASE_URL = 'https://wtfzqpaectqrbprmxjqp.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0ZnpxcGFlY3RxcmJwcm14anFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NzE4NDYsImV4cCI6MjA4ODE0Nzg0Nn0.LeJqnukvUpVJZyG_2pjwS0xnl24ATdV6Mi6qqZeVbJ4';
@@ -604,13 +455,12 @@
     }
   })();
 
-  // ── FIX 1: Email ALLEEN tonen als ingelogd, netjes afgekapt ──
   function updateNav(session) {
     const actions = document.getElementById('navActions');
     if (!actions) return;
     if (session) {
       actions.innerHTML = `
-        <span class="nav-user-email">${session.user.email}</span>
+        <span style="font-size:13px;color:#6b6b8a">${session.user.email}</span>
         <a href="app.html" class="btn-nav">Naar de app →</a>
       `;
     } else {
@@ -628,7 +478,7 @@
 
 <!-- Cookie banner -->
 <div id="cookieBanner" style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a26;border:1px solid #2a2a3d;border-radius:16px;padding:20px 24px;max-width:560px;width:calc(100% - 48px);z-index:9999;box-shadow:0 16px 48px rgba(0,0,0,0.5);font-family:'DM Sans',sans-serif;align-items:center;gap:16px;flex-wrap:wrap;">
-  <p style="font-size:13px;color:#6b6b8a;flex:1;min-width:200px;margin:0;line-height:1.6;">🍪 Wij gebruiken cookies om de site goed te laten werken. <a href="privacy.html" style="color:#ff4d6d;text-decoration:none;">Meer info</a></p>
+  <p style="font-size:13px;color:#6b6b8a;flex:1;min-width:200px;margin:0;line-height:1.6;">Wij gebruiken cookies om de site goed te laten werken. <a href="privacy.html" style="color:#ff4d6d;text-decoration:none;">Meer info</a></p>
   <div style="display:flex;gap:8px;flex-shrink:0;">
     <button onclick="acceptCookies()" style="padding:9px 18px;background:linear-gradient(135deg,#ff4d6d,#c9184a);border:none;border-radius:10px;color:white;font-size:13px;font-weight:700;cursor:pointer;">Accepteren</button>
     <button onclick="rejectCookies()" style="padding:9px 18px;background:none;border:1px solid #2a2a3d;border-radius:10px;color:#6b6b8a;font-size:13px;cursor:pointer;">Weigeren</button>
@@ -638,8 +488,4 @@
   function acceptCookies() { localStorage.setItem('sb-cookie-consent','accepted'); document.getElementById('cookieBanner').style.display='none'; }
   function rejectCookies() { localStorage.setItem('sb-cookie-consent','rejected'); document.getElementById('cookieBanner').style.display='none'; }
   const _consent = localStorage.getItem('sb-cookie-consent');
-  if (!_consent) { document.getElementById('cookieBanner').style.display='flex'; }
-</script>
-
-</body>
-</html>
+  const _justLoggedIn = new URLSearchParams(window.locatio
