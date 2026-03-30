@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — StudyBrain</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+/* ── Sidebar (zelfde als app.html) ── */
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:220px;background:rgba(10,10,15,0.98);border-right:1px solid rgba(255,255,255,0.06);z-index:998;display:flex;flex-direction:column;padding:0}
+.sidebar-logo{font-size:17px;font-weight:800;color:#f0f0f8;padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.sidebar-nav{flex:1;display:flex;flex-direction:column;gap:4px;padding:12px 10px;overflow-y:auto}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;font-size:14px;color:#6b6b8a;text-decoration:none;cursor:pointer;transition:all 0.2s;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif}
+.sidebar-item:hover{background:rgba(255,255,255,0.05);color:#f0f0f8}
+.sidebar-item.active{background:rgba(255,77,109,0.12);color:#ff4d6d}
+.sidebar-item .si-icon{font-size:14px;flex-shrink:0;width:20px;text-align:center;color:inherit}
+.sidebar-divider{height:1px;background:rgba(255,255,255,0.06);margin:6px 10px}
+.sidebar-bottom{padding:12px 10px;border-top:1px solid rgba(255,255,255,0.06)}
+.sidebar-plan{margin-bottom:8px;padding:7px 12px;border-radius:10px;font-size:12px;font-weight:700;text-align:center;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#6b6b8a;cursor:pointer;transition:all 0.2s}
+.sidebar-user{font-size:11px;color:#6b6b8a;padding:4px 12px 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sidebar-logout{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:13px;color:#ff4d6d;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+.sidebar-logout:hover{background:rgba(255,77,109,0.1)}
+
+body{padding-left:220px}
+.topbar{display:none}
+
+@media(max-width:700px){
+  body{padding-left:0;padding-top:56px}
+  .sidebar{display:none}
+  .topbar{display:flex;position:fixed;top:0;left:0;right:0;z-index:999;align-items:center;justify-content:space-between;padding:12px 24px;background:rgba(10,10,15,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06)}
+  .topbar-logo{font-size:16px;font-weight:700;color:#f0f0f8}
+  .logout-btn{padding:7px 16px;border-radius:8px;border:1px solid rgba(255,77,109,0.3);background:rgba(255,77,109,0.1);color:#ff4d6d;font-size:13px;cursor:pointer}
+}
+
+/* ── Dashboard layout ── */
+.dash-wrap {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 28px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Welcome header ── */
+.dash-header {
+  margin-bottom: 36px;
+  animation: fadeDown 0.5s ease both;
+}
+.dash-greeting {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.dash-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 4px;
+  letter-spacing: -0.5px;
+}
+.dash-sub {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ── Stats row ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+  animation: fadeUp 0.5s 0.1s ease both;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 22px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.stat-card:hover { border-color: rgba(255,77,109,0.3); }
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+.stat-card.plan-card::before { background: linear-gradient(90deg, #ff4d6d, #c9184a); }
+.stat-card.analyses-card::before { background: linear-gradient(90deg, #00e676, #00c853); }
+.stat-card.streak-card::before { background: linear-gradient(90deg, #ffd600, #ff9500); }
+.stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.stat-value {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.5px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-value.accent { color: var(--accent); }
+.stat-value.green { color: var(--green); }
+.stat-value.yellow { color: var(--yellow); }
+.stat-detail {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ── CTA sectie ── */
+.dash-cta-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 14px;
+  margin-bottom: 28px;
+  animation: fadeUp 0.5s 0.15s ease both;
+}
+.cta-main {
+  background: linear-gradient(135deg, rgba(255,77,109,0.12), rgba(255,77,109,0.04));
+  border: 1px solid rgba(255,77,109,0.25);
+  border-radius: 16px;
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.cta-main-text h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.cta-main-text p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  background: linear-gradient(135deg, #ff4d6d, #c9184a);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-family: 'DM Sans', sans-serif;
+}
+.cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,77,109,0.35); }
+.cta-upgrade {
+  background: rgba(255,214,0,0.06);
+  border: 1px solid rgba(255,214,0,0.2);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+}
+.cta-upgrade h4 { font-size: 15px; font-weight: 700; color: var(--yellow); }
+.cta-upgrade p { font-size: 12px; color: var(--muted); line-height: 1.5; flex: 1; }
+.upgrade-btn {
+  display: block;
+  padding: 10px;
+  background: rgba(255,214,0,0.1);
+  border: 1px solid rgba(255,214,0,0.3);
+  border-radius: 10px;
+  color: var(--yellow);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.upgrade-btn:hover { background: rgba(255,214,0,0.18); }
+
+/* ── Recente analyses ── */
+.dash-section {
+  margin-bottom: 28px;
+  animation: fadeUp 0.5s 0.2s ease both;
+}
+.dash-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.dash-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.dash-section-link {
+  font-size: 13px;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+.dash-section-link:hover { text-decoration: underline; }
+
+.analyses-list { display: flex; flex-direction: column; gap: 10px; }
+.analyse-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  transition: all 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+}
+.analyse-item:hover { border-color: rgba(255,77,109,0.3); transform: translateX(2px); }
+.analyse-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(255,77,109,0.12);
+  border: 1px solid rgba(255,77,109,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--accent);
+  flex-shrink: 0;
+  letter-spacing: 0.05em;
+}
+.analyse-info { flex: 1; min-width: 0; }
+.analyse-naam {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.analyse-meta { font-size: 12px; color: var(--muted); }
+.analyse-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+.analyse-badge.must { background: rgba(0,230,118,0.12); color: var(--green); }
+.analyse-badge.should { background: rgba(255,214,0,0.12); color: var(--yellow); }
+
+.analyses-empty {
+  text-align: center;
+  padding: 40px 20px;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.analyses-empty a { color: var(--accent); text-decoration: none; font-weight: 600; }
+
+/* ── Tip van de dag ── */
+.tip-card {
+  background: rgba(99,102,241,0.06);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: 16px;
+  padding: 20px 22px;
+  animation: fadeUp 0.5s 0.25s ease both;
+}
+.tip-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #818cf8;
+  margin-bottom: 8px;
+}
+.tip-text {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+/* ── Progress bar ── */
+.progress-wrap { margin-top: 8px; }
+.progress-bar {
+  height: 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #00e676, #00c853);
+  transition: width 0.6s ease;
+}
+
+@media (max-width: 700px) {
+  .dash-wrap { padding: 20px 16px 60px; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .stat-card:last-child { grid-column: span 2; }
+  .dash-cta-row { grid-template-columns: 1fr; }
+  .dash-title { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="sidebar-logo">StudyBrain</div>
+  <div class="sidebar-nav">
+    <a href="dashboard.html" class="sidebar-item active">
+      <span class="si-icon">▣</span> Dashboard
+    </a>
+    <a href="app.html" class="sidebar-item">
+      <span class="si-icon">+</span> Nieuwe analyse
+    </a>
+    <div class="sidebar-divider"></div>
+    <a href="index.html#pricing" class="sidebar-item">
+      <span class="si-icon">◈</span> Abonnementen
+    </a>
+    <a href="index.html" class="sidebar-item">
+      <span class="si-icon">←</span> Hoofdpagina
+    </a>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="sidebar-plan" id="sidebarPlan" onclick="window.location.href='index.html#pricing'">Gratis</div>
+    <div class="sidebar-user" id="sidebarEmail"></div>
+    <button class="sidebar-logout" onclick="doLogout()">Uitloggen</button>
+  </div>
+</div>
+
+<!-- Topbar mobiel -->
+<div class="topbar">
+  <div class="topbar-logo">StudyBrain</div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <button class="logout-btn" onclick="doLogout()">Uitloggen</button>
+  </div>
+</div>
+
+<div class="glow-orb"></div>
+<div class="glow-orb2"></div>
+
+<div class="dash-wrap">
+
+  <!-- Header -->
+  <div class="dash-header">
+    <div class="dash-greeting" id="dashGreeting">Welkom terug</div>
+    <div class="dash-title" id="dashTitle">Goed bezig</div>
+    <div class="dash-sub" id="dashSub">Hier is een overzicht van jouw voortgang.</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card plan-card">
+      <div class="stat-label">Jouw plan</div>
+      <div class="stat-value accent" id="statPlan">Gratis</div>
+      <div class="stat-detail" id="statPlanDetail">1 analyse inbegrepen</div>
+    </div>
+    <div class="stat-card analyses-card">
+      <div class="stat-label">Analyses gedaan</div>
+      <div class="stat-value green" id="statAnalyses">0</div>
+      <div class="stat-detail" id="statAnalysesDetail">Nog geen analyses</div>
+      <div class="progress-wrap" id="progressWrap" style="display:none">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+    <div class="stat-card streak-card">
+      <div class="stat-label">Lid sinds</div>
+      <div class="stat-value yellow" id="statSince">—</div>
+      <div class="stat-detail">Blijf consistent studeren</div>
+    </div>
+  </div>
+
+  <!-- CTA row -->
+  <div class="dash-cta-row">
+    <div class="cta-main">
+      <div class="cta-main-text">
+        <h3>Start een nieuwe analyse</h3>
+        <p>Upload je lesstof en ontdek wat je moet leren voor je toets.</p>
+      </div>
+      <a href="app.html" class="cta-btn">Analyseer nu →</a>
+    </div>
+    <div class="cta-upgrade" id="upgradeCard">
+      <h4>Upgrade naar Pro</h4>
+      <p>Onbeperkt analyses, persoonlijk studieplan en ezelsbruggetjes.</p>
+      <a href="index.html#pricing" class="upgrade-btn">Bekijk plannen →</a>
+    </div>
+  </div>
+
+  <!-- Recente analyses -->
+  <div class="dash-section">
+    <div class="dash-section-header">
+      <div class="dash-section-title">Recente analyses</div>
+      <a href="app.html" class="dash-section-link">Nieuwe analyse →</a>
+    </div>
+    <div class="analyses-list" id="analysesList">
+      <div class="analyses-empty">
+        Je hebt nog geen analyses gedaan.<br>
+        <a href="app.html">Start je eerste analyse →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tip van de dag -->
+  <div class="tip-card">
+    <div class="tip-label">Studietip</div>
+    <div class="tip-text" id="tipText">Laadt...</div>
+  </div>
+
+</div>
+
+<script src="auth.js"></script>
+<script>
+  checkAccess();
+
+  const tips = [
+    "Spaced repetition werkt beter dan alles in één keer leren. Herhaal stof na 1 dag, 3 dagen en een week voor de beste resultaten.",
+    "Studeer in blokken van 25 minuten met 5 minuten pauze ertussen. Je hersenen hebben rust nodig om informatie op te slaan.",
+    "Schrijf na het leren de hoofdpunten op uit je hoofd. Als je het kunt opschrijven, kun je het ook op de toets.",
+    "Begin altijd met de moeilijkste stof als je fris bent. Laat de makkelijke onderwerpen voor het einde.",
+    "Leg de stof uit alsof je het aan iemand anders uitlegt. Als je het niet kunt uitleggen, begrijp je het nog niet goed genoeg.",
+    "Vermijd je telefoon tijdens het studeren. Elke melding kost je 20 minuten concentratie om terug te komen.",
+    "Slaap genoeg na het leren. Tijdens je slaap slaat je brein de nieuwe informatie op in het langetermijngeheugen.",
+  ];
+
+  (async () => {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
+
+    const email = session.user.email;
+    const naam = email.split('@')[0];
+    const hour = new Date().getHours();
+    const greeting = hour < 12 ? 'Goedemorgen' : hour < 17 ? 'Goedemiddag' : 'Goedenavond';
+
+    document.getElementById('dashGreeting').textContent = greeting + ', ' + naam;
+    document.getElementById('sidebarEmail').textContent = email;
+
+    // Tip van de dag
+    const dayIndex = new Date().getDay();
+    document.getElementById('tipText').textContent = tips[dayIndex % tips.length];
+
+    // Lid sinds
+    const created = new Date(session.user.created_at);
+    const maanden = ['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'];
+    document.getElementById('statSince').textContent = created.getDate() + ' ' + maanden[created.getMonth()];
+
+    // Plan ophalen
+    const { data: profile } = await sb.from('profiles').select('plan, free_analysis_used').eq('id', session.user.id).single();
+    const plan = profile?.plan || 'gratis';
+    const used = profile?.free_analysis_used || false;
+
+    // Plan badge sidebar
+    const planEl = document.getElementById('sidebarPlan');
+    const statPlan = document.getElementById('statPlan');
+    const statDetail = document.getElementById('statPlanDetail');
+
+    if (plan === 'pro') {
+      planEl.textContent = 'Pro';
+      planEl.style.cssText += 'color:#ff4d6d;border-color:rgba(255,77,109,0.3);background:rgba(255,77,109,0.08)';
+      statPlan.textContent = 'Pro';
+      statDetail.textContent = 'Onbeperkt analyses';
+      document.getElementById('upgradeCard').style.display = 'none';
+    } else if (plan === 'elite') {
+      planEl.textContent = 'Elite';
+      planEl.style.cssText += 'color:#ffd600;border-color:rgba(255,214,0,0.3);background:rgba(255,214,0,0.08)';
+      statPlan.textContent = 'Elite';
+      statDetail.textContent = 'Onbeperkt + 4 vakken';
+      document.getElementById('upgradeCard').style.display = 'none';
+    } else if (plan === 'starter') {
+      planEl.textContent = 'Starter';
+      statPlan.textContent = 'Starter';
+      statDetail.textContent = '10 analyses per maand';
+    } else {
+      // Gratis
+      const analysesGedaan = used ? 1 : 0;
+      document.getElementById('statAnalyses').textContent = analysesGedaan;
+      document.getElementById('statAnalysesDetail').textContent = used ? 'Gratis analyse gebruikt' : '1 gratis analyse beschikbaar';
+      if (used) {
+        document.getElementById('progressWrap').style.display = 'block';
+        document.getElementById('progressFill').style.width = '100%';
+        document.getElementById('progressFill').style.background = 'linear-gradient(90deg,#ff4d6d,#c9184a)';
+      }
+    }
+
+    // Welkoms subtitle
+    if (plan === 'gratis' && !used) {
+      document.getElementById('dashTitle').textContent = 'Klaar voor je eerste analyse?';
+      document.getElementById('dashSub').textContent = 'Je hebt 1 gratis analyse tegoed. Upload je lesstof en ontdek wat echt in de toets komt.';
+    } else if (plan === 'gratis' && used) {
+      document.getElementById('dashTitle').textContent = 'Je gratis analyse is op';
+      document.getElementById('dashSub').textContent = 'Upgrade naar Pro voor onbeperkte analyses en een persoonlijk studieplan.';
+    } else {
+      document.getElementById('dashTitle').textContent = 'Goed bezig, ' + naam + '.';
+      document.getElementById('dashSub').textContent = 'Hier is een overzicht van jouw studieactiviteit.';
+    }
+
+    // Recente analyses uit localStorage
+    const opgeslagen = JSON.parse(localStorage.getItem('studybrain-analyses') || '[]');
+    const lijst = document.getElementById('analysesList');
+
+    if (opgeslagen.length === 0) {
+      lijst.innerHTML = `
+        <div class="analyses-empty">
+          Je hebt nog geen analyses gedaan.<br>
+          <a href="app.html">Start je eerste analyse →</a>
+        </div>`;
+    } else {
+      lijst.innerHTML = opgeslagen.slice(0, 5).map(a => `
+        <div class="analyse-item" onclick="window.location.href='app.html'">
+          <div class="analyse-icon">${a.naam.substring(0,3).toUpperCase()}</div>
+          <div class="analyse-info">
+            <div class="analyse-naam">${a.naam}</div>
+            <div class="analyse-meta">${a.datum} · ${a.tijd}</div>
+          </div>
+          <div class="analyse-badge must">${a.mustCount} must</div>
+        </div>`).join('');
+    }
+  })();
+</script>
+</body>
+</html>
