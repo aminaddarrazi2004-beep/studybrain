@@ -3,100 +3,92 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Algemene voorwaarden — StudyBrain</title>
-<meta name="description" content="De algemene voorwaarden van StudyBrain.">
-<meta name="theme-color" content="#ff4d6d">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<title>Algemene Voorwaarden — StudyBrain</title>
+<link rel="stylesheet" href="landing.css">
 <style>
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-:root { --bg:#0a0a0f; --surface:#12121a; --border:#2a2a3d; --accent:#ff4d6d; --text:#f0f0f8; --muted:#6b6b8a; }
-body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; -webkit-font-smoothing:antialiased; }
-nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:12px 24px; border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(10,10,15,0.9); backdrop-filter:blur(14px); display:flex; align-items:center; justify-content:space-between; }
-.nav-logo { font-family:'Syne',sans-serif; font-size:18px; font-weight:700; color:var(--text); text-decoration:none; }
-.nav-back { padding:8px 16px; border-radius:10px; border:1px solid var(--border); color:var(--muted); font-size:13px; text-decoration:none; transition:all 0.2s; }
-.nav-back:hover { border-color:var(--text); color:var(--text); }
-.page { max-width:740px; margin:0 auto; padding:120px 24px 80px; }
-.label { display:inline-block; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); background:rgba(255,77,109,0.1); border:1px solid rgba(255,77,109,0.25); padding:5px 14px; border-radius:100px; margin-bottom:20px; }
-h1 { font-family:'Syne',sans-serif; font-size:clamp(26px,4vw,40px); font-weight:700; line-height:1.2; margin-bottom:12px; }
-.intro { font-size:16px; color:var(--muted); line-height:1.7; margin-bottom:48px; }
-.section { margin-bottom:32px; padding:28px; background:var(--surface); border:1px solid var(--border); border-radius:18px; }
-.section h2 { font-family:'Syne',sans-serif; font-size:18px; font-weight:700; margin-bottom:12px; }
-.section p, .section li { font-size:14px; color:var(--muted); line-height:1.8; }
-.section ul { padding-left:20px; margin-top:8px; }
-.section ul li { margin-bottom:6px; }
-.section a { color:var(--accent); text-decoration:none; }
-.section a:hover { text-decoration:underline; }
-footer { border-top:1px solid var(--border); padding:32px 24px; text-align:center; font-size:13px; color:var(--muted); }
+  .legal-page { max-width: 720px; margin: 0 auto; padding: 120px 24px 80px; }
+  .legal-page h1 { font-family: 'DM Sans', sans-serif; font-size: 36px; font-weight: 700; margin-bottom: 8px; }
+  .legal-page .meta { color: var(--muted); font-size: 14px; margin-bottom: 48px; border-bottom: 1px solid var(--border); padding-bottom: 24px; }
+  .legal-page h2 { font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 700; margin: 32px 0 10px; color: var(--text); text-transform: uppercase; letter-spacing: 0.04em; }
+  .legal-page p { font-size: 15px; color: #c0c0d8; line-height: 1.8; margin-bottom: 12px; }
+  .legal-page ul { padding-left: 20px; margin-bottom: 12px; }
+  .legal-page ul li { font-size: 15px; color: #c0c0d8; line-height: 1.8; margin-bottom: 4px; }
+  .legal-page a { color: var(--accent); text-decoration: none; }
+  .legal-page a:hover { text-decoration: underline; }
+  .back-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; text-decoration: none; margin-bottom: 32px; transition: color 0.2s; }
+  .back-btn:hover { color: var(--text); }
 </style>
 </head>
 <body>
+
 <nav>
-  <a href="index.html" class="nav-logo">🧠 StudyBrain</a>
-  <a href="index.html" class="nav-back">← Terug</a>
+  <div class="nav-inner">
+    <a href="index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;margin-right:auto;">
+      <span style="font-family:'DM Sans',sans-serif;font-size:18px;font-weight:700;color:var(--text);"> StudyBrain</span>
+    </a>
+    <div class="nav-actions">
+      <a href="login.html" class="btn-ghost">Inloggen</a>
+      <a href="login.html#signup" class="btn-nav">Gratis proberen</a>
+    </div>
+  </div>
 </nav>
 
-<div class="page">
-  <span class="label">Voorwaarden</span>
-  <h1>Algemene voorwaarden</h1>
-  <p class="intro">Laatste update: maart 2025. Door StudyBrain te gebruiken ga je akkoord met deze voorwaarden.</p>
+<div class="legal-page">
+  <a href="index.html" class="back-btn">← Terug naar homepage</a>
+  <h1>Algemene Voorwaarden</h1>
+  <p class="meta">Laatste update: maart 2026 &nbsp;·&nbsp; StudyBrain, Nederland &nbsp;·&nbsp; <a href="/cdn-cgi/l/email-protection#3b52555d547b484f4e5f4259495a5255155a4b4b"><span class="__cf_email__" data-cfemail="a9c0c7cfc6e9dadddccdd0cbdbc8c0c787c8d9d9">[email&#160;protected]</span></a></p>
 
-  <div class="section">
-    <h2>1. Over StudyBrain</h2>
-    <p>StudyBrain is een slim studieplatform dat studenten helpt bij het prioriteren van leerstof. StudyBrain is geen vervanging voor het oordeel van een docent of school.</p>
-  </div>
+  <h2>1. Over StudyBrain</h2>
+  <p>StudyBrain is een professionele studietool ontwikkeld samen met ervaren leraren, gevestigd in Nederland. Het platform analyseert lesstof, herkent toetspatronen en helpt studenten gerichter te leren. Door gebruik te maken van StudyBrain ga je akkoord met deze voorwaarden.</p>
 
-  <div class="section">
-    <h2>2. Gebruik van de dienst</h2>
-    <ul>
-      <li>Je bent minimaal 12 jaar oud om een account aan te maken</li>
-      <li>Je bent verantwoordelijk voor de inhoud die je uploadt</li>
-      <li>Je uploadt geen auteursrechtelijk beschermde materialen zonder toestemming</li>
-      <li>Je gebruikt de dienst niet voor onwettige doeleinden</li>
-      <li>Je deelt je accountgegevens niet met anderen</li>
-    </ul>
-  </div>
+  <h2>2. De dienst</h2>
+  <p>StudyBrain analyseert geüploade PDF-bestanden en genereert op basis van bewezen toetspatronen een persoonlijk studieplan met prioriteiten, ezelsbruggetjes en oefenvragen. De resultaten dienen ter ondersteuning van het leerproces en vormen geen garantie voor toetsresultaten.</p>
 
-  <div class="section">
-    <h2>3. Abonnementen en betaling</h2>
-    <ul>
-      <li>Abonnementen worden maandelijks verlengd tenzij je opzegt</li>
-      <li>Opzeggen kan altijd vóór de volgende factuurdatum via je accountinstellingen</li>
-      <li>Betalingen worden verwerkt door Stripe — wij bewaren geen betaalgegevens</li>
-      <li>Prijzen kunnen wijzigen — bestaande abonnees ontvangen 30 dagen van tevoren bericht</li>
-      <li>Terugbetaling is mogelijk binnen 14 dagen na eerste aankoop</li>
-    </ul>
-  </div>
+  <h2>3. Account en toegang</h2>
+  <ul>
+    <li>Je bent verantwoordelijk voor de veiligheid van je wachtwoord</li>
+    <li>Je mag je account niet delen met anderen</li>
+    <li>Je dient een geldig e-mailadres op te geven</li>
+    <li>StudyBrain behoudt het recht accounts te blokkeren bij misbruik</li>
+  </ul>
 
-  <div class="section">
-    <h2>4. Resultaten en aansprakelijkheid</h2>
-    <p>StudyBrain analyseert leerstof op basis van bewezen toetspatronen die zijn bestudeerd en samengesteld door ervaren leraren. Deze patronen helpen StudyBrain herkennen welke onderwerpen docenten het vaakst toetsen. We kunnen echter <strong>niet garanderen</strong> dat de resultaten altijd volledig correct of volledig zijn — elke toets is anders. Gebruik de analyses als aanvulling op je eigen studie, niet als vervanging. StudyBrain is niet aansprakelijk voor studieresultaten gebaseerd op onze analyses.</p>
-  </div>
+  <h2>4. Gratis gebruik</h2>
+  <p>Nieuwe gebruikers ontvangen één gratis analyse zonder creditcard. Na gebruik van de gratis analyse is een betaald abonnement vereist om de dienst te blijven gebruiken.</p>
 
-  <div class="section">
-    <h2>5. Intellectueel eigendom</h2>
-    <p>De StudyBrain-software, het design en de content op deze website zijn eigendom van StudyBrain. Je mag deze niet kopiëren, aanpassen of distribueren zonder toestemming. De PDFs die jij uploadt blijven jouw eigendom.</p>
-  </div>
+  <h2>5. Abonnementen en betaling</h2>
+  <ul>
+    <li>Abonnementen worden maandelijks gefactureerd</li>
+    <li>Betaling vindt vooraf plaats aan het begin van elke periode</li>
+    <li>Prijzen zijn inclusief BTW tenzij anders vermeld</li>
+    <li>Je kunt op elk moment opzeggen — je behoudt toegang tot het einde van de betaalde periode</li>
+    <li>StudyBrain behoudt het recht prijzen te wijzigen met 30 dagen voorafgaande kennisgeving</li>
+  </ul>
 
-  <div class="section">
-    <h2>6. Accounts</h2>
-    <ul>
-      <li>We mogen accounts opschorten bij misbruik van de dienst</li>
-      <li>Je kunt je account op elk moment verwijderen via <a href="/cdn-cgi/l/email-protection#b5dcdbd3daf5c6c1c0d1ccd7c7d4dcdb9bd4c5c5"><span class="__cf_email__" data-cfemail="afc6c1c9c0efdcdbdacbd6cdddcec6c181cedfdf">[email&#160;protected]</span></a></li>
-      <li>Bij verwijdering worden al je gegevens binnen 30 dagen gewist</li>
-    </ul>
-  </div>
+  <h2>6. Terugbetalingsbeleid</h2>
+  <p>Wij hanteren geen automatische terugbetalingen. Bij aantoonbare technische problemen kun je binnen 14 dagen na afschrijving contact opnemen via <a href="/cdn-cgi/l/email-protection#11787f777e516265647568736370787f3f706161"><span class="__cf_email__" data-cfemail="731a1d151c33000706170a1101121a1d5d120303">[email&#160;protected]</span></a>. Wij beoordelen dit per geval.</p>
 
-  <div class="section">
-    <h2>7. Beschikbaarheid</h2>
-    <p>We streven naar maximale beschikbaarheid maar kunnen geen 100% uptime garanderen. Onderhoud of storingen kunnen de dienst tijdelijk onderbreken. We communiceren geplande onderbrekingen via e-mail.</p>
-  </div>
+  <h2>7. Gebruik van de dienst</h2>
+  <p>Het is niet toegestaan de dienst te gebruiken voor illegale doeleinden, auteursrechtelijk beschermd materiaal te uploaden zonder toestemming, de dienst te misbruiken of door te verkopen aan derden.</p>
 
-  <div class="section">
-    <h2>8. Wijzigingen in de voorwaarden</h2>
-    <p>We kunnen deze voorwaarden aanpassen. Bij belangrijke wijzigingen sturen we een e-mail. Door de dienst te blijven gebruiken ga je akkoord met de nieuwe voorwaarden.</p>
-  </div>
+  <h2>8. Geüpload materiaal</h2>
+  <p>Jij bent verantwoordelijk voor de bestanden die je uploadt. Geüploade bestanden worden uitsluitend gebruikt om de analyse uit te voeren en daarna direct verwijderd.</p>
 
-  <div class="section">
-    <h2>9. Contact</h2>
-    <p>Vragen over deze voorwaarden? Mail naar <a href="/cdn-cgi/l/email-protection#ed84838b82ad9e999889948f9f8c8483c38c9d9d"><span class="__cf_email__" data-cfemail="caa3a4aca58ab9bebfaeb3a8b8aba3a4e4abbaba">[email&#160;protected]</s
+  <h2>9. Aansprakelijkheid</h2>
+  <p>StudyBrain is een studieondersteunend platform en geen vervanging voor eigen studie. De resultaten zijn bedoeld als hulpmiddel — behaalde cijfers of toetsresultaten vallen buiten onze verantwoordelijkheid. Wij zijn evenmin aansprakelijk voor tijdelijke onbeschikbaarheid van de dienst of verlies van data door technische storingen. Onze maximale aansprakelijkheid is beperkt tot het bedrag dat in de betreffende maand is betaald.</p>
+
+  <h2>10. Intellectueel eigendom</h2>
+  <p>De software, het ontwerp en de content van StudyBrain zijn eigendom van StudyBrain. Gegenereerde studieplannen op basis van jouw materiaal zijn voor persoonlijk gebruik en mogen niet commercieel worden verspreid.</p>
+
+  <h2>11. Wijzigingen</h2>
+  <p>StudyBrain behoudt het recht de dienst of prijzen te wijzigen. Bij ingrijpende wijzigingen word je minimaal 30 dagen van tevoren geïnformeerd via e-mail.</p>
+
+  <h2>12. Toepasselijk recht</h2>
+  <p>Op deze voorwaarden is Nederlands recht van toepassing. Geschillen worden voorgelegd aan de bevoegde rechter in Nederland.</p>
+
+  <h2>13. Contact</h2>
+  <p>Vragen? Stuur een e-mail naar <a href="/cdn-cgi/l/email-protection#fa93949c95ba898e8f9e8398889b9394d49b8a8a"><span class="__cf_email__" data-cfemail="a6cfc8c0c9e6d5d2d3c2dfc4d4c7cfc888c7d6d6">[email&#160;protected]</span></a>.</p>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div style="font-family:'DM Sans',sans-serif;font-size:20px
