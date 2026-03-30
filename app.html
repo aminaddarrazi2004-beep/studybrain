@@ -3,180 +3,302 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>StudyBrain — Leer slimmer, niet harder</title>
-<meta name="description" content="Upload je lesstof en ontdek wat je écht moet leren voor je toets. AI-powered studiecoach.">
-<meta property="og:title" content="StudyBrain — Leer slimmer, niet harder">
-<meta property="og:description" content="Upload je PDF, krijg een prioriteitenlijst. Weet wat je MOET leren, wat handig is, en wat je kunt skippen.">
-<meta property="og:type" content="website">
+<title>Nieuwe analyse — StudyBrain</title>
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 /* ── Sidebar ── */
-.sidebar{position:fixed;left:0;top:0;bottom:0;width:220px;background:rgba(10,10,15,0.98);border-right:1px solid rgba(255,255,255,0.06);z-index:998;display:flex;flex-direction:column;padding:0}
-.sidebar-logo{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:#f0f0f8;padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.06)}
-.sidebar-nav{flex:1;display:flex;flex-direction:column;gap:4px;padding:12px 10px;overflow-y:auto}
-.sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;font-size:14px;color:#6b6b8a;text-decoration:none;cursor:pointer;transition:all 0.2s;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif}
-.sidebar-item:hover{background:rgba(255,255,255,0.05);color:#f0f0f8}
-.sidebar-item.active{background:rgba(255,77,109,0.12);color:#ff4d6d}
-.sidebar-item .si-icon{font-size:17px;flex-shrink:0;width:22px;text-align:center}
-.sidebar-divider{height:1px;background:rgba(255,255,255,0.06);margin:6px 10px}
-.sidebar-bottom{padding:12px 10px;border-top:1px solid rgba(255,255,255,0.06)}
-.sidebar-plan{margin-bottom:8px;padding:7px 12px;border-radius:10px;font-size:12px;font-weight:700;text-align:center;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#6b6b8a;cursor:pointer}
-.sidebar-user{font-size:11px;color:#6b6b8a;padding:4px 12px 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sidebar-logout{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:13px;color:#ff4d6d;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif;transition:all 0.2s}
-.sidebar-logout:hover{background:rgba(255,77,109,0.1)}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:220px;background:#0d0d14;border-right:1px solid rgba(255,255,255,0.06);z-index:998;display:flex;flex-direction:column}
+.sidebar-logo{font-size:15px;font-weight:700;color:#f0f0f8;padding:20px;border-bottom:1px solid rgba(255,255,255,0.06);letter-spacing:-0.2px}
+.sidebar-nav{flex:1;display:flex;flex-direction:column;gap:2px;padding:10px 8px;overflow-y:auto}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:13.5px;color:#6b6b8a;text-decoration:none;cursor:pointer;transition:all 0.15s;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif;font-weight:500}
+.sidebar-item:hover{background:rgba(255,255,255,0.04);color:#c0c0d8}
+.sidebar-item.active{background:rgba(255,77,109,0.1);color:#ff4d6d;font-weight:600}
+.sidebar-icon{width:16px;height:16px;flex-shrink:0;opacity:0.6}
+.sidebar-item.active .sidebar-icon{opacity:1}
+.sidebar-item:hover .sidebar-icon{opacity:0.8}
+.sidebar-sep{height:1px;background:rgba(255,255,255,0.05);margin:6px 8px}
+.sidebar-section{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#3a3a52;padding:10px 12px 4px}
+.sidebar-bottom{padding:10px 8px;border-top:1px solid rgba(255,255,255,0.05)}
+.sidebar-plan-pill{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);margin-bottom:6px;cursor:pointer;transition:all 0.15s}
+.sidebar-plan-pill:hover{border-color:rgba(255,255,255,0.12)}
+.sidebar-plan-name{font-size:12px;font-weight:700;color:#f0f0f8}
+.sidebar-plan-label{font-size:10px;color:#6b6b8a;font-weight:500}
+.sidebar-plan-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(255,77,109,0.15);color:#ff4d6d;border:1px solid rgba(255,77,109,0.2)}
+.sidebar-user-row{padding:4px 12px 8px;font-size:11px;color:#3a3a52;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sidebar-logout-btn{display:flex;align-items:center;gap:8px;width:100%;padding:8px 12px;border-radius:8px;font-size:13px;color:#6b6b8a;background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;text-align:left}
+.sidebar-logout-btn:hover{background:rgba(255,77,109,0.08);color:#ff4d6d}
 
-/* ── Hoe het werkt panel ── */
-.hoe-panel{display:none;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;margin-bottom:24px}
-.hoe-panel.open{display:block}
-.hoe-panel h3{font-family:'Syne',sans-serif;font-size:18px;margin-bottom:16px;color:#f0f0f8}
-.hoe-stap{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
-.hoe-num{background:rgba(255,77,109,0.15);color:#ff4d6d;font-size:12px;font-weight:700;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
-.hoe-stap p{font-size:14px;color:#c0c0d8;line-height:1.5;margin:0}
-.hoe-stap strong{color:#f0f0f8}
+/* SVG icons */
+.icon-grid{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3E%3Crect x='1' y='1' width='6' height='6' rx='1.5' stroke='currentColor' stroke-width='1.5'/%3E%3Crect x='9' y='1' width='6' height='6' rx='1.5' stroke='currentColor' stroke-width='1.5'/%3E%3Crect x='1' y='9' width='6' height='6' rx='1.5' stroke='currentColor' stroke-width='1.5'/%3E%3Crect x='9' y='9' width='6' height='6' rx='1.5' stroke='currentColor' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat center/contain}
+.icon-plus{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3E%3Cpath d='M8 3v10M3 8h10' stroke='currentColor' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center/contain}
+.icon-info{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6.5' stroke='currentColor' stroke-width='1.5'/%3E%3Cpath d='M8 7.5v4M8 5.5v.5' stroke='currentColor' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center/contain}
+.icon-diamond{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3E%3Cpath d='M8 1.5l4 4-4 9-4-9 4-4z' stroke='currentColor' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/contain}
+.icon-home{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3E%3Cpath d='M2 6.5L8 2l6 4.5V14H10v-3.5H6V14H2V6.5z' stroke='currentColor' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/contain}
+.icon-logout{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3E%3Cpath d='M10 11l3-3-3-3M13 8H6M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/contain}
 
-/* ── Layout met sidebar ── */
-body{padding-top:0;padding-left:220px}
-.container{padding-top:32px}
+/* ── App layout ── */
+body{padding-left:220px;padding-top:0}
+.app-topbar{display:none}
 
-/* ── Topbar verbergen op desktop, tonen op mobiel ── */
-.topbar{display:none}
-
-/* ── Mobile ── */
 @media(max-width:700px){
-  body{padding-left:0;padding-top:56px}
+  body{padding-left:0;padding-top:52px}
   .sidebar{display:none}
-  .topbar{display:flex;position:fixed;top:0;left:0;right:0;z-index:999;align-items:center;justify-content:space-between;padding:12px 24px;background:rgba(10,10,15,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06)}
+  .app-topbar{display:flex;position:fixed;top:0;left:0;right:0;z-index:999;align-items:center;justify-content:space-between;padding:0 20px;height:52px;background:#0d0d14;border-bottom:1px solid rgba(255,255,255,0.06)}
+  .app-topbar-logo{font-size:15px;font-weight:700;color:#f0f0f8}
 }
 
-.topbar-logo{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;color:#f0f0f8}
-.topbar-right{display:flex;align-items:center;gap:12px}
-.topbar-email{font-size:12px;color:#6b6b8a}
-.logout-btn{padding:7px 16px;border-radius:8px;border:1px solid rgba(255,77,109,0.3);background:rgba(255,77,109,0.1);color:#ff4d6d;font-size:13px;cursor:pointer;transition:all 0.2s}
-.logout-btn:hover{background:rgba(255,77,109,0.2)}
+/* ── Page header ── */
+.page-header{padding:32px 0 24px;border-bottom:1px solid rgba(255,255,255,0.05);margin-bottom:28px}
+.page-title{font-size:20px;font-weight:700;color:#f0f0f8;letter-spacing:-0.3px;margin-bottom:4px}
+.page-sub{font-size:13px;color:#6b6b8a}
+
+/* ── Upload zone ── */
+.upload-zone{border:1.5px dashed rgba(255,255,255,0.1);border-radius:16px;padding:48px 32px;text-align:center;cursor:pointer;transition:all 0.2s;background:rgba(255,255,255,0.02);position:relative}
+.upload-zone:hover{border-color:rgba(255,77,109,0.4);background:rgba(255,77,109,0.03)}
+.upload-zone.drag-over{border-color:#ff4d6d;background:rgba(255,77,109,0.06)}
+.upload-arrow{width:36px;height:36px;margin:0 auto 16px;color:#6b6b8a}
+.upload-zone h3{font-size:15px;font-weight:600;color:#f0f0f8;margin-bottom:6px}
+.upload-zone p{font-size:13px;color:#6b6b8a}
+#fileInput{display:none}
+
+/* ── File list ── */
+.file-list{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+.file-item{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:11px 14px;font-size:13px}
+.file-item .fi-icon{width:16px;height:16px;flex-shrink:0;color:#6b6b8a;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3E%3Cpath d='M9 1.5H4a1 1 0 00-1 1v11a1 1 0 001 1h8a1 1 0 001-1v-8L9 1.5z' stroke='%236b6b8a' stroke-width='1.2' stroke-linejoin='round'/%3E%3Cpath d='M9 1.5V5h3.5' stroke='%236b6b8a' stroke-width='1.2' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/contain}
+.file-item .fi-name{flex:1;font-weight:500;color:#c0c0d8}
+.file-item .fi-size{color:#6b6b8a;font-size:12px}
+.file-item .fi-remove{cursor:pointer;color:#6b6b8a;font-size:16px;line-height:1;background:none;border:none;padding:2px;transition:color 0.15s}
+.file-item .fi-remove:hover{color:#ff4d6d}
+
+/* ── Time selector ── */
+.time-section{margin-top:20px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:20px}
+.time-label{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#6b6b8a;margin-bottom:12px}
+.time-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.time-btn{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer;transition:all 0.15s;color:#c0c0d8;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500}
+.time-btn:hover{border-color:rgba(255,77,109,0.3);color:#f0f0f8}
+.time-btn.active{background:rgba(255,77,109,0.1);border-color:rgba(255,77,109,0.4);color:#ff4d6d;font-weight:600}
+@media(max-width:480px){.time-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ── Analyze button ── */
+.analyze-btn{margin-top:20px;width:100%;padding:16px;background:linear-gradient(135deg,#ff4d6d,#c9184a);border:none;border-radius:12px;color:white;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:0.2px}
+.analyze-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(255,77,109,0.35)}
+.analyze-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* ── Error ── */
+.error-box{background:rgba(255,77,109,0.08);border:1px solid rgba(255,77,109,0.2);border-radius:10px;padding:14px;color:#ff8fa3;font-size:13px;margin-top:14px;display:none}
+
+/* ── Loading ── */
+.loading{display:none;text-align:center;padding:80px 20px}
+.loading h3{font-size:18px;font-weight:600;margin-bottom:8px;color:#f0f0f8}
+.loading p{color:#6b6b8a;font-size:14px}
+.loading-dots{display:inline-flex;gap:5px;margin-top:20px}
+.loading-dots span{width:7px;height:7px;border-radius:50%;background:#ff4d6d;animation:dotBounce 1.2s ease-in-out infinite}
+.loading-dots span:nth-child(2){animation-delay:0.2s}
+.loading-dots span:nth-child(3){animation-delay:0.4s}
+@keyframes dotBounce{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}
+
+/* ── Results ── */
+.results{display:none}
+.results-header{margin-bottom:28px}
+.results-header h2{font-size:22px;font-weight:700;color:#f0f0f8;margin-bottom:4px}
+.results-header p{font-size:13px;color:#6b6b8a}
+
+.priority-card{border-radius:14px;padding:24px;margin-bottom:16px;border:1px solid;position:relative;overflow:hidden}
+.priority-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.priority-card.must{background:rgba(0,230,118,0.04);border-color:rgba(0,230,118,0.15)}
+.priority-card.must::before{background:#00e676}
+.priority-card.should{background:rgba(255,214,0,0.04);border-color:rgba(255,214,0,0.15)}
+.priority-card.should::before{background:#ffd600}
+.priority-card.skip{background:rgba(255,77,109,0.03);border-color:rgba(255,77,109,0.12)}
+.priority-card.skip::before{background:#ff4d6d}
+
+.card-label{margin-bottom:12px}
+.card-badge{display:inline-flex;align-items:center;padding:4px 12px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase}
+.must .card-badge{background:rgba(0,230,118,0.12);color:#00e676}
+.should .card-badge{background:rgba(255,214,0,0.12);color:#ffd600}
+.skip .card-badge{background:rgba(255,77,109,0.12);color:#ff4d6d}
+.card-title{font-size:18px;font-weight:700;color:#f0f0f8;margin-bottom:4px}
+.card-subtitle{font-size:13px;color:#6b6b8a;margin-bottom:18px}
+.topic-list{display:flex;flex-direction:column;gap:10px}
+.topic-item{background:rgba(255,255,255,0.03);border-radius:10px;padding:14px}
+.topic-item h4{font-weight:600;font-size:14px;margin-bottom:4px;color:#f0f0f8}
+.topic-item p{color:#8888a8;font-size:13px;line-height:1.6}
+.topic-reason{margin-top:8px;font-size:12px;padding:3px 10px;border-radius:6px;display:inline-block;font-weight:500}
+.must .topic-reason{background:rgba(0,230,118,0.1);color:#00e676}
+.should .topic-reason{background:rgba(255,214,0,0.1);color:#ffd600}
+.skip .topic-reason{background:rgba(255,77,109,0.1);color:#ff4d6d}
+
+.cheatsheet-section{margin-top:16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:24px}
+.cheatsheet-section h3{font-size:15px;font-weight:700;color:#f0f0f8;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.06em}
+.cheatsheet-content{font-size:13px;line-height:1.8;color:#8888a8;white-space:pre-wrap}
+
+.reset-btn{margin-top:28px;width:100%;padding:14px;background:transparent;border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:#6b6b8a;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;transition:all 0.2s}
+.reset-btn:hover{border-color:rgba(255,255,255,0.15);color:#c0c0d8}
+
+/* ── Locked content ── */
+.locked-text{color:#6b6b8a;font-size:13px;font-style:italic;margin:4px 0 8px}
+.upgrade-inline{display:inline-block;margin-top:8px;font-size:12px;color:#ff4d6d;text-decoration:none;font-weight:600;border:1px solid rgba(255,77,109,0.25);padding:3px 10px;border-radius:6px;transition:all 0.15s}
+.upgrade-inline:hover{background:rgba(255,77,109,0.08)}
+.topic-tip{display:block;margin-top:8px;font-size:12px;color:#00e676;background:rgba(0,230,118,0.06);border:1px solid rgba(0,230,118,0.15);border-radius:6px;padding:6px 10px}
+
+/* ── Studieplan ── */
+.studieplan{padding:4px 0}
+.sp-section{margin-bottom:24px}
+.sp-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#6b6b8a;margin-bottom:12px;display:block}
+.sp-stap{display:flex;gap:14px;margin-bottom:14px}
+.sp-stap-num{background:rgba(255,77,109,0.12);color:#ff4d6d;font-size:11px;font-weight:700;padding:4px 8px;border-radius:6px;height:fit-content;white-space:nowrap}
+.sp-stap-body strong{font-size:14px;font-weight:600;display:block;margin-bottom:4px;color:#f0f0f8}
+.sp-stap-body p{font-size:13px;color:#8888a8;line-height:1.6;margin-bottom:4px}
+.sp-timing{font-size:11px;color:#ffd600;margin-bottom:6px;font-weight:500}
+.sp-onthoud{background:rgba(255,214,0,0.06);border:1px solid rgba(255,214,0,0.15);border-radius:6px;padding:8px 12px;font-size:13px;color:#ffd600;margin:8px 0 4px}
+.sp-ezel{background:rgba(0,230,118,0.05);border:1px solid rgba(0,230,118,0.15);border-radius:6px;padding:8px 12px;font-size:13px;color:#00e676;margin:4px 0 6px}
+.sp-valkuil{background:rgba(255,152,0,0.06);border:1px solid rgba(255,152,0,0.15);border-radius:6px;padding:6px 10px;font-size:12px;color:#ff9800;margin:4px 0 6px}
+.sp-tijd{font-size:11px;color:#6b6b8a;background:rgba(255,255,255,0.04);padding:2px 8px;border-radius:20px;display:inline-block;margin-top:4px}
+.sp-herhaling{background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px;margin-bottom:8px}
+.sp-herhaling strong{font-size:13px;color:#00e676;display:block;margin-bottom:4px}
+.sp-herhaling p{font-size:13px;color:#8888a8;line-height:1.6;margin:0}
+.sp-geheimtip{background:rgba(255,214,0,0.04);border:1px solid rgba(255,214,0,0.15);border-radius:10px;padding:14px 16px;font-size:13px;color:#c0c0d8;line-height:1.7;margin-top:8px}
+.sp-geheimtip strong{color:#ffd600}
+.sp-samenvatting{background:rgba(255,255,255,0.03);border-radius:10px;padding:14px 16px;margin-bottom:20px}
+.sp-samenvatting p{font-size:14px;color:#8888a8;line-height:1.7;margin-top:8px}
+.sp-focuspunten{margin-bottom:20px}
+.sp-focus-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.sp-focus-num{background:rgba(255,77,109,0.15);color:#ff4d6d;font-size:11px;font-weight:700;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.sp-focus-item span{font-size:14px;color:#f0f0f8;line-height:1.5}
+.sp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.sp-header h3{margin-bottom:0;font-size:15px;font-weight:700;color:#f0f0f8;text-transform:uppercase;letter-spacing:0.06em}
+.sp-download-btn{background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.25);color:#ff4d6d;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif}
+.sp-download-btn:hover{background:rgba(255,77,109,0.18)}
+.sp-preview-card{display:flex;align-items:center;gap:16px;background:rgba(0,230,118,0.04);border:1px solid rgba(0,230,118,0.2);border-radius:14px;padding:20px;flex-wrap:wrap}
+.sp-preview-text{flex:1;min-width:180px}
+.sp-preview-text strong{font-size:14px;font-weight:700;display:block;margin-bottom:4px;color:#00e676}
+.sp-preview-text p{font-size:13px;color:#6b6b8a;line-height:1.5;margin:0}
+.sp-preview-card .sp-download-btn{background:rgba(0,230,118,0.1);border-color:rgba(0,230,118,0.25);color:#00e676;white-space:nowrap;font-size:13px;padding:10px 18px}
 
 /* ── Toetsvragen ── */
-.toetsvraag{padding:18px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,214,0,0.15);border-radius:12px;margin-bottom:14px}
+.toetsvraag{padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;margin-bottom:12px}
 .vr-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.vr-num{background:rgba(255,214,0,0.15);color:#ffd600;font-weight:700;font-size:13px;padding:2px 9px;border-radius:20px}
-.vr-vak{background:rgba(255,77,109,0.12);color:#ff8fa3;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;letter-spacing:0.04em}
-.vr-vraag{font-size:15px;font-weight:600;margin:10px 0 14px;line-height:1.5;color:#f0f0f8}
+.vr-num{background:rgba(255,255,255,0.06);color:#c0c0d8;font-weight:600;font-size:12px;padding:2px 8px;border-radius:20px}
+.vr-vak{background:rgba(255,77,109,0.1);color:#ff8fa3;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;letter-spacing:0.04em}
+.vr-vraag{font-size:14px;font-weight:600;margin:10px 0 14px;line-height:1.5;color:#f0f0f8}
 .vr-opties{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
-.vr-optie{padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;font-size:14px;color:#f0f0f8;cursor:pointer;transition:all 0.2s}
-.vr-optie:hover{border-color:rgba(255,214,0,0.4);background:rgba(255,214,0,0.06)}
-.vr-optie.selected{border-color:#ffd600;background:rgba(255,214,0,0.1);color:#ffd600}
-.vr-optie.correct{border-color:#00e676;background:rgba(0,230,118,0.1);color:#00e676}
-.vr-optie.incorrect{border-color:#ff4d6d;background:rgba(255,77,109,0.1);color:#ff4d6d}
-.vr-feedback{font-size:13px;border-radius:10px;padding:10px 14px;line-height:1.5;margin-top:8px}
-.correct-feedback{color:#00e676;background:rgba(0,230,118,0.08);border:1px solid rgba(0,230,118,0.2)}
-.incorrect-feedback{color:#ff8fa3;background:rgba(255,77,109,0.08);border:1px solid rgba(255,77,109,0.2)}
-.submit-toets-btn{width:100%;padding:14px;background:linear-gradient(135deg,#ffd600,#ff9500);border:none;border-radius:12px;color:#0a0a0f;font-family:Syne,sans-serif;font-size:16px;font-weight:700;cursor:pointer;margin-top:16px;transition:all 0.2s}
-.submit-toets-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,214,0,0.3)}
-.score-box{text-align:center;padding:20px;background:rgba(255,214,0,0.08);border:1px solid rgba(255,214,0,0.2);border-radius:12px;font-size:18px;font-weight:600;color:#ffd600;margin-top:16px}
-.topic-tip{display:block;margin-top:8px;font-size:12px;color:#00e676;background:rgba(0,230,118,0.08);border:1px solid rgba(0,230,118,0.2);border-radius:8px;padding:6px 10px}
+.vr-optie{padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:8px;font-size:13px;color:#c0c0d8;cursor:pointer;transition:all 0.15s}
+.vr-optie:hover{border-color:rgba(255,255,255,0.15);color:#f0f0f8}
+.vr-optie.selected{border-color:rgba(255,214,0,0.4);background:rgba(255,214,0,0.06);color:#ffd600}
+.vr-optie.correct{border-color:rgba(0,230,118,0.4);background:rgba(0,230,118,0.06);color:#00e676}
+.vr-optie.incorrect{border-color:rgba(255,77,109,0.4);background:rgba(255,77,109,0.06);color:#ff4d6d}
+.vr-feedback{font-size:13px;border-radius:8px;padding:10px 14px;line-height:1.5;margin-top:8px}
+.correct-feedback{color:#00e676;background:rgba(0,230,118,0.06);border:1px solid rgba(0,230,118,0.15)}
+.incorrect-feedback{color:#ff8fa3;background:rgba(255,77,109,0.06);border:1px solid rgba(255,77,109,0.15)}
+.submit-toets-btn{width:100%;padding:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#f0f0f8;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:16px;transition:all 0.2s}
+.submit-toets-btn:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.18)}
+.score-box{text-align:center;padding:18px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;font-size:16px;font-weight:600;color:#f0f0f8;margin-top:14px}
 
-/* ── Multi-vak styling ── */
+/* ── Multi-vak ── */
 .vak-sectie{margin-bottom:8px}
-.vak-titel{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);color:#f0f0f8}
-.vak-divider{border:none;border-top:2px solid rgba(255,255,255,0.05);margin:32px 0}
-.vak-blok{margin-bottom:16px;border-radius:14px;padding:16px;border:1px solid}
-.must-blok{background:rgba(0,230,118,0.04);border-color:rgba(0,230,118,0.15)}
-.should-blok{background:rgba(255,214,0,0.04);border-color:rgba(255,214,0,0.15)}
-.skip-blok{background:rgba(255,77,109,0.04);border-color:rgba(255,77,109,0.12)}
-.vak-cheatsheet{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:16px;margin-bottom:16px}
-.vak-cheatsheet pre{font-family:'DM Sans',sans-serif;font-size:13px;color:#c0c0d8;white-space:pre-wrap;line-height:1.7;margin-top:8px}
-.blok-label{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;color:#6b6b8a}
+.vak-titel{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06);color:#f0f0f8}
+.vak-divider{border:none;border-top:1px solid rgba(255,255,255,0.05);margin:28px 0}
+.vak-blok{margin-bottom:14px;border-radius:12px;padding:14px;border:1px solid}
+.must-blok{background:rgba(0,230,118,0.03);border-color:rgba(0,230,118,0.12)}
+.should-blok{background:rgba(255,214,0,0.03);border-color:rgba(255,214,0,0.12)}
+.skip-blok{background:rgba(255,77,109,0.03);border-color:rgba(255,77,109,0.1)}
+.vak-cheatsheet{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px;margin-bottom:14px}
+.vak-cheatsheet pre{font-family:'DM Sans',sans-serif;font-size:13px;color:#8888a8;white-space:pre-wrap;line-height:1.7;margin-top:8px}
+.blok-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;color:#6b6b8a}
 .must-blok .blok-label{color:#00e676}
 .should-blok .blok-label{color:#ffd600}
 .skip-blok .blok-label{color:#ff4d6d}
-
-/* ── Weekplan ── */
 .weekplan{padding:4px 0}
-.weekplan h3{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:20px}
-.dag-item{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px 16px;margin-bottom:10px}
-.dag-item strong{font-size:14px;font-weight:700;color:#ff8fa3;display:block;margin-bottom:8px}
+.weekplan h3{font-size:16px;font-weight:700;margin-bottom:16px;color:#f0f0f8}
+.dag-item{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 14px;margin-bottom:8px}
+.dag-item strong{font-size:13px;font-weight:700;color:#ff8fa3;display:block;margin-bottom:6px}
 .dag-item ul{list-style:none;display:flex;flex-direction:column;gap:5px}
-.dag-item ul li{font-size:13px;color:#c0c0d8;padding-left:14px;position:relative}
+.dag-item ul li{font-size:13px;color:#8888a8;padding-left:14px;position:relative}
 .dag-item ul li::before{content:'→';position:absolute;left:0;color:#6b6b8a}
-.weekplan-tips{background:rgba(0,230,118,0.05);border:1px solid rgba(0,230,118,0.15);border-radius:12px;padding:14px 16px;margin-top:16px}
-.weekplan-tips strong{font-size:13px;color:#00e676;display:block;margin-bottom:8px}
-.weekplan-tips ul{list-style:none;display:flex;flex-direction:column;gap:5px}
-.weekplan-tips ul li{font-size:13px;color:#c0c0d8;padding-left:14px;position:relative}
-.weekplan-tips ul li::before{content:'💡';position:absolute;left:0}
 
 /* ── Upgrade modal ── */
-.upgrade-modal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:24px}
-.upgrade-box{background:#12121a;border:1px solid rgba(255,77,109,0.3);border-radius:24px;padding:40px;max-width:420px;width:100%;text-align:center;animation:fadeUp 0.3s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.upgrade-icon{font-size:48px;margin-bottom:16px}
-.upgrade-box h2{font-family:Syne,sans-serif;font-size:22px;font-weight:700;margin-bottom:10px}
-.upgrade-box p{font-size:14px;color:#6b6b8a;margin-bottom:24px;line-height:1.6}
-.upgrade-plans{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
-.upgrade-plan-btn{display:block;padding:14px;border-radius:12px;font-family:Syne,sans-serif;font-size:14px;font-weight:700;text-decoration:none;transition:all 0.2s}
-.upgrade-plan-btn.starter{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#f0f0f8}
-.upgrade-plan-btn.starter:hover{border-color:rgba(255,255,255,0.3)}
+.upgrade-modal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:24px}
+.upgrade-box{background:#111118;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:36px;max-width:400px;width:100%;text-align:center}
+.upgrade-box h2{font-size:20px;font-weight:700;margin-bottom:8px;color:#f0f0f8}
+.upgrade-box p{font-size:13px;color:#6b6b8a;margin-bottom:24px;line-height:1.6}
+.upgrade-plans{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.upgrade-plan-btn{display:block;padding:13px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;text-decoration:none;transition:all 0.15s}
+.upgrade-plan-btn.starter{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#c0c0d8}
+.upgrade-plan-btn.starter:hover{border-color:rgba(255,255,255,0.15)}
 .upgrade-plan-btn.pro{background:linear-gradient(135deg,#ff4d6d,#c9184a);color:white}
-.upgrade-plan-btn.pro:hover{opacity:0.9;transform:translateY(-1px)}
-.upgrade-plan-btn.elite{background:rgba(255,214,0,0.1);border:1px solid rgba(255,214,0,0.3);color:#ffd600}
-.upgrade-plan-btn.elite:hover{background:rgba(255,214,0,0.15)}
-.upgrade-close{font-size:13px;color:#6b6b8a;cursor:pointer;text-decoration:underline}
+.upgrade-plan-btn.pro:hover{opacity:0.9}
+.upgrade-plan-btn.elite{background:rgba(255,214,0,0.08);border:1px solid rgba(255,214,0,0.2);color:#ffd600}
+.upgrade-plan-btn.elite:hover{background:rgba(255,214,0,0.14)}
+.upgrade-close{font-size:13px;color:#6b6b8a;cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;padding:0}
 .upgrade-close:hover{color:#f0f0f8}
+
+/* ── Hoe het werkt panel ── */
+.hoe-panel{display:none;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:22px;margin-bottom:22px}
+.hoe-panel.open{display:block}
+.hoe-panel h3{font-size:15px;font-weight:700;color:#f0f0f8;margin-bottom:16px;text-transform:uppercase;letter-spacing:0.06em}
+.hoe-stap{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start}
+.hoe-num{background:rgba(255,77,109,0.12);color:#ff4d6d;font-size:11px;font-weight:700;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.hoe-stap p{font-size:13px;color:#8888a8;line-height:1.5;margin:0}
+.hoe-stap strong{color:#c0c0d8}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
 
-<!-- ── Zijbalk ── -->
+<!-- Sidebar -->
 <div class="sidebar">
   <div class="sidebar-logo">StudyBrain</div>
   <div class="sidebar-nav">
     <a href="dashboard.html" class="sidebar-item">
-      <span class="si-icon">▣</span> Dashboard
+      <span class="sidebar-icon icon-grid"></span> Dashboard
     </a>
     <a class="sidebar-item active" onclick="scrollToTop(this)">
-      <span class="si-icon">+</span> Nieuwe analyse
+      <span class="sidebar-icon icon-plus"></span> Nieuwe analyse
     </a>
     <button class="sidebar-item" onclick="toggleHoe(this)">
-      <span class="si-icon">?</span> Hoe het werkt
+      <span class="sidebar-icon icon-info"></span> Hoe het werkt
     </button>
-    <div class="sidebar-divider"></div>
+    <div class="sidebar-sep"></div>
     <a href="index.html#pricing" class="sidebar-item">
-      <span class="si-icon">◈</span> Abonnementen
+      <span class="sidebar-icon icon-diamond"></span> Abonnementen
     </a>
     <a href="index.html" class="sidebar-item">
-      <span class="si-icon">←</span> Hoofdpagina
+      <span class="sidebar-icon icon-home"></span> Hoofdpagina
     </a>
   </div>
   <div class="sidebar-bottom">
-    <div class="sidebar-plan" id="sidebarPlan" onclick="window.location.href='index.html#pricing'">🆓 Gratis</div>
-    <div class="sidebar-user" id="sidebarEmail"></div>
-    <button class="sidebar-logout" onclick="doLogout()">
-      Uitloggen
+    <div class="sidebar-plan-pill" id="sidebarPlanPill" onclick="window.location.href='index.html#pricing'">
+      <div>
+        <div class="sidebar-plan-name" id="sidebarPlanName">Gratis</div>
+        <div class="sidebar-plan-label" id="sidebarPlanLabel">1 analyse inbegrepen</div>
+      </div>
+      <div class="sidebar-plan-badge" id="sidebarPlanBadge">Free</div>
+    </div>
+    <div class="sidebar-user-row" id="sidebarEmail"></div>
+    <button class="sidebar-logout-btn" onclick="doLogout()">
+      <span class="sidebar-icon icon-logout"></span> Uitloggen
     </button>
   </div>
 </div>
 
-<!-- Topbar (alleen mobiel) -->
-<div class="topbar">
-  <div class="topbar-logo">StudyBrain</div>
-  <div class="topbar-right">
-    <span class="topbar-email" id="userEmail"></span>
-    <button class="logout-btn" onclick="doLogout()">Uitloggen</button>
-  </div>
+<!-- Topbar mobiel -->
+<div class="app-topbar">
+  <div class="app-topbar-logo">StudyBrain</div>
+  <button class="logout-btn" onclick="doLogout()">Uitloggen</button>
 </div>
 
 <!-- Upgrade Modal -->
 <div class="upgrade-modal" id="upgradeModal">
   <div class="upgrade-box">
-    
-    <h2>Je gratis analyse is op</h2>
-    <p>Upgrade naar een abonnement om onbeperkt te blijven analyseren en je persoonlijk studieplan te krijgen.</p>
+    <h2>Upgrade je account</h2>
+    <p>Onbeperkt analyses, persoonlijk studieplan en volledige uitleg met ezelsbruggetjes.</p>
     <div class="upgrade-plans">
-      <a href="https://buy.stripe.com/test_14A00b6fA3uqeWi85h1wY00" target="_blank" class="upgrade-plan-btn starter">Starter — €12,99/mnd · 10 analyses · cheatsheet</a>
-      <a href="https://buy.stripe.com/test_14A9AL1Zkd50cOaetF1wY01" target="_blank" class="upgrade-plan-btn pro">Pro — €14,99/mnd · Meest gekozen · onbeperkt + studieplan</a>
-      <a href="https://buy.stripe.com/test_fZu14f0Vg3uq3dAetF1wY02" target="_blank" class="upgrade-plan-btn elite">Elite — €27,99/mnd · 4 vakken combineren</a>
+      <a href="https://buy.stripe.com/test_14A00b6fA3uqeWi85h1wY00" target="_blank" class="upgrade-plan-btn starter">Starter — €12,99/mnd · 10 analyses</a>
+      <a href="https://buy.stripe.com/test_14A9AL1Zkd50cOaetF1wY01" target="_blank" class="upgrade-plan-btn pro">Pro — €14,99/mnd · Onbeperkt + studieplan</a>
+      <a href="https://buy.stripe.com/test_fZu14f0Vg3uq3dAetF1wY02" target="_blank" class="upgrade-plan-btn elite">Elite — €27,99/mnd · 4 vakken</a>
     </div>
-    <span class="upgrade-close" onclick="hideUpgradeModal()">Nee bedankt, terug naar de app</span>
+    <button class="upgrade-close" onclick="hideUpgradeModal()">Terug naar de app</button>
   </div>
 </div>
 
@@ -185,31 +307,30 @@ body{padding-top:0;padding-left:220px}
 
 <div class="container">
 
-  <!-- Header -->
-  <header>
-    <div class="logo-badge"><span class="badge-dot"></span> StudyBrain &middot; Leer slimmer, niet harder</div>
-    <h1>StudyBrain</h1>
-    <p class="tagline">Upload je lesstof. Wij vertellen je <strong>precies wat je moet leren.</strong></p>
-  </header>
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="page-title">Nieuwe analyse</div>
+    <div class="page-sub">Upload je lesstof en ontdek wat je moet leren voor je toets.</div>
+  </div>
 
   <!-- Hoe het werkt panel -->
   <div class="hoe-panel" id="hoePanel">
-    <h3>Hoe werkt StudyBrain?</h3>
+    <h3>Hoe werkt het</h3>
     <div class="hoe-stap">
       <div class="hoe-num">1</div>
       <p><strong>Upload je PDF</strong> — sleep je samenvatting of syllabus in het uploadvak.</p>
     </div>
     <div class="hoe-stap">
       <div class="hoe-num">2</div>
-      <p><strong>Kies je tijd</strong> — 30 minuten of een avond? StudyBrain past het plan aan.</p>
+      <p><strong>Kies je tijd</strong> — 30 minuten of een avond? Het plan past zich aan.</p>
     </div>
     <div class="hoe-stap">
       <div class="hoe-num">3</div>
-      <p><strong>Krijg je prioriteiten</strong> — Must learn, Nice to know en Skip. Geen giswerk meer.</p>
+      <p><strong>Krijg je prioriteiten</strong> — Must learn, Nice to know en Skip.</p>
     </div>
     <div class="hoe-stap">
       <div class="hoe-num">4</div>
-      <p><strong>Pro/Elite</strong> — persoonlijk studieplan met leerroute, herhalingsschema en ezelsbruggetjes.</p>
+      <p><strong>Pro/Elite</strong> — persoonlijk studieplan met leerroute en herhalingsschema.</p>
     </div>
   </div>
 
@@ -217,20 +338,22 @@ body{padding-top:0;padding-left:220px}
   <div id="mainInterface">
     <div class="upload-section">
       <div class="upload-zone" id="uploadZone">
-        <span class="upload-icon">↑</span>
-        <h3>Sleep je PDF bestanden hier naartoe</h3>
-        <p>Of klik om bestanden te selecteren · PDF, max 20MB per bestand</p>
+        <svg class="upload-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+        </svg>
+        <h3>Sleep je PDF hier naartoe</h3>
+        <p>Of klik om te selecteren · PDF, max 20MB</p>
         <input type="file" id="fileInput" multiple accept=".pdf,application/pdf">
       </div>
       <div class="file-list" id="fileList"></div>
     </div>
 
     <div class="time-section">
-      <h3>⏰ Hoeveel tijd heb je nog?</h3>
+      <div class="time-label">Hoeveel tijd heb je nog?</div>
       <div class="time-grid">
         <button class="time-btn" data-time="30 minuten">30 min</button>
         <button class="time-btn" data-time="1 uur">1 uur</button>
-        <button class="time-btn" data-time="2-3 uur">2-3 uur</button>
+        <button class="time-btn" data-time="2-3 uur">2–3 uur</button>
         <button class="time-btn active" data-time="een avond">Een avond</button>
       </div>
     </div>
@@ -241,37 +364,36 @@ body{padding-top:0;padding-left:220px}
 
   <!-- Loading -->
   <div class="loading" id="loadingState">
-    
-    <h3>StudyBrain analyseert je lesstof...</h3>
-    <p id="loadingMsg">Bezig met lezen en prioriteren...</p>
+    <h3>Analyse bezig...</h3>
+    <p id="loadingMsg">Lesstof verwerken en prioriteren...</p>
     <div class="loading-dots"><span></span><span></span><span></span></div>
   </div>
 
   <!-- Results -->
   <div class="results" id="resultsSection">
     <div class="results-header">
-      <h2>Jouw studieplan is klaar</h2>
+      <h2>Jouw studieplan</h2>
       <p id="resultsSubtitle">Gebaseerd op jouw lesstof en beschikbare tijd</p>
     </div>
 
     <div class="priority-card must">
       <div class="card-label"><div class="card-badge">Must learn</div></div>
       <div class="card-title">Dit MOET je kennen</div>
-      <div class="card-subtitle">Dit staat sowieso in de toets. Begin hier.</div>
+      <div class="card-subtitle">Staat sowieso in de toets. Begin hier.</div>
       <div class="topic-list" id="mustList"></div>
     </div>
 
     <div class="priority-card should">
       <div class="card-label"><div class="card-badge">Nice to know</div></div>
       <div class="card-title">Leer dit als je nog tijd hebt</div>
-      <div class="card-subtitle">Geeft je extra punten, maar niet kritisch.</div>
+      <div class="card-subtitle">Geeft extra punten, maar niet kritisch.</div>
       <div class="topic-list" id="shouldList"></div>
     </div>
 
     <div class="priority-card skip">
       <div class="card-label"><div class="card-badge">Skip</div></div>
       <div class="card-title">Sla dit over</div>
-      <div class="card-subtitle">Te gedetailleerd, te zeldzaam, of niet de moeite waard.</div>
+      <div class="card-subtitle">Te gedetailleerd of niet de moeite waard.</div>
       <div class="topic-list" id="skipList"></div>
     </div>
 
@@ -298,30 +420,37 @@ body{padding-top:0;padding-left:220px}
   checkAccess();
 
   sb.auth.onAuthStateChange((event, session) => {
-    if (session) {
-      document.getElementById('userEmail').textContent = session.user.email;
-      document.getElementById('sidebarEmail').textContent = session.user.email;
-    }
+    if (session) document.getElementById('sidebarEmail').textContent = session.user.email;
   });
 
   (async () => {
     const { data: { session } } = await sb.auth.getSession();
     if (!session) return;
-    document.getElementById('userEmail').textContent = session.user.email;
     document.getElementById('sidebarEmail').textContent = session.user.email;
 
     const { data: profile } = await sb.from('profiles').select('plan').eq('id', session.user.id).single();
     const plan = profile?.plan || 'gratis';
-    const planEl = document.getElementById('sidebarPlan');
+    const planEl = document.getElementById('sidebarPlanName');
+    const badgeEl = document.getElementById('sidebarPlanBadge');
+    const labelEl = document.getElementById('sidebarPlanLabel');
+    const pillEl = document.getElementById('sidebarPlanPill');
+
     if (plan === 'pro') {
-      planEl.textContent = 'Pro';
-      planEl.style.cssText += 'color:#ff4d6d;border-color:rgba(255,77,109,0.3);background:rgba(255,77,109,0.08);cursor:default';
+      planEl.textContent = 'Pro plan';
+      badgeEl.textContent = 'Pro';
+      badgeEl.style.cssText = 'font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(255,77,109,0.15);color:#ff4d6d;border:1px solid rgba(255,77,109,0.25)';
+      labelEl.textContent = 'Onbeperkt analyses';
+      pillEl.style.cursor = 'default';
     } else if (plan === 'elite') {
-      planEl.textContent = 'Elite';
-      planEl.style.cssText += 'color:#ffd600;border-color:rgba(255,214,0,0.3);background:rgba(255,214,0,0.08);cursor:default';
+      planEl.textContent = 'Elite plan';
+      badgeEl.textContent = 'Elite';
+      badgeEl.style.cssText = 'font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(255,214,0,0.12);color:#ffd600;border:1px solid rgba(255,214,0,0.25)';
+      labelEl.textContent = 'Onbeperkt + 4 vakken';
+      pillEl.style.cursor = 'default';
     } else if (plan === 'starter') {
-      planEl.textContent = 'Starter';
-      planEl.style.color = '#c0c0d8';
+      planEl.textContent = 'Starter plan';
+      badgeEl.textContent = 'Starter';
+      labelEl.textContent = '10 analyses per maand';
     }
   })();
 
