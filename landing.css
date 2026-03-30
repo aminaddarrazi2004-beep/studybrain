@@ -230,3 +230,21 @@ nav { animation: fadeDown 0.5s ease both; }
   .plan-price { font-size: 36px; }
   .cta-band .section-inner { padding: 64px 20px; }
 }
+
+/* ── Feature icons zonder emoji ── */
+.feat-icon { width: 40px; height: 40px; border-radius: 10px; margin-bottom: 14px; }
+.feat-must  { background: rgba(0,230,118,0.15); border: 1px solid rgba(0,230,118,0.3); }
+.feat-book  { background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3); }
+.feat-bolt  { background: rgba(255,214,0,0.15); border: 1px solid rgba(255,214,0,0.3); }
+.feat-skip  { background: rgba(255,77,109,0.15); border: 1px solid rgba(255,77,109,0.3); }
+.feat-test  { background: rgba(255,152,0,0.15); border: 1px solid rgba(255,152,0,0.3); }
+
+/* ── Sidebar icon styling ── */
+.sidebar-link .icon { font-size: 13px; width: 20px; text-align: center; flex-shrink: 0; color: var(--muted); }
+.sidebar-link.highlight .icon { color: var(--accent); }
+
+/* ── Step icon verwijderd ── */
+.step-icon { display: none; }
+
+/* ── Badge dot (vervangt emoji in hero badge) ── */
+.badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: blink 2s step-end infinite; display: inline-block; flex-shrink: 0; }
