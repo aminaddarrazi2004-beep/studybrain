@@ -63,7 +63,7 @@ function renderFileList() {
   const list = document.getElementById('fileList');
   list.innerHTML = files.map((f, i) => `
     <div class="file-item">
-      <span class="fi-icon">📄</span>
+      <span class="fi-icon"></span>
       <span class="fi-name">${f.name}</span>
       <span class="fi-size">${(f.size/1024/1024).toFixed(1)} MB</span>
       <button class="fi-remove" onclick="removeFile(${i})">×</button>
@@ -128,10 +128,17 @@ async function markAnalysisUsed() {
 }
 
 // ── API call helper ──
+async function getAuthToken() {
+  const { data: { session } } = await sb.auth.getSession();
+  return session?.access_token || null;
+}
+
 async function callAnalyzeAPI(text, vakNaam, vragenCount) {
+  const token = await getAuthToken();
+  if (!token) throw new Error('Niet ingelogd');
   const res = await fetch('https://analyze.aminaddarrazi2004.workers.dev', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
     body: JSON.stringify({
       messages: [
         {
@@ -208,9 +215,10 @@ async function buildCombinedStudieplan(vakResultaten) {
     return `Vak: ${vakNaam}\nBelangrijkste onderwerpen: ${mustTopics}`;
   }).join('\n\n');
 
+  const token2 = await getAuthToken();
   const res = await fetch('https://analyze.aminaddarrazi2004.workers.dev', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token2}` },
     body: JSON.stringify({
       messages: [
         {
@@ -322,7 +330,11 @@ async function analyze() {
     clearInterval(iv);
     document.getElementById('mainInterface').style.display = 'block';
     document.getElementById('loadingState').style.display = 'none';
-    showError('Fout: ' + err.message);
+    if (err.message === 'free_limit_reached') {
+      showUpgradeModal();
+    } else {
+      showError('Fout: ' + err.message);
+    }
   }
 }
 
@@ -430,9 +442,10 @@ async function buildStudieplan(result, vakNaam, rawText = '') {
   const mustTopics = result.must.map(m => `- ${m.topic}: ${m.summary || ''}`).join('\n');
   const shouldTopics = result.should.map(s => `- ${s.topic}: ${s.summary || ''}`).join('\n');
 
+  const spToken = await getAuthToken();
   const res = await fetch('https://analyze.aminaddarrazi2004.workers.dev', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${spToken}` },
     body: JSON.stringify({
       messages: [
         {
@@ -620,7 +633,7 @@ function renderStudieplan(studieplan, containerId) {
     </div>
 
     <div class="sp-preview-card">
-      <div class="sp-preview-icon">📋</div>
+      
       <div class="sp-preview-text">
         <strong>Jouw persoonlijk studieplan is klaar</strong>
         <p>Leerroute, herhalingsschema, ezelsbruggetjes en docenttips — speciaal voor jouw stof.</p>
@@ -665,7 +678,7 @@ function downloadStudieplanPDF() {
   </style>
 </head>
 <body>
-  <button class="print-btn no-print" onclick="window.print();window.close();">🖨️ Opslaan als PDF</button>
+  <button class="print-btn no-print" onclick="window.print();window.close();">Opslaan als PDF</button>
   ${el.innerHTML}
   <div class="footer">Gegenereerd door StudyBrain — studybrain.pages.dev</div>
 </body>
