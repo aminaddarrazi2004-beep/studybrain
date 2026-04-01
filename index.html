@@ -173,12 +173,54 @@ h1, h2, h3, .step h3, .plan-name, .feat-card h3 { font-family: 'DM Sans', Arial,
   .sidebar-toggle { top: 10px; left: 10px; padding: 7px 9px; font-size: 17px; }
   .sp-stat-num { font-size: 28px; }
 }
+
+/* ── NOVA PILL NAV ── */
+.nav-pill-wrap { position: fixed; top: 20px; left: 0; right: 0; z-index: 1000; display: flex; justify-content: center; padding: 0 20px; }
+.nav-pill {
+  display: flex; align-items: center; gap: 0;
+  background: rgba(5,5,15,0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 100px;
+  padding: 8px 8px 8px 24px;
+  width: 100%; max-width: 920px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.03) inset;
+  transition: all 0.3s;
+}
+.nav-pill.scrolled { background: rgba(3,3,12,0.95); box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 30px rgba(255,77,109,0.05); }
+.nav-pill-logo { font-size: 18px; font-weight: 800; color: var(--text); text-decoration: none; margin-right: auto; letter-spacing: -0.3px; font-family: 'DM Sans', sans-serif; }
+.nav-pill-logo span { color: var(--accent); }
+.nav-pill-links { display: flex; gap: 2px; margin: 0 12px; }
+.nav-pill-links a { padding: 8px 14px; border-radius: 100px; font-size: 12px; font-weight: 600; color: var(--muted); text-decoration: none; letter-spacing: 0.05em; text-transform: uppercase; transition: all 0.2s; white-space: nowrap; font-family: 'DM Sans', sans-serif; }
+.nav-pill-links a:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+.nav-pill-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.nav-pill-ghost { padding: 10px 16px; border-radius: 100px; font-size: 13px; font-weight: 600; color: var(--muted); text-decoration: none; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+.nav-pill-ghost:hover { color: var(--text); }
+.nav-pill-cta { display: inline-flex; align-items: center; padding: 10px 22px; border-radius: 100px; background: var(--accent); color: white; font-size: 13px; font-weight: 700; text-decoration: none; transition: all 0.25s; font-family: 'DM Sans', sans-serif; box-shadow: 0 0 20px rgba(255,77,109,0.3); white-space: nowrap; }
+.nav-pill-cta:hover { transform: scale(1.04); box-shadow: 0 0 32px rgba(255,77,109,0.45); }
 </style>
 </head>
 <body>
 
 <button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">☰</button>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- NOVA PILL NAV -->
+<div class="nav-pill-wrap">
+  <div class="nav-pill" id="navPill">
+    <a href="/" class="nav-pill-logo">Study<span>Brain</span></a>
+    <div class="nav-pill-links">
+      <a href="#how">Hoe het werkt</a>
+      <a href="#pricing">Abonnementen</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-pill-actions" id="navPillActions">
+      <a href="login.html" class="nav-pill-ghost">Inloggen</a>
+      <a href="login.html#signup" class="nav-pill-cta">Gratis proberen &rarr;</a>
+    </div>
+  </div>
+</div>
 
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
@@ -196,12 +238,12 @@ h1, h2, h3, .step h3, .plan-name, .feat-card h3 { font-family: 'DM Sans', Arial,
     <div class="sidebar-divider"></div>
     <a href="privacy.html" class="sidebar-link"><span class="icon">·</span> Privacy</a>
     <a href="voorwaarden.html" class="sidebar-link"><span class="icon">·</span> Voorwaarden</a>
-    <a href="mailto:info@studybrain.app" class="sidebar-link"><span class="icon">·</span> Contact</a>
+    <a href="/cdn-cgi/l/email-protection#cfa6a1a9a08fbcbbbaabb6adbdaea6a1e1aebfbf" class="sidebar-link"><span class="icon">·</span> Contact</a>
   </nav>
   <div class="sidebar-footer" id="sidebarFooter"></div>
 </aside>
 
-<nav>
+<nav style="display:none;">
   <div class="nav-inner">
     <a href="/" class="nav-logo"><span class="nav-logo-text">StudyBrain</span></a>
     <div class="nav-links">
@@ -484,7 +526,7 @@ h1, h2, h3, .step h3, .plan-name, .feat-card h3 { font-family: 'DM Sans', Arial,
           <li class="no">Meerdere PDFs tegelijk</li>
           <li class="no">Persoonlijk studieplan</li>
         </ul>
-        <a href="https://buy.stripe.com/test_14A00b6fA3uqeWi85h1wY00" target="_blank" class="plan-cta ghost-cta">Begin met Starter</a>
+        <a href="https://buy.stripe.com/bJe5kv1RudhP9b36SA8IU02" target="_blank" class="plan-cta ghost-cta">Begin met Starter</a>
       </div>
       <div class="plan plan-hot">
         <div class="hot-label">Meest gekozen</div>
@@ -500,11 +542,11 @@ h1, h2, h3, .step h3, .plan-name, .feat-card h3 { font-family: 'DM Sans', Arial,
           <li class="yes"><strong>Persoonlijk studieplan</strong> — leerroute + herhalingsschema</li>
           <li class="no">Meerdere vakken combineren</li>
         </ul>
-        <a href="https://buy.stripe.com/test_14A9AL1Zkd50cOaetF1wY01" target="_blank" class="plan-cta hot-cta">Begin met Pro</a>
+        <a href="https://buy.stripe.com/6oUdR1cw891zfzrfp68IU01" target="_blank" class="plan-cta hot-cta">Begin met Pro</a>
       </div>
       <div class="plan">
         <div class="plan-name">Elite</div>
-        <div class="plan-price"><span class="euro">€</span>27<span class="cents">,99</span><span class="per">/mnd</span></div>
+        <div class="plan-price"><span class="euro">€</span>22<span class="cents">,99</span><span class="per">/mnd</span></div>
         <div class="plan-desc">Voor wie meerdere vakken tegelijk wil aanpakken.</div>
         <ul class="plan-list">
           <li class="yes"><strong>Onbeperkt</strong> analyses</li>
@@ -514,7 +556,7 @@ h1, h2, h3, .step h3, .plan-name, .feat-card h3 { font-family: 'DM Sans', Arial,
           <li class="yes"><strong>Persoonlijk studieplan per vak</strong></li>
           <li class="yes"><strong>Gecombineerd weekoverzicht</strong></li>
         </ul>
-        <a href="https://buy.stripe.com/test_fZu14f0Vg3uq3dAetF1wY02" target="_blank" class="plan-cta ghost-cta">Begin met Elite</a>
+        <a href="https://buy.stripe.com/eVq6ozcw82Db1IBgta8IU00" target="_blank" class="plan-cta ghost-cta">Begin met Elite</a>
       </div>
     </div>
     <p class="pricing-note">Veilig betalen &middot; Maandelijks opzegbaar &middot; Geen verborgen kosten</p>
@@ -555,13 +597,13 @@ h1, h2, h3, .step h3, .plan-name, .feat-card h3 { font-family: 'DM Sans', Arial,
     <div class="footer-links">
       <a href="privacy.html">Privacy</a>
       <a href="voorwaarden.html">Voorwaarden</a>
-      <a href="mailto:info@studybrain.app">Contact</a>
+      <a href="/cdn-cgi/l/email-protection#a1c8cfc7cee1d2d5d4c5d8c3d3c0c8cf8fc0d1d1">Contact</a>
     </div>
     <p class="copy">&copy; 2026 StudyBrain. Alle rechten voorbehouden.</p>
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = 'https://wtfzqpaectqrbprmxjqp.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0ZnpxcGFlY3RxcmJwcm14anFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NzE4NDYsImV4cCI6MjA4ODE0Nzg0Nn0.LeJqnukvUpVJZyG_2pjwS0xnl24ATdV6Mi6qqZeVbJ4';
@@ -653,8 +695,4 @@ if (wrap && inner) {
 </div>
 <script>
 function acceptCookies() { localStorage.setItem('sb-cookie-consent','accepted'); document.getElementById('cookieBanner').style.display='none'; }
-function rejectCookies() { localStorage.setItem('sb-cookie-consent','rejected'); document.getElementById('cookieBanner').style.display='none'; }
-if (!localStorage.getItem('sb-cookie-consent')) { document.getElementById('cookieBanner').style.display='flex'; }
-</script>
-</body>
-</html>
+function rejectCookies() { localStorage.setItem('sb-cookie-consent','rejected'); document.get
