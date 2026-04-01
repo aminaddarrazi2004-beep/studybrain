@@ -936,3 +936,10 @@ h1 {
   .sp-herhaling-row { grid-template-columns: 1fr; gap: 4px; }
   .sp-step-header { flex-wrap: wrap; }
 }
+
+/* Studieplan loading animatie */
+.sp-loading-steps { display: flex; flex-direction: column; gap: 8px; padding: 20px 0; }
+.sp-loading-step { font-size: 13px; color: #3a3a52; padding: 10px 14px; border-radius: 8px; border: 1px solid transparent; transition: all 0.3s; }
+.sp-loading-step-active { color: #ff4d6d; background: rgba(255,77,109,0.06); border-color: rgba(255,77,109,0.15); }
+.sp-loading-step-done { color: #00e676; }
+.sp-loading-step-done::before { content: '✓ '; }
