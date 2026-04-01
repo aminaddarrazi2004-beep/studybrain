@@ -324,8 +324,30 @@ function showResults(data, vakNaam) {
       planContainer.id = 'studieplanContainer';
       studieplanSection.parentNode.insertBefore(planContainer, studieplanSection);
     }
-    planContainer.innerHTML = `<div class="sp-loading">Persoonlijk studieplan wordt gegenereerd...</div>`;
-    buildStudieplan(data, vakNaam, lastExtractedText).then(sp => renderStudieplan(sp, 'studieplanContainer'));
+    planContainer.innerHTML = `
+      <div class="sp-loading">
+        <div class="sp-loading-steps">
+          <div class="sp-loading-step" id="spstep0">Stof analyseren...</div>
+          <div class="sp-loading-step" id="spstep1">Leerroute opstellen...</div>
+          <div class="sp-loading-step" id="spstep2">Ezelsbruggetjes genereren...</div>
+          <div class="sp-loading-step" id="spstep3">Herhalingsschema maken...</div>
+        </div>
+      </div>`;
+
+    // Animate stappen
+    let spIdx = 0;
+    const spTimer = setInterval(() => {
+      document.querySelectorAll('.sp-loading-step').forEach((s,i) => {
+        s.classList.toggle('sp-loading-step-active', i === spIdx);
+        s.classList.toggle('sp-loading-step-done', i < spIdx);
+      });
+      spIdx = (spIdx + 1) % 4;
+    }, 1800);
+
+    buildStudieplan(data, vakNaam, lastExtractedText).then(sp => {
+      clearInterval(spTimer);
+      renderStudieplan(sp, 'studieplanContainer');
+    });
   }
 }
 
