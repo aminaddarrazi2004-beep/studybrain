@@ -169,8 +169,8 @@ body{padding-left:220px}
 }
 .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,77,109,0.35); }
 .cta-upgrade {
-  background: rgba(255,214,0,0.06);
-  border: 1px solid rgba(255,214,0,0.2);
+  background: linear-gradient(135deg,rgba(255,77,109,0.1),rgba(255,77,109,0.03));
+  border: 1px solid rgba(255,77,109,0.25);
   border-radius: 16px;
   padding: 24px;
   display: flex;
@@ -178,15 +178,15 @@ body{padding-left:220px}
   justify-content: space-between;
   gap: 12px;
 }
-.cta-upgrade h4 { font-size: 15px; font-weight: 700; color: var(--yellow); }
+.cta-upgrade h4 { font-size: 15px; font-weight: 700; color: var(--accent); }
 .cta-upgrade p { font-size: 12px; color: var(--muted); line-height: 1.5; flex: 1; }
 .upgrade-btn {
   display: block;
   padding: 10px;
-  background: rgba(255,214,0,0.1);
-  border: 1px solid rgba(255,214,0,0.3);
+  background: var(--accent);
+  border: none;
   border-radius: 10px;
-  color: var(--yellow);
+  color: white;
   font-size: 13px;
   font-weight: 700;
   text-align: center;
@@ -194,7 +194,7 @@ body{padding-left:220px}
   transition: all 0.2s;
   font-family: 'DM Sans', sans-serif;
 }
-.upgrade-btn:hover { background: rgba(255,214,0,0.18); }
+.upgrade-btn:hover { opacity: 0.9; transform: translateY(-1px); }
 
 /* ── Recente analyses ── */
 .dash-section {
@@ -397,9 +397,8 @@ body{padding-left:220px}
       </div>
     </div>
     <div class="stat-card streak-card">
-      <div class="stat-label">Lid sinds</div>
-      <div class="stat-value yellow" id="statSince">—</div>
-      <div class="stat-detail">Blijf consistent studeren</div>
+      <div class="stat-label">Studietip vandaag</div>
+      <div class="stat-value yellow" style="font-size:16px;font-weight:600;line-height:1.4;" id="statSince">Laadt...</div>
     </div>
   </div>
 
@@ -414,8 +413,8 @@ body{padding-left:220px}
     </div>
     <div class="cta-upgrade" id="upgradeCard">
       <h4>Upgrade naar Pro</h4>
-      <p>Onbeperkt analyses, persoonlijk studieplan en ezelsbruggetjes.</p>
-      <a href="index.html#pricing" class="upgrade-btn">Bekijk plannen →</a>
+      <p>Onbeperkt analyses, persoonlijk studieplan en ezelsbruggetjes voor elke toets.</p>
+      <a href="index.html#pricing" class="upgrade-btn">Upgrade nu &rarr;</a>
     </div>
   </div>
 
@@ -472,9 +471,8 @@ body{padding-left:220px}
     document.getElementById('tipText').textContent = tips[dayIndex % tips.length];
 
     // Lid sinds
-    const created = new Date(session.user.created_at);
-    const maanden = ['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'];
-    document.getElementById('statSince').textContent = created.getDate() + ' ' + maanden[created.getMonth()];
+    const quickTips = ['Begin altijd met Must Learn', 'Herhaal na 1 dag', 'Schrijf het daarna op', 'Leg uit aan iemand anders', 'Slaap voldoende na studeren', 'Pauze elke 25 minuten', 'Skip is ook een keuze'];
+    document.getElementById('statSince').textContent = quickTips[new Date().getDay() % quickTips.length];
 
     // Plan ophalen
     const { data: profile } = await sb.from('profiles').select('plan, free_analysis_used').eq('id', session.user.id).single();
