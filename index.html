@@ -18,7 +18,7 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#010614;
+  --bg:#05050f;
   --accent:#ff4d6d;
   --accent2:#ff8fa3;
   --accent-glow:rgba(255,77,109,0.3);
@@ -36,9 +36,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font
 
 /* ─── ANIMATED BG ─── */
 .bg-wrap{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
-.bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,77,109,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,77,109,0.04) 1px,transparent 1px);background-size:64px 64px;}
+.bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,77,109,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,77,109,0.02) 1px,transparent 1px);background-size:64px 64px;}
 .bg-orb{position:absolute;border-radius:50%;filter:blur(100px);animation:orbFloat 10s ease-in-out infinite;}
-.bg-orb-1{width:700px;height:700px;background:radial-gradient(circle,rgba(255,77,109,0.15),transparent 65%);top:-200px;right:-100px;}
+.bg-orb-1{width:700px;height:700px;background:radial-gradient(circle,rgba(255,77,109,0.1),transparent 65%);top:-200px;right:-100px;}
 .bg-orb-2{width:600px;height:600px;background:radial-gradient(circle,rgba(99,102,241,0.1),transparent 65%);bottom:0;left:-150px;animation-delay:-4s;}
 .bg-orb-3{width:400px;height:400px;background:radial-gradient(circle,rgba(0,230,118,0.07),transparent 65%);top:50%;right:20%;animation-delay:-7s;}
 @keyframes orbFloat{0%,100%{transform:translate(0,0);}50%{transform:translate(30px,-30px);}}
@@ -47,7 +47,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font
 .nav-wrap{position:fixed;top:20px;left:0;right:0;z-index:1000;display:flex;justify-content:center;padding:0 20px;}
 .nav-pill{
   display:flex;align-items:center;gap:0;
-  background:rgba(5,8,25,0.7);
+  background:rgba(3,3,12,0.85);
   backdrop-filter:blur(24px);
   -webkit-backdrop-filter:blur(24px);
   border:1px solid rgba(255,255,255,0.1);
@@ -58,7 +58,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font
   box-shadow:0 8px 40px rgba(0,0,0,0.4),0 0 0 1px rgba(255,255,255,0.04) inset;
   transition:all 0.3s;
 }
-.nav-pill.scrolled{background:rgba(1,4,18,0.92);box-shadow:0 8px 40px rgba(0,0,0,0.6),0 0 40px rgba(255,77,109,0.06);}
+.nav-pill.scrolled{background:rgba(3,3,12,0.96);box-shadow:0 8px 40px rgba(0,0,0,0.6),0 0 40px rgba(255,77,109,0.06);}
 .nav-logo{font-size:18px;font-weight:800;color:var(--text);text-decoration:none;white-space:nowrap;margin-right:auto;letter-spacing:-0.3px;}
 .nav-logo span{color:var(--accent);}
 .nav-links{display:flex;gap:4px;margin:0 16px;}
@@ -102,23 +102,23 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font
 .drawer-foot-user{font-size:12px;color:var(--muted);padding:0 6px 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
 /* ─── HERO ─── */
-.hero{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:140px 24px 80px;}
-.hero-inner{max-width:860px;margin:0 auto;}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 18px;border-radius:100px;background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.25);font-size:11px;font-weight:700;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:28px;animation:badgePop 0.6s ease both;}
+.hero{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;padding:100px 0 60px;}
+.hero-inner{max-width:1100px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;width:100%;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 18px;border-radius:100px;background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.25);font-size:11px;font-weight:700;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:28px;animation:badgePop 0.6s ease both;text-align:left;}
 @keyframes badgePop{from{opacity:0;transform:scale(0.9);}to{opacity:1;transform:scale(1);}}
 .badge-ping{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:ping 2s ease-in-out infinite;}
 @keyframes ping{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
-.hero h1{font-size:clamp(44px,8vw,88px);font-weight:800;line-height:1.05;letter-spacing:-2.5px;margin-bottom:24px;animation:heroFade 0.8s 0.1s ease both;}
+.hero h1{font-size:clamp(36px,4.5vw,60px);font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bottom:20px;animation:heroFade 0.8s 0.1s ease both;}
 @keyframes heroFade{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
 .hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hero-sub{font-size:18px;color:var(--muted);line-height:1.75;max-width:580px;margin:0 auto 40px;font-weight:400;animation:heroFade 0.8s 0.2s ease both;}
+.hero-sub{font-size:17px;color:var(--muted);line-height:1.75;max-width:520px;margin:0 0 36px;font-weight:400;animation:heroFade 0.8s 0.2s ease both;}
 .hero-sub strong{color:var(--text);font-weight:600;}
-.hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:56px;animation:heroFade 0.8s 0.3s ease both;}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:40px;animation:heroFade 0.8s 0.3s ease both;}
 .btn-hero-primary{display:inline-flex;align-items:center;gap:10px;padding:17px 36px;border-radius:100px;background:var(--accent);color:white;font-family:var(--font);font-size:15px;font-weight:700;text-decoration:none;transition:all 0.3s;box-shadow:0 0 40px var(--accent-glow),0 4px 20px rgba(0,0,0,0.3);border:none;cursor:pointer;letter-spacing:0.01em;}
 .btn-hero-primary:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 0 60px var(--accent-glow),0 8px 32px rgba(0,0,0,0.4);}
 .btn-hero-outline{display:inline-flex;align-items:center;gap:10px;padding:17px 36px;border-radius:100px;background:rgba(255,255,255,0.06);color:var(--text);font-family:var(--font);font-size:15px;font-weight:600;text-decoration:none;transition:all 0.25s;border:1px solid rgba(255,255,255,0.12);backdrop-filter:blur(8px);}
 .btn-hero-outline:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.22);}
-.hero-trust{display:flex;align-items:center;gap:12px;justify-content:center;font-size:13px;color:var(--muted);animation:heroFade 0.8s 0.4s ease both;}
+.hero-trust{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted);animation:heroFade 0.8s 0.4s ease both;}
 .trust-avs{display:flex;}
 .trust-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#c9184a);border:2px solid var(--bg);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;margin-left:-9px;}
 .trust-av:first-child{margin-left:0;}
@@ -301,6 +301,12 @@ footer p{font-size:13px;color:var(--muted);margin-bottom:20px;}
 
 /* ─── RESPONSIVE ─── */
 @media(max-width:1024px){
+  .hero-inner{grid-template-columns:1fr!important;gap:48px;}
+  .hero h1{font-size:clamp(36px,7vw,56px)!important;}
+  .hero-sub{max-width:100%!important;}
+  .hero-cta{justify-content:flex-start;}
+  .mockup-content{grid-template-columns:1fr!important;}
+  .mockup-right{display:none!important;}
   .how-layout{grid-template-columns:1fr;}
   .how-preview-box{display:none;}
   .feat-grid{grid-template-columns:1fr 1fr;}
@@ -374,7 +380,7 @@ footer p{font-size:13px;color:var(--muted);margin-bottom:20px;}
       <div style="height:1px;background:var(--border);margin:8px 0;"></div>
       <a href="privacy.html" class="drawer-link">Privacy</a>
       <a href="voorwaarden.html" class="drawer-link">Voorwaarden</a>
-      <a href="mailto:info@studybrain.app" class="drawer-link">Contact</a>
+      <a href="/cdn-cgi/l/email-protection#d3babdb5bc93a0a7a6b7aab1a1b2babdfdb2a3a3" class="drawer-link">Contact</a>
     </div>
     <div class="drawer-foot">
       <div class="drawer-foot-user" id="drawerUser"></div>
@@ -387,73 +393,75 @@ footer p{font-size:13px;color:var(--muted);margin-bottom:20px;}
 <div class="toast-bar" id="toast">Succesvol ingelogd — welkom bij StudyBrain.</div>
 
 <!-- ─── HERO ─── -->
-<section class="hero">
-  <div class="hero-inner">
-    <div class="hero-badge"><span class="badge-ping"></span> Leer slimmer, niet harder</div>
-    <h1>Stop met alles leren<br><em>wat niet telt.</em></h1>
-    <p class="hero-sub">Upload je lesstof. StudyBrain analyseert wat <strong>sowieso in de toets komt</strong>, wat handig is, en wat je veilig kunt overslaan.</p>
-    <div class="hero-cta">
-      <a href="login.html#signup" class="btn-hero-primary">Probeer 1x gratis &rarr;</a>
-      <a href="#how" class="btn-hero-outline">Hoe werkt het?</a>
-    </div>
-    <div class="hero-trust">
-      <div class="trust-avs">
-        <div class="trust-av">S</div><div class="trust-av">M</div><div class="trust-av">J</div><div class="trust-av">L</div>
-      </div>
-      <span>Gratis te proberen &middot; Geen creditcard &middot; Direct resultaat</span>
-    </div>
-  </div>
-</section>
+<section style="position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;padding:120px 0 80px;">
+  <div style="max-width:1100px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;width:100%;">
 
-<!-- ─── MOCKUP ─── -->
-<div style="position:relative;z-index:1;padding:0 24px 100px;max-width:860px;margin:0 auto;">
-  <div class="hero-mockup">
-    <div class="mockup-perspective" id="mockupWrap">
-      <div class="mockup-tilt" id="mockupTilt">
-        <div class="mockup-shell">
-          <div class="mockup-topbar">
-            <div class="m-dot r"></div><div class="m-dot y"></div><div class="m-dot g"></div>
-            <div class="m-urlbar">studybrain.app</div>
-          </div>
-          <div class="mockup-content">
-            <div class="mockup-left">
-              <div class="m-section-label m-must">Must Learn — start hier</div>
-              <div class="m-card">
-                <div class="m-card-title">Oorzaken WO2</div>
-                <div class="m-card-text">3 oorzaken: <strong>Versailles</strong>, <strong>economische crisis</strong> 1929, <strong>opkomst Hitler</strong>. Docenten toetsen dit ALTIJD.</div>
-                <div class="m-card-tip">VEH = Versailles → Economie → Hitler</div>
-              </div>
-              <div class="m-card">
-                <div class="m-card-title">De Holocaust</div>
-                <div class="m-card-text">6 miljoen Joden. Neurenbergwetten 1935 → Wannsee 1942 = uitroeiingsplan.</div>
-              </div>
-              <div class="m-section-label m-skip">Skip — geen tijd</div>
-              <div class="m-card skip-card">
-                <div class="m-card-title">Namen van alle generaals</div>
-                <div class="m-card-text">1x genoemd, nooit getoetst. Sla over.</div>
-              </div>
+    <!-- Linker kolom: tekst -->
+    <div style="animation:heroFade 0.8s 0.1s ease both;">
+      <div class="hero-badge"><span class="badge-ping"></span> Leer slimmer, niet harder</div>
+      <h1 style="font-size:clamp(36px,4vw,58px);font-weight:800;line-height:1.08;letter-spacing:-2px;margin-bottom:20px;">Stop met alles leren<br><em style="font-style:normal;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">wat niet telt.</em></h1>
+      <p style="font-size:17px;color:var(--muted);line-height:1.75;max-width:480px;margin:0 0 36px;">Upload je lesstof. StudyBrain analyseert wat <strong style="color:var(--text);">sowieso in de toets komt</strong>, wat handig is, en wat je veilig kunt overslaan.</p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:40px;">
+        <a href="login.html#signup" class="btn-hero-primary">Probeer 1x gratis &rarr;</a>
+        <a href="#how" class="btn-hero-outline">Hoe werkt het?</a>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted);">
+        <div style="display:flex;">
+          <div class="trust-av">S</div><div class="trust-av">M</div><div class="trust-av">J</div><div class="trust-av">L</div>
+        </div>
+        <span>Gratis te proberen &middot; Geen creditcard &middot; Direct resultaat</span>
+      </div>
+    </div>
+
+    <!-- Rechter kolom: mockup -->
+    <div style="animation:heroFade 1s 0.3s ease both;">
+      <div class="mockup-perspective" id="mockupWrap">
+        <div class="mockup-tilt" id="mockupTilt">
+          <div class="mockup-shell">
+            <div class="mockup-topbar">
+              <div class="m-dot r"></div><div class="m-dot y"></div><div class="m-dot g"></div>
+              <div class="m-urlbar">studybrain.app</div>
             </div>
-            <div class="mockup-right">
-              <div class="m-section-label m-nice">Nice to Know</div>
-              <div class="m-card" style="opacity:0.8">
-                <div class="m-card-title">D-Day (6 juni 1944)</div>
-                <div class="m-card-text">Geallieerde landing Normandië → keerpunt van de oorlog.</div>
+            <div class="mockup-content">
+              <div class="mockup-left">
+                <div class="m-section-label m-must">Must Learn — start hier</div>
+                <div class="m-card">
+                  <div class="m-card-title">Oorzaken WO2</div>
+                  <div class="m-card-text">3 oorzaken: <strong>Versailles</strong>, <strong>economische crisis</strong> (1929), <strong>opkomst Hitler</strong>. Docenten toetsen dit ALTIJD.</div>
+                  <div class="m-card-tip">VEH = Versailles → Economie → Hitler</div>
+                </div>
+                <div class="m-card">
+                  <div class="m-card-title">De Holocaust</div>
+                  <div class="m-card-text">6 miljoen Joden. Neurenbergwetten 1935 → Wannsee 1942.</div>
+                </div>
+                <div class="m-section-label m-skip" style="margin-top:6px;">Skip</div>
+                <div class="m-card skip-card">
+                  <div class="m-card-title">Namen van alle generaals</div>
+                  <div class="m-card-text">1x genoemd, nooit getoetst. Sla over.</div>
+                </div>
               </div>
-              <div class="m-cheatsheet">
-                <strong>Cheatsheet</strong><br>
-                WO2 oorzaken → VEH<br>
-                Holocaust → 1935 Neurenberg<br>
-                → 1942 Wannsee plan<br>
-                D-Day → 6 juni 1944<br>
-                <span style="color:rgba(255,77,109,0.6)">✗ Generaalsnamen → skip</span>
+              <div class="mockup-right">
+                <div class="m-section-label m-nice">Nice to Know</div>
+                <div class="m-card" style="opacity:0.8">
+                  <div class="m-card-title">D-Day (6 juni 1944)</div>
+                  <div class="m-card-text">Geallieerde landing Normandië → keerpunt.</div>
+                </div>
+                <div class="m-cheatsheet">
+                  <strong>Cheatsheet</strong><br>
+                  WO2 → VEH<br>
+                  Holocaust → 1935 → 1942<br>
+                  D-Day → 6 juni 1944<br>
+                  <span style="color:rgba(255,77,109,0.5)">✗ Generaals → skip</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
   </div>
-</div>
+</section>
 
 <!-- ─── STATS ─── -->
 <div class="stats-section">
@@ -675,7 +683,7 @@ footer p{font-size:13px;color:var(--muted);margin-bottom:20px;}
   <div class="foot-links">
     <a href="privacy.html">Privacy</a>
     <a href="voorwaarden.html">Voorwaarden</a>
-    <a href="mailto:info@studybrain.app">Contact</a>
+    <a href="/cdn-cgi/l/email-protection#553c3b333a15262120312c3727343c3b7b342525">Contact</a>
   </div>
   <div class="foot-copy">&copy; 2026 StudyBrain. Alle rechten voorbehouden.</div>
 </footer>
@@ -689,7 +697,7 @@ footer p{font-size:13px;color:var(--muted);margin-bottom:20px;}
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ── Supabase ──
 const sb = supabase.createClient(
@@ -787,8 +795,4 @@ document.querySelectorAll('.sr').forEach(el => obs.observe(el));
 
 // ── Cookie ──
 function cookieOk() { localStorage.setItem('sb-cookie-consent','accepted'); document.getElementById('cookieBar').style.display='none'; }
-function cookieNo() { localStorage.setItem('sb-cookie-consent','rejected'); document.getElementById('cookieBar').style.display='none'; }
-if (!localStorage.getItem('sb-cookie-consent')) { document.getElementById('cookieBar').style.display='flex'; }
-</script>
-</body>
-</html>
+function cookieNo() { localStorage.setItem('sb-cookie-consent','rejected'); docume
