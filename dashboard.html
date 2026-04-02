@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="sb-design.css">
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -25,7 +26,7 @@
 .sidebar-logout{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;font-size:13px;color:#ff4d6d;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif;transition:all 0.2s}
 .sidebar-logout:hover{background:rgba(255,77,109,0.1)}
 
-body{padding-left:220px}
+body{padding-left:220px;background:var(--bg)}
 .topbar{display:none}
 
 @media(max-width:700px){
@@ -334,28 +335,41 @@ body{padding-left:220px}
 <body>
 
 <!-- Sidebar -->
-<div class="sidebar">
-  <div class="sidebar-logo">StudyBrain</div>
-  <div class="sidebar-nav">
-    <a href="index.html" class="sidebar-item">
-      <span class="si-icon">←</span> Hoofdpagina
+<div class="sb-sidebar">
+  <div class="sb-sidebar-logo">Study<span>Brain</span></div>
+  <div class="sb-sidebar-nav">
+    <a href="index.html" class="sb-sidebar-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2 6.5L8 2l6 4.5V14H10v-3.5H6V14H2V6.5z"/></svg>
+      Hoofdpagina
     </a>
-    <div class="sidebar-divider"></div>
-    <a href="dashboard.html" class="sidebar-item active">
-      <span class="si-icon">▣</span> Dashboard
+    <div class="sb-sidebar-sep"></div>
+    <a href="dashboard.html" class="sb-sidebar-item active">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>
+      Dashboard
     </a>
-    <a href="app.html" class="sidebar-item">
-      <span class="si-icon">+</span> Nieuwe analyse
+    <a href="app.html" class="sb-sidebar-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>
+      Nieuwe analyse
     </a>
-    <div class="sidebar-divider"></div>
-    <a href="index.html#pricing" class="sidebar-item">
-      <span class="si-icon">◈</span> Abonnementen
+    <div class="sb-sidebar-sep"></div>
+    <a href="index.html#pricing" class="sb-sidebar-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M8 1.5l4 4-4 9-4-9 4-4z"/></svg>
+      Abonnementen
     </a>
   </div>
-  <div class="sidebar-bottom">
-    <div class="sidebar-plan" id="sidebarPlan" onclick="window.location.href='index.html#pricing'">Gratis</div>
-    <div class="sidebar-user" id="sidebarEmail"></div>
-    <button class="sidebar-logout" onclick="doLogout()">Uitloggen</button>
+  <div class="sb-sidebar-bottom">
+    <div class="sb-sidebar-plan" id="sidebarPlan" onclick="window.location.href='index.html#pricing'">
+      <div>
+        <div class="sb-sidebar-plan-name" id="sidebarPlanName">Gratis</div>
+        <div class="sb-sidebar-plan-label">Klik om te upgraden</div>
+      </div>
+      <div class="sb-sidebar-plan-badge" id="sidebarPlanBadge">Free</div>
+    </div>
+    <div class="sb-sidebar-email" id="sidebarEmail"></div>
+    <button class="sb-sidebar-logout" onclick="doLogout()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 11l3-3-3-3M13 8H6M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3"/></svg>
+      Uitloggen
+    </button>
   </div>
 </div>
 
@@ -480,7 +494,7 @@ body{padding-left:220px}
     const used = profile?.free_analysis_used || false;
 
     // Plan badge sidebar
-    const planEl = document.getElementById('sidebarPlan');
+    const planEl = document.getElementById('sidebarPlanName');
     const statPlan = document.getElementById('statPlan');
     const statDetail = document.getElementById('statPlanDetail');
 
