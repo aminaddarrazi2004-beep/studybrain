@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nieuwe analyse — StudyBrain</title>
+<link rel="stylesheet" href="sb-design.css">
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -38,7 +39,7 @@
 .icon-logout{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3E%3Cpath d='M10 11l3-3-3-3M13 8H6M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center/contain}
 
 /* ── App layout ── */
-body{padding-left:220px;padding-top:0}
+body{padding-left:220px;padding-top:0;background:var(--bg)}
 .app-topbar{display:none}
 
 @media(max-width:700px){
@@ -271,36 +272,40 @@ body{padding-left:220px;padding-top:0}
 <body>
 
 <!-- Sidebar -->
-<div class="sidebar">
-  <div class="sidebar-logo">StudyBrain</div>
-  <div class="sidebar-nav">
-    <a href="index.html" class="sidebar-item">
-      <span class="sidebar-icon icon-home"></span> Hoofdpagina
+<div class="sb-sidebar">
+  <div class="sb-sidebar-logo">Study<span>Brain</span></div>
+  <div class="sb-sidebar-nav">
+    <a href="index.html" class="sb-sidebar-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2 6.5L8 2l6 4.5V14H10v-3.5H6V14H2V6.5z"/></svg>
+      Hoofdpagina
     </a>
-    <div class="sidebar-sep"></div>
-    <a href="dashboard.html" class="sidebar-item">
-      <span class="sidebar-icon icon-grid"></span> Dashboard
+    <div class="sb-sidebar-sep"></div>
+    <a href="dashboard.html" class="sb-sidebar-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>
+      Dashboard
     </a>
-    <a class="sidebar-item active" onclick="scrollToTop(this)">
-      <span class="sidebar-icon icon-plus"></span> Nieuwe analyse
+    <a class="sb-sidebar-item active" onclick="scrollToTop(this)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>
+      Nieuwe analyse
     </a>
-
-    <div class="sidebar-sep"></div>
-    <a href="index.html#pricing" class="sidebar-item">
-      <span class="sidebar-icon icon-diamond"></span> Abonnementen
+    <div class="sb-sidebar-sep"></div>
+    <a href="index.html#pricing" class="sb-sidebar-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M8 1.5l4 4-4 9-4-9 4-4z"/></svg>
+      Abonnementen
     </a>
   </div>
-  <div class="sidebar-bottom">
-    <div class="sidebar-plan-pill" id="sidebarPlanPill" onclick="window.location.href='index.html#pricing'">
+  <div class="sb-sidebar-bottom">
+    <div class="sb-sidebar-plan" id="sidebarPlanPill" onclick="window.location.href='index.html#pricing'">
       <div>
-        <div class="sidebar-plan-name" id="sidebarPlanName">Gratis</div>
-        <div class="sidebar-plan-label" id="sidebarPlanLabel">1 analyse inbegrepen</div>
+        <div class="sb-sidebar-plan-name" id="sidebarPlanName">Gratis</div>
+        <div class="sb-sidebar-plan-label" id="sidebarPlanLabel">1 analyse inbegrepen</div>
       </div>
-      <div class="sidebar-plan-badge" id="sidebarPlanBadge">Free</div>
+      <div class="sb-sidebar-plan-badge" id="sidebarPlanBadge">Free</div>
     </div>
-    <div class="sidebar-user-row" id="sidebarEmail"></div>
-    <button class="sidebar-logout-btn" onclick="doLogout()">
-      <span class="sidebar-icon icon-logout"></span> Uitloggen
+    <div class="sb-sidebar-email" id="sidebarEmail"></div>
+    <button class="sb-sidebar-logout" onclick="doLogout()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 11l3-3-3-3M13 8H6M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3"/></svg>
+      Uitloggen
     </button>
   </div>
 </div>
