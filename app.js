@@ -94,12 +94,8 @@ async function extractPdfText(file) {
 }
 
 async function checkFreeLimit() {
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) return true;
-  const { data: profile, error } = await sb.from('profiles').select('free_analysis_used, plan').eq('id', session.user.id).single();
-  if (error || !profile) return true;
-  if (profile.plan && profile.plan !== 'gratis') return false;
-  return profile.free_analysis_used === true;
+  // Server-side check in Worker — client-side altijd doorgaan
+  return false;
 }
 
 async function markAnalysisUsed() {
@@ -164,7 +160,13 @@ ${text}`
     })
   });
 
-  if (!res.ok) { const err = await res.json(); throw new Error(err.error?.message || 'API fout'); }
+  if (!res.ok) {
+    const err = await res.json();
+    if (err.error === 'rate_limit_exceeded') throw new Error('Te veel analyses. Wacht een uur en probeer opnieuw.');
+    if (err.error === 'free_limit_reached') throw new Error('free_limit_reached');
+    if (err.error === 'upgrade_required') throw new Error('upgrade_required');
+    throw new Error(err.error?.message || 'API fout');
+  }
   const data = await res.json();
   const raw = data.choices?.[0]?.message?.content || '';
   const cleaned = raw.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
@@ -200,11 +202,11 @@ async function buildCombinedStudieplan(vakResultaten) {
 }
 
 function slaAnalyseOp(naam, result) {
-  const analyses = JSON.parse(localStorage.getItem('studybrain-analyses') || '[]');
+  const analyses = JSON.parse(sessionStorage.getItem('studybrain-analyses') || '[]');
   const nu = new Date();
   const maanden = ['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'];
   analyses.unshift({ naam, datum: nu.getDate() + ' ' + maanden[nu.getMonth()], tijd: selectedTime, mustCount: result.must?.length || 0 });
-  localStorage.setItem('studybrain-analyses', JSON.stringify(analyses.slice(0, 10)));
+  sessionStorage.setItem('studybrain-analyses', JSON.stringify(analyses.slice(0, 10)));
 }
 
 async function analyze() {
@@ -266,6 +268,7 @@ async function analyze() {
     document.getElementById('mainInterface').style.display = 'block';
     document.getElementById('loadingState').style.display = 'none';
     if (err.message === 'free_limit_reached') showUpgradeModal();
+    else if (err.message === 'upgrade_required') showUpgradeModal();
     else showError('Fout: ' + err.message);
   }
 }
