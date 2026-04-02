@@ -59,7 +59,7 @@ async function doSignup() {
   const { error } = await sb.auth.signUp({
     email,
     password: pw1,
-    options: { emailRedirectTo: 'https://studybrain.pages.dev/login.html' }
+    options: { emailRedirectTo: 'https://studybrain.nl/login.html' }
   });
 
   if (error) {
@@ -97,6 +97,21 @@ async function doLogin() {
 async function doLogout() {
   await sb.auth.signOut();
   window.location.href = 'index.html';
+}
+
+async function doForgot() {
+  const email = document.getElementById('forgotEmail').value.trim();
+  if (!email) return showMsg('forgotError', 'Vul je e-mailadres in.', 'error');
+  const btn = document.getElementById('forgotBtn');
+  btn.disabled = true; btn.textContent = 'Bezig...';
+
+  // Altijd hetzelfde bericht tonen — voorkomt dat hackers kunnen checken of email bestaat
+  await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: 'https://studybrain.nl/login.html'
+  });
+
+  showMsg('forgotSuccess', 'Als er een account bestaat met dit e-mailadres, ontvang je een herstelmail.', 'success');
+  btn.textContent = 'Verstuurd';
 }
 
 async function checkAccess() {
