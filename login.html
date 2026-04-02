@@ -3,149 +3,269 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>StudyBrain — Inloggen</title>
-<meta name="robots" content="noindex, nofollow">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<title>Inloggen — StudyBrain</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="sb-design.css">
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;font-synthesis:none;}
-:root{--bg:#05050f;--surface:#0f0f1a;--card:#181824;--border:rgba(255,255,255,0.08);--accent:#ff4d6d;--green:#00e676;--text:#ffffff;--muted:#6b6b8a;--font:'DM Sans',sans-serif;}
-html,body{height:100%;}
-body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;position:relative;overflow:hidden;-webkit-font-smoothing:antialiased;}
+.login-wrap {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 20px 40px;
+}
+.login-logo {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+  text-decoration: none;
+  margin-bottom: 32px;
+  letter-spacing: -0.3px;
+}
+.login-logo span { color: var(--accent); }
+.login-card {
+  background: rgba(13,13,26,0.8);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 40px;
+  width: 100%;
+  max-width: 420px;
+  backdrop-filter: blur(20px);
+  animation: cardIn 0.5s ease both;
+}
+@keyframes cardIn { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
 
-/* Background */
-.bg-orb{position:fixed;border-radius:50%;pointer-events:none;filter:blur(80px);}
-.bg-orb-1{width:500px;height:500px;background:radial-gradient(circle,rgba(255,77,109,0.1),transparent 70%);top:-150px;right:-100px;animation:orbFloat 8s ease-in-out infinite;}
-.bg-orb-2{width:400px;height:400px;background:radial-gradient(circle,rgba(99,102,241,0.07),transparent 70%);bottom:-100px;left:-100px;animation:orbFloat 10s ease-in-out infinite reverse;}
-@keyframes orbFloat{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-20px)}}
+.login-tabs {
+  display: flex;
+  background: rgba(255,255,255,0.04);
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+  margin-bottom: 32px;
+}
+.login-tab {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--muted);
+  border: none;
+  background: transparent;
+  font-family: var(--font);
+  transition: all 0.2s;
+  letter-spacing: 0.01em;
+}
+.login-tab.active {
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 0 20px var(--accent-glow);
+}
 
-/* Logo */
-.login-logo{font-size:22px;font-weight:800;color:var(--text);text-decoration:none;margin-bottom:32px;position:relative;z-index:1;letter-spacing:-0.5px;}
-.login-logo span{color:var(--accent);}
+.login-title { font-size: 22px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.5px; }
+.login-sub { font-size: 14px; color: var(--muted); margin-bottom: 28px; line-height: 1.5; }
 
-/* Card */
-.auth-card{background:rgba(15,15,26,0.8);border:1px solid var(--border);border-radius:24px;padding:40px;width:100%;max-width:420px;position:relative;z-index:1;backdrop-filter:blur(20px);animation:cardIn 0.5s ease both;}
-@keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.login-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,230,118,0.07);
+  border: 1px solid rgba(0,230,118,0.18);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--green);
+  margin-bottom: 24px;
+}
+.login-badge-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+}
 
-/* Tabs */
-.tab-row{display:flex;background:rgba(255,255,255,0.04);border-radius:12px;padding:4px;margin-bottom:32px;gap:4px;}
-.tab{flex:1;padding:10px;text-align:center;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;color:var(--muted);border:none;background:transparent;font-family:var(--font);transition:all 0.2s;letter-spacing:0.01em;}
-.tab.active{background:var(--accent);color:white;box-shadow:0 0 20px rgba(255,77,109,0.3);}
+.login-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.login-remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--muted);
+}
+.login-remember input[type=checkbox] {
+  width: 16px; height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.login-forgot {
+  font-size: 13px;
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 500;
+  background: none;
+  border: none;
+  font-family: var(--font);
+  transition: opacity 0.2s;
+  text-decoration: none;
+}
+.login-forgot:hover { opacity: 0.75; }
 
-/* Form */
-.form-title{font-size:22px;font-weight:800;margin-bottom:6px;letter-spacing:-0.5px;}
-.form-sub{font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.5;}
-.free-badge{background:rgba(0,230,118,0.08);border:1px solid rgba(0,230,118,0.2);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--green);margin-bottom:20px;display:flex;align-items:center;gap:8px;}
-.free-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;}
+.login-submit {
+  width: 100%;
+  padding: 14px;
+  background: var(--accent);
+  border: none;
+  border-radius: 100px;
+  color: white;
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s;
+  box-shadow: 0 0 24px var(--accent-glow);
+  letter-spacing: 0.01em;
+}
+.login-submit:hover { transform: translateY(-2px); box-shadow: 0 0 40px var(--accent-glow); }
+.login-submit:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
 
-.field{margin-bottom:16px;}
-.field label{display:block;font-size:12px;font-weight:600;margin-bottom:7px;color:var(--muted);letter-spacing:0.04em;text-transform:uppercase;}
-.field input{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:13px 16px;color:var(--text);font-family:var(--font);font-size:15px;outline:none;transition:all 0.2s;}
-.field input:focus{border-color:var(--accent);background:rgba(255,77,109,0.04);}
-.field input::placeholder{color:rgba(255,255,255,0.2);}
+.login-back {
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+.login-back a { color: var(--accent); text-decoration: none; font-weight: 500; }
+.login-back a:hover { text-decoration: underline; }
 
-.form-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
-.remember-row{display:flex;align-items:center;gap:8px;cursor:pointer;}
-.remember-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;}
-.remember-row span{font-size:13px;color:var(--muted);}
-.forgot-link{font-size:13px;color:var(--accent);text-decoration:none;cursor:pointer;font-weight:500;transition:opacity 0.2s;}
-.forgot-link:hover{opacity:0.75;}
-
-.submit-btn{width:100%;padding:15px;background:var(--accent);border:none;border-radius:12px;color:white;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;transition:all 0.25s;letter-spacing:0.01em;box-shadow:0 0 24px rgba(255,77,109,0.25);}
-.submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,77,109,0.4);}
-.submit-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none;}
-
-.msg{padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:16px;display:none;line-height:1.5;}
-.msg.error{background:rgba(255,77,109,0.08);border:1px solid rgba(255,77,109,0.2);color:#ff8fa3;}
-.msg.success{background:rgba(0,230,118,0.08);border:1px solid rgba(0,230,118,0.2);color:var(--green);}
-
-.back-home{margin-top:20px;font-size:13px;color:var(--muted);text-align:center;position:relative;z-index:1;}
-.back-home a{color:var(--accent);text-decoration:none;font-weight:500;}
-.back-home a:hover{text-decoration:underline;}
-
-.divider{height:1px;background:var(--border);margin:20px 0;}
+.login-divider { height: 1px; background: var(--border); margin: 20px 0; }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-<div class="bg-orb bg-orb-1"></div>
-<div class="bg-orb bg-orb-2"></div>
+<div class="sb-orb sb-orb-1"></div>
+<div class="sb-orb sb-orb-2"></div>
 
-<a href="index.html" class="login-logo">Study<span>Brain</span></a>
-
-<div class="auth-card">
-  <div class="tab-row">
-    <button class="tab active" id="tabLogin" onclick="showTab('login')">Inloggen</button>
-    <button class="tab" id="tabSignup" onclick="showTab('signup')">Registreren</button>
-  </div>
-
-  <!-- LOGIN -->
-  <div id="formLogin">
-    <div class="form-title">Welkom terug</div>
-    <div class="form-sub">Log in om door te gaan met studeren.</div>
-    <div class="msg error" id="loginError"></div>
-    <div class="msg success" id="loginSuccess"></div>
-    <div class="field"><label>E-mailadres</label><input type="email" id="loginEmail" placeholder="jouw@email.nl" autocomplete="email"></div>
-    <div class="field"><label>Wachtwoord</label><input type="password" id="loginPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" autocomplete="current-password"></div>
-    <div class="form-row">
-      <label class="remember-row">
-        <input type="checkbox" id="rememberMe">
-        <span>Onthoud mij</span>
-      </label>
-      <span class="forgot-link" onclick="showTab('forgot')">Wachtwoord vergeten?</span>
+<!-- Pill nav -->
+<div class="sb-nav">
+  <div class="sb-nav-pill">
+    <a href="index.html" class="sb-nav-logo">Study<span>Brain</span></a>
+    <div class="sb-nav-actions">
+      <a href="index.html" class="sb-btn-ghost">Terug naar home</a>
     </div>
-    <button class="submit-btn" onclick="doLogin()" id="loginBtn">Inloggen &rarr;</button>
-  </div>
-
-  <!-- SIGNUP -->
-  <div id="formSignup" style="display:none">
-    <div class="free-badge"><span class="free-badge-dot"></span> 1 gratis analyse bij aanmaken &mdash; geen creditcard nodig</div>
-    <div class="form-title">Account aanmaken</div>
-    <div class="form-sub">Begin gratis. Upgrade wanneer je wil.</div>
-    <div class="msg error" id="signupError"></div>
-    <div class="msg success" id="signupSuccess"></div>
-    <div class="field"><label>E-mailadres</label><input type="email" id="signupEmail" placeholder="jouw@email.nl" autocomplete="email"></div>
-    <div class="field"><label>Wachtwoord</label><input type="password" id="signupPassword" placeholder="Minimaal 6 tekens" autocomplete="new-password"></div>
-    <div class="field"><label>Wachtwoord herhalen</label><input type="password" id="signupPassword2" placeholder="Herhaal wachtwoord" onkeydown="if(event.key==='Enter')doSignup()" autocomplete="new-password"></div>
-    <button class="submit-btn" onclick="doSignup()" id="signupBtn">Account aanmaken &rarr;</button>
-  </div>
-
-  <!-- FORGOT -->
-  <div id="formForgot" style="display:none">
-    <div class="form-title">Wachtwoord vergeten</div>
-    <div class="form-sub">Vul je e-mailadres in. We sturen je een link om je wachtwoord te herstellen.</div>
-    <div class="msg error" id="forgotError"></div>
-    <div class="msg success" id="forgotSuccess"></div>
-    <div class="field"><label>E-mailadres</label><input type="email" id="forgotEmail" placeholder="jouw@email.nl" onkeydown="if(event.key==='Enter')doForgot()"></div>
-    <button class="submit-btn" onclick="doForgot()" id="forgotBtn">Stuur herstelmail &rarr;</button>
-    <div class="divider"></div>
-    <span class="forgot-link" onclick="showTab('login')">&larr; Terug naar inloggen</span>
   </div>
 </div>
 
-<div class="back-home"><a href="index.html">&larr; Terug naar hoofdpagina</a></div>
+<div class="login-wrap">
+  <a href="index.html" class="login-logo">Study<span>Brain</span></a>
+
+  <div class="login-card">
+    <div class="login-tabs">
+      <button class="login-tab active" id="tabLogin" onclick="showTab('login')">Inloggen</button>
+      <button class="login-tab" id="tabSignup" onclick="showTab('signup')">Registreren</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="formLogin">
+      <div class="login-title">Welkom terug</div>
+      <div class="login-sub">Log in om door te gaan met studeren.</div>
+      <div class="sb-msg error" id="loginError"></div>
+      <div class="sb-msg success" id="loginSuccess"></div>
+      <div class="sb-field">
+        <label>E-mailadres</label>
+        <input class="sb-input" type="email" id="loginEmail" placeholder="jouw@email.nl" autocomplete="email">
+      </div>
+      <div class="sb-field">
+        <label>Wachtwoord</label>
+        <input class="sb-input" type="password" id="loginPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" autocomplete="current-password">
+      </div>
+      <div class="login-row">
+        <label class="login-remember">
+          <input type="checkbox" id="rememberMe">
+          <span>Onthoud mij</span>
+        </label>
+        <button class="login-forgot" onclick="showTab('forgot')">Wachtwoord vergeten?</button>
+      </div>
+      <button class="login-submit" onclick="doLogin()" id="loginBtn">Inloggen &rarr;</button>
+    </div>
+
+    <!-- SIGNUP -->
+    <div id="formSignup" style="display:none">
+      <div class="login-badge"><span class="login-badge-dot"></span> 1 gratis analyse &mdash; geen creditcard nodig</div>
+      <div class="login-title">Account aanmaken</div>
+      <div class="login-sub">Begin gratis. Upgrade wanneer je wil.</div>
+      <div class="sb-msg error" id="signupError"></div>
+      <div class="sb-msg success" id="signupSuccess"></div>
+      <div class="sb-field">
+        <label>E-mailadres</label>
+        <input class="sb-input" type="email" id="signupEmail" placeholder="jouw@email.nl" autocomplete="email">
+      </div>
+      <div class="sb-field">
+        <label>Wachtwoord</label>
+        <input class="sb-input" type="password" id="signupPassword" placeholder="Minimaal 6 tekens" autocomplete="new-password">
+      </div>
+      <div class="sb-field">
+        <label>Wachtwoord herhalen</label>
+        <input class="sb-input" type="password" id="signupPassword2" placeholder="Herhaal wachtwoord" onkeydown="if(event.key==='Enter')doSignup()" autocomplete="new-password">
+      </div>
+      <button class="login-submit" onclick="doSignup()" id="signupBtn">Account aanmaken &rarr;</button>
+    </div>
+
+    <!-- FORGOT -->
+    <div id="formForgot" style="display:none">
+      <div class="login-title">Wachtwoord vergeten</div>
+      <div class="login-sub">Vul je e-mailadres in. We sturen een herstelmail.</div>
+      <div class="sb-msg error" id="forgotError"></div>
+      <div class="sb-msg success" id="forgotSuccess"></div>
+      <div class="sb-field">
+        <label>E-mailadres</label>
+        <input class="sb-input" type="email" id="forgotEmail" placeholder="jouw@email.nl" onkeydown="if(event.key==='Enter')doForgot()">
+      </div>
+      <button class="login-submit" onclick="doForgot()" id="forgotBtn">Herstelmail sturen &rarr;</button>
+      <div class="login-divider"></div>
+      <button class="login-forgot" onclick="showTab('login')">&larr; Terug naar inloggen</button>
+    </div>
+  </div>
+
+  <div class="login-back"><a href="index.html">&larr; Terug naar hoofdpagina</a></div>
+</div>
 
 <script src="auth.js"></script>
 <script>
-  if (window.location.hash === '#signup') showTab('signup');
+if (window.location.hash === '#signup') showTab('signup');
 
-  function showTab(tab) {
-    ['login','signup','forgot'].forEach(t => {
-      document.getElementById('form' + t.charAt(0).toUpperCase() + t.slice(1)).style.display = t === tab ? 'block' : 'none';
-    });
-    document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
-    document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
-    // Verberg tabs bij forgot
-    document.querySelector('.tab-row').style.opacity = tab === 'forgot' ? '0.4' : '1';
-    document.querySelector('.tab-row').style.pointerEvents = tab === 'forgot' ? 'none' : 'all';
-  }
+function showTab(tab) {
+  ['login','signup','forgot'].forEach(t => {
+    document.getElementById('form' + t.charAt(0).toUpperCase() + t.slice(1)).style.display = t === tab ? 'block' : 'none';
+  });
+  document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+  document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
+  document.querySelector('.login-tabs').style.opacity = tab === 'forgot' ? '0.4' : '1';
+  document.querySelector('.login-tabs').style.pointerEvents = tab === 'forgot' ? 'none' : 'all';
+}
 
-  const params = new URLSearchParams(window.location.search);
-  if (params.get('verified') === '1') {
-    showTab('login');
-    showMsg('loginSuccess', 'E-mail bevestigd. Je kunt nu inloggen.', 'success');
-  }
+const params = new URLSearchParams(window.location.search);
+if (params.get('verified') === '1') {
+  showTab('login');
+  const el = document.getElementById('loginSuccess');
+  el.textContent = 'E-mail bevestigd. Je kunt nu inloggen.';
+  el.style.display = 'block';
+}
+
+// Nav scroll
+window.addEventListener('scroll', () => {
+  document.querySelector('.sb-nav-pill')?.classList.toggle('scrolled', window.scrollY > 40);
+});
 </script>
 </body>
 </html>
