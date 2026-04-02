@@ -120,6 +120,7 @@ async function callAnalyzeAPI(text, vakNaam, vragenCount) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
     body: JSON.stringify({
+      is_studieplan: false,
       messages: [
         {
           role: 'system',
@@ -182,6 +183,7 @@ async function buildCombinedStudieplan(vakResultaten) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
     body: JSON.stringify({
+      is_studieplan: true,
       messages: [
         { role: 'system', content: `Je bent een studiecoach. Geef ALLEEN JSON terug.\n\nJSON formaat:\n{\n  "weekplan": [{"dag": "Maandag", "taken": ["Vak X — onderwerp A (30 min)"]}],\n  "tips": ["Tip 1", "Tip 2"]\n}` },
         { role: 'user', content: `Maak een weekplanning voor ${selectedTime} per dag beschikbaar.\n\nVakken:\n${overzicht}` }
@@ -362,6 +364,7 @@ async function buildStudieplan(result, vakNaam, rawText = '') {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
     body: JSON.stringify({
+      is_studieplan: true,
       messages: [
         {
           role: 'system',
