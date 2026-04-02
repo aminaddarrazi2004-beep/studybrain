@@ -18,6 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="sb-design.css">
 <link rel="stylesheet" href="landing.css">
 <style>
 * { font-synthesis: none; }
@@ -206,19 +207,43 @@ h1, h2, h3, .step h3, .plan-name, .feat-card h3 { font-family: 'DM Sans', Arial,
 <button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">☰</button>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-<!-- NOVA PILL NAV -->
-<div class="nav-pill-wrap">
-  <div class="nav-pill" id="navPill">
-    <a href="/" class="nav-pill-logo">Study<span>Brain</span></a>
-    <div class="nav-pill-links">
+<!-- NAV -->
+<div class="sb-nav">
+  <div class="sb-nav-pill" id="navPill">
+    <a href="/" class="sb-nav-logo">Study<span>Brain</span></a>
+    <div class="sb-nav-links">
       <a href="#how">Hoe het werkt</a>
       <a href="#pricing">Abonnementen</a>
       <a href="#faq">FAQ</a>
     </div>
-    <div class="nav-pill-actions" id="navPillActions">
-      <a href="login.html" class="nav-pill-ghost">Inloggen</a>
-      <a href="login.html#signup" class="nav-pill-cta">Gratis proberen &rarr;</a>
+    <div class="sb-nav-actions" id="navPillActions">
+      <a href="login.html" class="sb-btn-ghost hide-mobile">Inloggen</a>
+      <a href="login.html#signup" class="sb-btn-primary">Gratis proberen &rarr;</a>
     </div>
+    <button class="sb-nav-mobile-btn" id="mobileMenuBtn">☰</button>
+  </div>
+</div>
+
+<!-- MOBILE DRAWER -->
+<div class="sb-drawer" id="drawer">
+  <div class="sb-drawer-overlay" id="drawerOverlay"></div>
+  <div class="sb-drawer-panel">
+    <div class="sb-drawer-head">
+      <div class="sb-drawer-logo">Study<span>Brain</span></div>
+      <button class="sb-drawer-close" id="drawerClose">✕</button>
+    </div>
+    <div class="sb-drawer-links">
+      <a href="app.html" class="sb-drawer-link cta">Open de app &rarr;</a>
+      <div class="sb-drawer-sep"></div>
+      <a href="#how" class="sb-drawer-link" onclick="closeDrawer()">Hoe het werkt</a>
+      <a href="#pricing" class="sb-drawer-link" onclick="closeDrawer()">Abonnementen</a>
+      <a href="#faq" class="sb-drawer-link" onclick="closeDrawer()">Veelgestelde vragen</a>
+      <div class="sb-drawer-sep"></div>
+      <a href="privacy.html" class="sb-drawer-link">Privacy</a>
+      <a href="voorwaarden.html" class="sb-drawer-link">Voorwaarden</a>
+      <a href="mailto:info@studybrain.app" class="sb-drawer-link">Contact</a>
+    </div>
+    <div class="sb-drawer-foot" id="drawerFoot"></div>
   </div>
 </div>
 
