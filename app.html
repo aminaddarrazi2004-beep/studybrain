@@ -244,6 +244,19 @@ body{padding-left:220px;padding-top:0}
 .upgrade-close{font-size:13px;color:#6b6b8a;cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;padding:0}
 .upgrade-close:hover{color:#f0f0f8}
 
+
+/* ── Result tabs ── */
+.res-tabs{display:flex;gap:4px;margin-bottom:20px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:4px}
+.res-tab{flex:1;padding:10px 8px;border:none;background:none;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:#6b6b8a;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px}
+.res-tab:hover{color:#c0c0d8;background:rgba(255,255,255,0.04)}
+.res-tab.active{background:rgba(255,255,255,0.08);color:#f0f0f8}
+.res-tab-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.must-dot{background:#00e676}
+.should-dot{background:#ffd600}
+.skip-dot{background:#ff4d6d}
+.res-section-label{font-size:12px;color:#4a4a6a;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.05)}
+.res-block-title{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#4a4a6a;margin:28px 0 16px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.05)}
+
 /* ── Hoe het werkt panel ── */
 .hoe-panel{display:none;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:22px;margin-bottom:22px}
 .hoe-panel.open{display:block}
@@ -387,38 +400,48 @@ body{padding-left:220px;padding-top:0}
   <!-- Results -->
   <div class="results" id="resultsSection">
     <div class="results-header">
-      <h2>Jouw studieplan</h2>
+      <h2 id="resultsTitle">Jouw analyse</h2>
       <p id="resultsSubtitle">Gebaseerd op jouw lesstof en beschikbare tijd</p>
     </div>
 
-    <div class="priority-card must">
-      <div class="card-label"><div class="card-badge">Must learn</div></div>
-      <div class="card-title">Dit MOET je kennen</div>
-      <div class="card-subtitle">Staat sowieso in de toets. Begin hier.</div>
-      <div class="topic-list" id="mustList"></div>
+    <!-- Tabs -->
+    <div class="res-tabs">
+      <button class="res-tab active" onclick="switchTab('must', this)">
+        <span class="res-tab-dot must-dot"></span> Must Learn
+      </button>
+      <button class="res-tab" onclick="switchTab('should', this)">
+        <span class="res-tab-dot should-dot"></span> Nice to Know
+      </button>
+      <button class="res-tab" onclick="switchTab('skip', this)">
+        <span class="res-tab-dot skip-dot"></span> Skip
+      </button>
+      <button class="res-tab" onclick="switchTab('cheat', this)">Cheatsheet</button>
     </div>
 
-    <div class="priority-card should">
-      <div class="card-label"><div class="card-badge">Nice to know</div></div>
-      <div class="card-title">Leer dit als je nog tijd hebt</div>
-      <div class="card-subtitle">Geeft extra punten, maar niet kritisch.</div>
-      <div class="topic-list" id="shouldList"></div>
+    <!-- Tab content -->
+    <div class="res-tab-content" id="tab-must">
+      <div class="res-section-label">Dit staat sowieso in de toets. Begin hier.</div>
+      <div id="mustList"></div>
+    </div>
+    <div class="res-tab-content" id="tab-should" style="display:none">
+      <div class="res-section-label">Geeft extra punten als je nog tijd hebt.</div>
+      <div id="shouldList"></div>
+    </div>
+    <div class="res-tab-content" id="tab-skip" style="display:none">
+      <div class="res-section-label">Te gedetailleerd of nooit getoetst. Sla over.</div>
+      <div id="skipList"></div>
+    </div>
+    <div class="res-tab-content" id="tab-cheat" style="display:none">
+      <div class="res-section-label">Alles in één oogopslag.</div>
+      <pre class="cheatsheet-content" id="cheatsheetContent"></pre>
     </div>
 
-    <div class="priority-card skip">
-      <div class="card-label"><div class="card-badge">Skip</div></div>
-      <div class="card-title">Sla dit over</div>
-      <div class="card-subtitle">Te gedetailleerd of niet de moeite waard.</div>
-      <div class="topic-list" id="skipList"></div>
-    </div>
+    <!-- Studieplan (Pro/Elite) -->
+    <div id="studieplanContainer"></div>
 
-    <div class="cheatsheet-section">
-      <h3>Cheatsheet</h3>
-      <div class="cheatsheet-content" id="cheatsheetContent"></div>
-    </div>
-
-    <div class="cheatsheet-section" id="toetsvragenSection" style="display:none">
-      <h3>Oefentoets</h3>
+    <!-- Oefentoets -->
+    <div id="toetsvragenSection" style="display:none">
+      <div class="res-block-title">Oefentoets</div>
       <div id="toetsvragenList"></div>
       <div id="toetsScore"></div>
       <button class="submit-toets-btn" id="submitToets" style="display:none" onclick="submitToets()">Indienen & antwoorden bekijken</button>
@@ -469,10 +492,18 @@ body{padding-left:220px;padding-top:0}
     }
   })();
 
+  function switchTab(tab, el) {
+    document.querySelectorAll('.res-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    ['must','should','skip','cheat'].forEach(t => {
+      const el = document.getElementById('tab-' + t);
+      if (el) el.style.display = t === tab ? 'block' : 'none';
+    });
+  }
+
   function scrollToTop(el) {
     document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
     el.classList.add('active');
-    document.getElementById('hoePanel').classList.remove('open');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
