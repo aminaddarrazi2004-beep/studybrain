@@ -94,7 +94,6 @@ async function extractPdfText(file) {
 }
 
 async function checkFreeLimit() {
-  // Server-side check in Worker — client-side altijd doorgaan
   return false;
 }
 
@@ -165,7 +164,7 @@ ${text}`
     if (err.error === 'rate_limit_exceeded') throw new Error('Te veel analyses. Wacht een uur en probeer opnieuw.');
     if (err.error === 'free_limit_reached') throw new Error('free_limit_reached');
     if (err.error === 'upgrade_required') throw new Error('upgrade_required');
-    throw new Error(err.error?.message || 'API fout');
+    throw new Error(err.error?.message || err.error || 'API fout');
   }
   const data = await res.json();
   const raw = data.choices?.[0]?.message?.content || '';
@@ -181,24 +180,34 @@ async function buildCombinedStudieplan(vakResultaten) {
   }).join('\n\n');
 
   const token = await getAuthToken();
-  const res = await fetch('https://analyze.aminaddarrazi2004.workers.dev', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-    body: JSON.stringify({
-      is_studieplan: true,
-      messages: [
-        { role: 'system', content: `Je bent een studiecoach. Geef ALLEEN JSON terug.\n\nJSON formaat:\n{\n  "weekplan": [{"dag": "Maandag", "taken": ["Vak X — onderwerp A (30 min)"]}],\n  "tips": ["Tip 1", "Tip 2"]\n}` },
-        { role: 'user', content: `Maak een weekplanning voor ${selectedTime} per dag beschikbaar.\n\nVakken:\n${overzicht}` }
-      ]
-    })
-  });
 
-  if (!res.ok) return null;
-  const data = await res.json();
-  const raw = data.choices?.[0]?.message?.content || '';
-  const match = raw.match(/\{[\s\S]*\}/);
-  if (!match) return null;
-  return JSON.parse(match[0]);
+  try {
+    const res = await fetch('https://analyze.aminaddarrazi2004.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({
+        is_studieplan: true,
+        messages: [
+          { role: 'system', content: `Je bent een studiecoach. Geef ALLEEN JSON terug.\n\nJSON formaat:\n{\n  "weekplan": [{"dag": "Maandag", "taken": ["Vak X — onderwerp A (30 min)"]}],\n  "tips": ["Tip 1", "Tip 2"]\n}` },
+          { role: 'user', content: `Maak een weekplanning voor ${selectedTime} per dag beschikbaar.\n\nVakken:\n${overzicht}` }
+        ]
+      })
+    });
+
+    if (!res.ok) {
+      console.error('Studieplan API error:', res.status);
+      return null;
+    }
+    const data = await res.json();
+    const raw = data.choices?.[0]?.message?.content || '';
+    const cleaned = raw.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
+    const match = cleaned.match(/\{[\s\S]*\}/);
+    if (!match) return null;
+    return JSON.parse(match[0]);
+  } catch (err) {
+    console.error('Studieplan error:', err);
+    return null;
+  }
 }
 
 function slaAnalyseOp(naam, result) {
@@ -220,7 +229,6 @@ async function analyze() {
 
   const isMultiVak = files.length > 1 && (userPlan === 'pro' || userPlan === 'elite');
 
-  // Loading progress animatie
   let stepIdx = 0;
   function advanceStep() {
     if (stepIdx > 0) {
@@ -276,7 +284,7 @@ async function analyze() {
 function showUpgradeModal() { document.getElementById('upgradeModal').style.display = 'flex'; }
 function hideUpgradeModal() { document.getElementById('upgradeModal').style.display = 'none'; }
 
-// ── RESULTATEN — schoon en leesbaar ──
+// ── RESULTATEN ──
 function showResults(data, vakNaam) {
   document.getElementById('loadingState').style.display = 'none';
   document.getElementById('resultsSection').style.display = 'block';
@@ -284,7 +292,6 @@ function showResults(data, vakNaam) {
 
   const hasAccess = (userPlan === 'pro' || userPlan === 'elite');
 
-  // Must learn
   document.getElementById('mustList').innerHTML = (data.must || []).map(item => `
     <div class="res-item">
       <div class="res-item-title">${item.topic}</div>
@@ -296,7 +303,6 @@ function showResults(data, vakNaam) {
       <div class="res-item-reason">${item.reason || ''}</div>
     </div>`).join('');
 
-  // Should
   document.getElementById('shouldList').innerHTML = (data.should || []).map(item => `
     <div class="res-item">
       <div class="res-item-title">${item.topic}</div>
@@ -307,28 +313,27 @@ function showResults(data, vakNaam) {
       }
     </div>`).join('');
 
-  // Skip
   document.getElementById('skipList').innerHTML = (data.skip || []).map(item => `
     <div class="res-item res-item-skip">
       <div class="res-item-title">${item.topic}</div>
       <div class="res-item-body">${item.reason || ''}</div>
     </div>`).join('');
 
-  // Cheatsheet
   document.getElementById('cheatsheetContent').textContent = data.cheatsheet || '';
 
-  // Oefentoets
   renderToetsvragen(data.toetsvragen || []);
 
   // Pro/Elite: genereer studieplan
   if (hasAccess) {
+    // Verwijder bestaande container als die er al is (voorkom dubbel)
+    const existing = document.getElementById('studieplanContainer');
+    if (existing) existing.remove();
+
     const studieplanSection = document.getElementById('toetsvragenSection');
-    let planContainer = document.getElementById('studieplanContainer');
-    if (!planContainer) {
-      planContainer = document.createElement('div');
-      planContainer.id = 'studieplanContainer';
-      studieplanSection.parentNode.insertBefore(planContainer, studieplanSection);
-    }
+    const planContainer = document.createElement('div');
+    planContainer.id = 'studieplanContainer';
+    studieplanSection.parentNode.insertBefore(planContainer, studieplanSection);
+
     planContainer.innerHTML = `
       <div class="sp-loading">
         <div class="sp-loading-steps">
@@ -339,7 +344,6 @@ function showResults(data, vakNaam) {
         </div>
       </div>`;
 
-    // Animate stappen
     let spIdx = 0;
     const spTimer = setInterval(() => {
       document.querySelectorAll('.sp-loading-step').forEach((s,i) => {
@@ -349,20 +353,96 @@ function showResults(data, vakNaam) {
       spIdx = (spIdx + 1) % 4;
     }, 1800);
 
-    buildStudieplan(data, vakNaam, lastExtractedText).then(sp => {
+    // FIX: error handling + timeout zodat spinner niet eeuwig draait
+    const studieplanTimeout = setTimeout(() => {
       clearInterval(spTimer);
-      renderStudieplan(sp, 'studieplanContainer');
-    });
+      renderStudieplanError('studieplanContainer', 'Studieplan duurde te lang. Probeer opnieuw.');
+    }, 60000); // 60 seconden timeout
+
+    buildStudieplan(data, vakNaam, lastExtractedText)
+      .then(sp => {
+        clearTimeout(studieplanTimeout);
+        clearInterval(spTimer);
+        if (sp) {
+          renderStudieplan(sp, 'studieplanContainer');
+        } else {
+          renderStudieplanError('studieplanContainer', 'Studieplan kon niet worden gegenereerd. Probeer het opnieuw.');
+        }
+      })
+      .catch(err => {
+        clearTimeout(studieplanTimeout);
+        clearInterval(spTimer);
+        console.error('Studieplan error:', err);
+        renderStudieplanError('studieplanContainer', 'Er ging iets mis bij het genereren van je studieplan.');
+      });
   }
 }
 
-// ── STUDIEPLAN — lees het, ken het, haal de toets ──
+// ── Studieplan error state ──
+function renderStudieplanError(containerId, message) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = `
+    <div class="sp-doc">
+      <div class="sp-doc-header">
+        <div class="sp-doc-label">Persoonlijk studieplan</div>
+      </div>
+      <div class="sp-error">
+        <p>${message}</p>
+        <button class="sp-retry-btn" onclick="retryStudieplan()">Opnieuw proberen</button>
+      </div>
+    </div>`;
+}
+
+// ── Retry studieplan ──
+async function retryStudieplan() {
+  const container = document.getElementById('studieplanContainer');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="sp-loading">
+      <div class="sp-loading-steps">
+        <div class="sp-loading-step sp-loading-step-active">Opnieuw proberen...</div>
+      </div>
+    </div>`;
+
+  try {
+    // Haal laatste analyse data op uit de DOM
+    const vakNaam = document.getElementById('resultsSubtitle')?.textContent?.split(' · ')[0] || 'Onbekend';
+    const mustItems = document.querySelectorAll('#mustList .res-item');
+    const shouldItems = document.querySelectorAll('#shouldList .res-item');
+
+    const reconstructed = {
+      must: Array.from(mustItems).map(el => ({
+        topic: el.querySelector('.res-item-title')?.textContent || '',
+        summary: el.querySelector('.res-item-body')?.textContent || ''
+      })),
+      should: Array.from(shouldItems).map(el => ({
+        topic: el.querySelector('.res-item-title')?.textContent || '',
+        summary: el.querySelector('.res-item-body')?.textContent || ''
+      }))
+    };
+
+    const sp = await buildStudieplan(reconstructed, vakNaam, lastExtractedText);
+    if (sp) {
+      renderStudieplan(sp, 'studieplanContainer');
+    } else {
+      renderStudieplanError('studieplanContainer', 'Studieplan kon niet worden gegenereerd.');
+    }
+  } catch (err) {
+    console.error('Retry studieplan error:', err);
+    renderStudieplanError('studieplanContainer', 'Er ging iets mis. Probeer later opnieuw.');
+  }
+}
+
+// ── STUDIEPLAN BUILDER ──
 async function buildStudieplan(result, vakNaam, rawText = '') {
   const cfg = getTijdConfig(selectedTime);
-  const mustTopics = result.must.map(m => `- ${m.topic}: ${m.summary || ''}`).join('\n');
-  const shouldTopics = result.should.map(s => `- ${s.topic}: ${s.summary || ''}`).join('\n');
+  const mustTopics = (result.must || []).map(m => `- ${m.topic}: ${m.summary || ''}`).join('\n');
+  const shouldTopics = (result.should || []).map(s => `- ${s.topic}: ${s.summary || ''}`).join('\n');
 
   const token = await getAuthToken();
+
   const res = await fetch('https://analyze.aminaddarrazi2004.workers.dev', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -382,7 +462,7 @@ ABSOLUTE REGELS:
 6. Valkuil = de meest gemaakte fout, specifiek en eerlijk.
 7. Herhalingsschema gebaseerd op spaced repetition — bewezen leertechniek.
 
-Geef ALLEEN JSON terug.
+Geef ALLEEN JSON terug. Geen tekst ervoor of erna.
 
 JSON formaat:
 {
@@ -430,13 +510,26 @@ ${rawText ? rawText.slice(0, 8000) : 'Niet beschikbaar'}`
     })
   });
 
-  if (!res.ok) return null;
+  if (!res.ok) {
+    console.error('Studieplan API error:', res.status);
+    return null;
+  }
+
   const data = await res.json();
   const raw = data.choices?.[0]?.message?.content || '';
   const cleaned = raw.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
   const match = cleaned.match(/\{[\s\S]*\}/);
-  if (!match) return null;
-  return JSON.parse(match[0]);
+  if (!match) {
+    console.error('Studieplan JSON parse failed. Raw response:', raw.slice(0, 500));
+    return null;
+  }
+
+  try {
+    return JSON.parse(match[0]);
+  } catch (err) {
+    console.error('Studieplan JSON parse error:', err, 'Raw:', raw.slice(0, 500));
+    return null;
+  }
 }
 
 function renderStudieplan(studieplan, containerId) {
@@ -563,13 +656,16 @@ function downloadStudieplanPDF() {
   .sp-herhaling-uitleg { font-size: 12px; color: #888; margin-top: 10px; font-style: italic; }
   .sp-tip { background: #fffde7; border: 1px solid #ffc107; border-radius: 8px; padding: 14px 16px; font-size: 13px; color: #333; }
   .sp-tip-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #f59e0b; margin-bottom: 6px; }
+  .sp-error { text-align: center; padding: 32px 16px; color: #666; }
+  .sp-retry-btn { margin-top: 12px; padding: 10px 24px; background: #ff4d6d; border: none; border-radius: 8px; color: white; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .sp-retry-btn:hover { background: #e8445f; }
   .footer { margin-top: 32px; text-align: center; font-size: 11px; color: #aaa; border-top: 1px solid #eee; padding-top: 12px; }
 </style>
 </head>
 <body>
   <button class="sp-doc-download" onclick="window.print()">Opslaan als PDF</button>
   ${el.innerHTML}
-  <div class="footer">Gegenereerd door StudyBrain — studybrain.app</div>
+  <div class="footer">Gegenereerd door StudyBrain — studybrain.nl</div>
 </body>
 </html>`;
 
