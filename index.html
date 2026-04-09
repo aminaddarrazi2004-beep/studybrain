@@ -9,23 +9,692 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#05050f;--bg-card:#0a0a1a;--bg-elevated:#111122;--surface:#161630;--border:rgba(255,255,255,.06);--border-hover:rgba(255,255,255,.12);--text:#eeeef2;--text-secondary:#7c7c9a;--text-muted:#4e4e6a;--accent:#ff4d6d;--accent-hover:#ff6b84;--accent-glow:rgba(255,77,109,.2);--accent-soft:rgba(255,77,109,.07);--green:#34d399;--green-soft:rgba(52,211,153,.08);--amber:#fbbf24;--amber-soft:rgba(251,191,36,.08);--red-soft:rgba(255,77,109,.06);--skip-color:#6b7280;--skip-soft:rgba(107,114,128,.08);--font:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif;--mono:'JetBrains Mono',monospace;--max-w:1180px;--header-h:64px;--radius:14px;--radius-sm:8px}*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}.container{max-width:var(--max-w);margin:0 auto;padding:0 24px}a{color:inherit;text-decoration:none}.header{position:fixed;top:0;left:0;right:0;z-index:100;height:var(--header-h);background:rgba(5,5,15,.85);backdrop-filter:blur(24px) saturate(1.4);border-bottom:1px solid var(--border)}.header-inner{max-width:var(--max-w);margin:0 auto;padding:0 24px;height:100%;display:flex;align-items:center;justify-content:space-between}.logo{font-size:18px;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:9px}.logo-mark{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--accent),#ff8fa3);display:flex;align-items:center;justify-content:center}.logo-mark svg{width:14px;height:14px}.nav-center{display:flex;align-items:center;gap:28px}.nav-center a{font-size:13px;font-weight:500;color:var(--text-secondary);transition:color .2s}.nav-center a:hover{color:var(--text)}.nav-right{display:flex;align-items:center;gap:6px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:var(--font);font-weight:600;cursor:pointer;border:none;transition:all .2s ease}.btn-ghost{padding:8px 16px;border-radius:var(--radius-sm);font-size:13px;background:0 0;color:var(--text-secondary)}.btn-ghost:hover{color:var(--text);background:rgba(255,255,255,.04)}.btn-primary{padding:9px 20px;border-radius:var(--radius-sm);font-size:13px;background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent-hover)}.btn-lg{padding:14px 32px;font-size:15px;border-radius:10px;font-weight:700}.btn-outline{padding:14px 32px;border-radius:10px;font-size:15px;font-weight:600;background:0 0;color:var(--text-secondary);border:1px solid var(--border)}.btn-outline:hover{border-color:var(--border-hover);color:var(--text)}.mobile-toggle{display:none;background:0 0;border:none;color:var(--text);cursor:pointer}.mobile-menu{display:none;position:fixed;inset:0;z-index:200;background:rgba(5,5,15,.97);backdrop-filter:blur(20px);flex-direction:column;align-items:center;justify-content:center;gap:20px}.mobile-menu.open{display:flex}.mobile-menu a{font-size:18px;font-weight:600;color:var(--text)}.mobile-close{position:absolute;top:18px;right:20px;background:0 0;border:none;color:var(--text);font-size:24px;cursor:pointer}.hero{min-height:100vh;display:flex;align-items:center;padding-top:var(--header-h);position:relative;overflow:hidden}.hero::before{content:'';position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(255,77,109,.06) 0%,transparent 65%);pointer-events:none}.hero::after{content:'';position:absolute;top:0;right:0;width:600px;height:600px;background:radial-gradient(circle,rgba(92,124,250,.04) 0%,transparent 60%);pointer-events:none}.hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;width:100%;max-width:var(--max-w);margin:0 auto;padding:0 24px}.hero-content{max-width:520px}.hero-tag{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;margin-bottom:24px}.hero-tag-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:blink 2s ease-in-out infinite}@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}.hero h1{font-size:clamp(34px,5vw,52px);font-weight:800;line-height:1.1;letter-spacing:-.03em;margin-bottom:20px}.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),#ff8fa3);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.hero-sub{font-size:16px;color:var(--text-secondary);line-height:1.7;margin-bottom:32px;max-width:440px}.hero-actions{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}.hero-proof{display:flex;gap:20px;font-size:12px;color:var(--text-muted)}.hero-proof span{display:flex;align-items:center;gap:5px}.hero-proof-check{width:14px;height:14px;border-radius:50%;background:var(--green-soft);display:flex;align-items:center;justify-content:center;flex-shrink:0}.hero-proof-check svg{width:8px;height:8px}.demo-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.02),0 20px 60px rgba(0,0,0,.5),0 0 120px rgba(255,77,109,.04)}.demo-chrome{display:flex;align-items:center;gap:6px;padding:12px 16px;background:rgba(255,255,255,.015);border-bottom:1px solid var(--border)}.demo-dot-r{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.08)}.demo-url-bar{flex:1;margin-left:8px;background:rgba(255,255,255,.03);border-radius:4px;padding:4px 10px;font-size:10px;font-family:var(--mono);color:var(--text-muted);text-align:center}.demo-content{padding:20px}.demo-tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:1px solid var(--border)}.demo-tab{padding:8px 14px;font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:.02em;border-bottom:2px solid transparent;cursor:default}.demo-tab.active{color:var(--accent);border-bottom-color:var(--accent)}.demo-result{padding:14px 16px;border-radius:8px;margin-bottom:8px;border-left:3px solid}.demo-result.must{border-color:var(--accent);background:var(--red-soft)}.demo-result.nice{border-color:var(--amber);background:var(--amber-soft)}.demo-result.skip{border-color:var(--skip-color);background:var(--skip-soft)}.demo-result-tag{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}.demo-result.must .demo-result-tag{color:var(--accent)}.demo-result.nice .demo-result-tag{color:var(--amber)}.demo-result.skip .demo-result-tag{color:var(--skip-color)}.demo-result-title{font-size:13px;font-weight:700;margin-bottom:3px}.demo-result-desc{font-size:11px;color:var(--text-secondary);line-height:1.5}.demo-result-hint{margin-top:6px;font-size:10px;color:var(--green);font-family:var(--mono);display:flex;align-items:center;gap:5px}.demo-result-hint svg{width:10px;height:10px;flex-shrink:0}.demo-score{display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px 14px;background:rgba(255,255,255,.02);border-radius:6px;border:1px solid var(--border)}.demo-score-label{font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em}.demo-score-bar{flex:1;height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}.demo-score-fill{height:100%;width:78%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:2px}.demo-score-pct{font-size:11px;font-weight:700;color:var(--green);font-family:var(--mono)}section{padding:100px 0}.section-label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px}.section-title{font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.15;letter-spacing:-.025em;margin-bottom:14px}.section-sub{font-size:15px;color:var(--text-secondary);max-width:520px;line-height:1.7}.centered{text-align:center}.centered .section-sub{margin:0 auto}.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px}.how-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:32px 24px;position:relative;transition:border-color .3s,transform .3s}.how-card:hover{border-color:var(--border-hover);transform:translateY(-3px)}.how-num{position:absolute;top:16px;right:20px;font-size:11px;font-weight:700;color:var(--text-muted);font-family:var(--mono);letter-spacing:.05em}.how-icon-wrap{width:40px;height:40px;border-radius:10px;margin-bottom:18px;display:flex;align-items:center;justify-content:center}.how-icon-wrap svg{width:18px;height:18px}.how-card:nth-child(1) .how-icon-wrap{background:var(--red-soft);color:var(--accent)}.how-card:nth-child(2) .how-icon-wrap{background:rgba(92,124,250,.08);color:#5c7cfa}.how-card:nth-child(3) .how-icon-wrap{background:var(--green-soft);color:var(--green)}.how-card h3{font-size:16px;font-weight:700;margin-bottom:6px}.how-card p{font-size:13px;color:var(--text-secondary);line-height:1.6}.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:56px}.compare-card{border-radius:var(--radius);padding:32px;border:1px solid var(--border)}.compare-card.without{background:rgba(255,255,255,.01)}.compare-card.with{background:linear-gradient(160deg,var(--red-soft),rgba(52,211,153,.03));border-color:rgba(255,77,109,.15)}.compare-label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:7px}.compare-card.without .compare-label{color:var(--text-muted)}.compare-card.with .compare-label{color:var(--accent)}.compare-row{display:flex;gap:10px;margin-bottom:14px;font-size:13px;line-height:1.55}.compare-mark{flex-shrink:0;margin-top:2px;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center}.compare-mark svg{width:8px;height:8px}.compare-card.without .compare-mark{background:rgba(255,255,255,.04);color:var(--text-muted)}.compare-card.with .compare-mark{background:var(--green-soft);color:var(--green)}.compare-row strong{display:block;margin-bottom:1px}.compare-row span{color:var(--text-secondary);font-size:12px}.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px}.feat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;transition:border-color .3s,transform .3s}.feat-card:hover{border-color:var(--border-hover);transform:translateY(-2px)}.feat-icon{width:36px;height:36px;border-radius:8px;margin-bottom:14px;display:flex;align-items:center;justify-content:center;background:var(--accent-soft);color:var(--accent)}.feat-icon svg{width:16px;height:16px}.feat-card h3{font-size:14px;font-weight:700;margin-bottom:5px}.feat-card p{font-size:12px;color:var(--text-secondary);line-height:1.6}.stats-strip{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:80px 0}.stat-cell{padding:28px 20px;text-align:center;border-right:1px solid var(--border)}.stat-cell:last-child{border-right:none}.stat-val{font-size:30px;font-weight:800;color:var(--accent);margin-bottom:2px;letter-spacing:-.02em}.stat-lbl{font-size:12px;color:var(--text-secondary)}.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}.test-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px}.test-stars{color:var(--amber);font-size:12px;letter-spacing:1px;margin-bottom:12px}.test-quote{font-size:13px;color:var(--text-secondary);line-height:1.65;margin-bottom:16px}.test-author{display:flex;align-items:center;gap:10px}.test-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#5c7cfa);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff}.test-name{font-size:13px;font-weight:700}.test-meta{font-size:11px;color:var(--text-muted)}.pricing-note{text-align:center;font-size:14px;color:var(--text-secondary);margin-bottom:40px}.pricing-note strong{color:var(--text)}.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start;margin-top:16px}.price-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:32px 24px;position:relative;transition:transform .3s}.price-card:hover{transform:translateY(-3px)}.price-card.pop{border-color:rgba(255,77,109,.3);box-shadow:0 0 80px rgba(255,77,109,.08)}.price-tag{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 14px;border-radius:100px}.price-name{font-size:18px;font-weight:700;margin-bottom:6px}.price-amt{font-size:36px;font-weight:800;letter-spacing:-.03em;margin-bottom:2px}.price-amt span{font-size:14px;font-weight:500;color:var(--text-secondary)}.price-desc{font-size:12px;color:var(--text-secondary);margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}.price-list{list-style:none;margin-bottom:24px}.price-list li{font-size:12px;color:var(--text-secondary);padding:5px 0;display:flex;align-items:flex-start;gap:8px}.price-list li .li-icon{flex-shrink:0;margin-top:2px}.price-list li .li-icon svg{width:12px;height:12px}.price-list li.on .li-icon{color:var(--green)}.price-list li.off{opacity:.3}.price-list li.off .li-icon{color:var(--text-muted)}.price-btn-wrap a{display:block;width:100%;text-align:center;padding:12px;border-radius:var(--radius-sm);font-size:13px;font-weight:700;font-family:var(--font);transition:all .2s}.price-btn-std{background:rgba(255,255,255,.04);color:var(--text);border:1px solid var(--border)}.price-btn-std:hover{border-color:var(--accent);color:var(--accent)}.price-btn-accent{background:var(--accent);color:#fff;border:none}.price-btn-accent:hover{background:var(--accent-hover)}.pricing-footer{text-align:center;margin-top:16px;font-size:12px;color:var(--text-muted)}.faq-list{max-width:680px;margin:40px auto 0}.faq-item{border-bottom:1px solid var(--border)}.faq-q{width:100%;background:0 0;border:none;color:var(--text);padding:18px 0;font-size:14px;font-weight:600;font-family:var(--font);cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center}.faq-q:hover{color:var(--accent)}.faq-icon{font-size:16px;color:var(--text-muted);transition:transform .3s}.faq-item.open .faq-icon{transform:rotate(45deg)}.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease}.faq-item.open .faq-a{max-height:160px}.faq-a p{padding-bottom:18px;font-size:13px;color:var(--text-secondary);line-height:1.65}.cta{text-align:center;padding:100px 0;border-top:1px solid var(--border);background:linear-gradient(180deg,var(--bg) 0%,var(--bg-card) 100%)}.cta .section-sub{margin:0 auto 28px}.footer{padding:32px 0;border-top:1px solid var(--border)}.footer-inner{display:flex;justify-content:space-between;align-items:center}.footer-brand{font-size:13px;font-weight:700;color:var(--text-secondary)}.footer-links{display:flex;gap:20px}.footer-links a{font-size:12px;color:var(--text-muted)}.footer-links a:hover{color:var(--text)}.footer-copy{font-size:11px;color:var(--text-muted)}.cookie-bar{position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--bg-card);border-top:1px solid var(--border);padding:12px 24px;display:none;align-items:center;justify-content:center;gap:14px}.cookie-bar.show{display:flex}.cookie-bar p{font-size:12px;color:var(--text-secondary)}.cookie-bar a{color:var(--accent)}.ck-btn{padding:6px 16px;border-radius:6px;font-size:11px;font-weight:700;font-family:var(--font);cursor:pointer;border:none}.ck-yes{background:var(--accent);color:#fff}.ck-no{background:rgba(255,255,255,.04);color:var(--text-secondary);border:1px solid var(--border)}.reveal{opacity:0;transform:translateY(24px);transition:opacity .5s ease,transform .5s ease}.reveal.vis{opacity:1;transform:none}.rd1{transition-delay:.08s}.rd2{transition-delay:.16s}.rd3{transition-delay:.24s}@media(max-width:900px){.hero-inner{grid-template-columns:1fr;gap:48px;text-align:center}.hero-content{max-width:100%}.hero-sub{margin:0 auto 28px}.hero-actions{justify-content:center}.hero-proof{justify-content:center;flex-wrap:wrap}.demo-card{max-width:480px;margin:0 auto}.how-grid,.feat-grid,.test-grid,.pricing-grid{grid-template-columns:1fr;max-width:440px;margin-left:auto;margin-right:auto}.compare-grid{grid-template-columns:1fr}.stats-strip{grid-template-columns:1fr 1fr}.nav-center,.nav-right{display:none}.mobile-toggle{display:block}.footer-inner{flex-direction:column;gap:12px;text-align:center}.how-grid,.feat-grid,.test-grid,.pricing-grid{margin-top:36px}}@media(max-width:480px){section{padding:64px 0}.hero-actions{flex-direction:column;width:100%}.btn-lg,.btn-outline{width:100%}}
+    :root {
+      --bg: #05050f;
+      --bg-card: #0a0a1a;
+      --bg-elevated: #111122;
+      --border: rgba(255,255,255,0.06);
+      --border-hover: rgba(255,255,255,0.12);
+      --text: #eeeef2;
+      --text-secondary: #7c7c9a;
+      --text-muted: #4e4e6a;
+      --accent: #ff4d6d;
+      --accent-hover: #ff6b84;
+      --accent-glow: rgba(255,77,109,0.2);
+      --accent-soft: rgba(255,77,109,0.07);
+      --must: #34d399;
+      --must-soft: rgba(52,211,153,0.08);
+      --must-border: rgba(52,211,153,0.25);
+      --nice: #fbbf24;
+      --nice-soft: rgba(251,191,36,0.08);
+      --nice-border: rgba(251,191,36,0.25);
+      --skip: #6b7280;
+      --skip-soft: rgba(107,114,128,0.06);
+      --skip-border: rgba(107,114,128,0.2);
+      --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      --max-w: 1180px;
+      --header-h: 64px;
+      --radius: 14px;
+      --radius-sm: 8px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── HEADER ── */
+    .header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--header-h);
+      background: rgba(5,5,15,0.85);
+      backdrop-filter: blur(24px) saturate(1.4);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner {
+      max-width: var(--max-w); margin: 0 auto; padding: 0 24px;
+      height: 100%; display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; display: flex; align-items: center; gap: 9px; }
+    .logo-mark {
+      width: 28px; height: 28px; border-radius: 7px;
+      background: linear-gradient(135deg, var(--accent), #ff8fa3);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-mark svg { width: 14px; height: 14px; }
+    .nav-center { display: flex; align-items: center; gap: 28px; }
+    .nav-center a { font-size: 13px; font-weight: 500; color: var(--text-secondary); transition: color 0.2s; }
+    .nav-center a:hover { color: var(--text); }
+    .nav-right { display: flex; align-items: center; gap: 6px; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      font-family: var(--font); font-weight: 600; cursor: pointer; border: none; transition: all 0.2s ease;
+    }
+    .btn-ghost { padding: 8px 16px; border-radius: var(--radius-sm); font-size: 13px; background: transparent; color: var(--text-secondary); }
+    .btn-ghost:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+    .btn-primary { padding: 9px 20px; border-radius: var(--radius-sm); font-size: 13px; background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-lg { padding: 14px 32px; font-size: 15px; border-radius: 10px; font-weight: 700; }
+    .btn-outline { padding: 14px 32px; border-radius: 10px; font-size: 15px; font-weight: 600; background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
+    .btn-outline:hover { border-color: var(--border-hover); color: var(--text); }
+
+    .mobile-toggle { display: none; background: none; border: none; color: var(--text); cursor: pointer; }
+    .mobile-menu {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(5,5,15,0.97); backdrop-filter: blur(20px);
+      flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { font-size: 18px; font-weight: 600; color: var(--text); }
+    .mobile-close { position: absolute; top: 18px; right: 20px; background: none; border: none; color: var(--text); font-size: 24px; cursor: pointer; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center;
+      padding-top: var(--header-h); position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; top: -20%; left: 50%; transform: translateX(-50%);
+      width: 900px; height: 900px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,77,109,0.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center;
+      width: 100%; max-width: var(--max-w); margin: 0 auto; padding: 0 24px;
+    }
+    .hero-content { max-width: 520px; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 600; color: var(--accent);
+      letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 24px;
+    }
+    .hero-tag-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 2s ease-in-out infinite; }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+    .hero h1 { font-size: clamp(34px, 5vw, 52px); font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 20px; }
+    .hero h1 em { font-style: normal; background: linear-gradient(135deg, var(--accent), #ff8fa3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-sub { font-size: 16px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 32px; max-width: 440px; }
+    .hero-actions { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+    .hero-proof { display: flex; gap: 20px; font-size: 12px; color: var(--text-muted); }
+    .hero-proof span { display: flex; align-items: center; gap: 5px; }
+    .hero-proof-check { width: 14px; height: 14px; border-radius: 50%; background: rgba(52,211,153,0.08); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--must); }
+    .hero-proof-check svg { width: 8px; height: 8px; }
+
+    /* ── ANIMATED DEMO ── */
+    .demo-wrapper {
+      perspective: 1200px;
+    }
+    .demo-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px; overflow: hidden;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 24px 80px rgba(0,0,0,0.5), 0 0 120px rgba(255,77,109,0.03);
+      transform: rotateY(-2deg) rotateX(1deg);
+      transition: transform 0.6s ease;
+    }
+    .demo-card:hover { transform: rotateY(0) rotateX(0); }
+    .demo-chrome {
+      display: flex; align-items: center; gap: 6px;
+      padding: 10px 16px;
+      background: rgba(255,255,255,0.015);
+      border-bottom: 1px solid var(--border);
+    }
+    .demo-dots { display: flex; gap: 5px; }
+    .demo-dots span { width: 8px; height: 8px; border-radius: 50%; }
+    .demo-dots span:nth-child(1) { background: #ff5f57; }
+    .demo-dots span:nth-child(2) { background: #febc2e; }
+    .demo-dots span:nth-child(3) { background: #28c840; }
+    .demo-url-bar {
+      flex: 1; margin-left: 12px;
+      background: rgba(255,255,255,0.04); border-radius: 5px;
+      padding: 4px 12px; font-size: 10px; font-family: var(--mono);
+      color: var(--text-muted); text-align: center;
+    }
+    .demo-body { padding: 20px; min-height: 340px; position: relative; }
+
+    /* Demo scenes */
+    .demo-scene { position: absolute; inset: 20px; opacity: 0; transition: opacity 0.5s ease, transform 0.4s ease; transform: translateY(8px); pointer-events: none; }
+    .demo-scene.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+    /* Scene 1: Upload */
+    .scene-upload {}
+    .upload-zone {
+      border: 2px dashed rgba(255,255,255,0.08); border-radius: 12px;
+      padding: 40px 20px; text-align: center; margin-bottom: 16px;
+      transition: all 0.4s;
+    }
+    .upload-zone.drag { border-color: var(--accent); background: var(--accent-soft); }
+    .upload-icon { margin-bottom: 10px; color: var(--text-muted); }
+    .upload-icon svg { width: 32px; height: 32px; }
+    .upload-text { font-size: 13px; color: var(--text-muted); }
+    .upload-text strong { color: var(--accent); }
+    .file-row {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 14px; opacity: 0;
+      transform: translateY(10px); transition: all 0.4s;
+    }
+    .file-row.show { opacity: 1; transform: translateY(0); }
+    .file-icon { color: var(--accent); }
+    .file-icon svg { width: 16px; height: 16px; }
+    .file-name { flex: 1; font-size: 12px; font-family: var(--mono); }
+    .file-size { font-size: 10px; color: var(--text-muted); }
+    .file-check { color: var(--must); opacity: 0; transition: opacity 0.3s; }
+    .file-check.show { opacity: 1; }
+    .file-check svg { width: 14px; height: 14px; }
+
+    /* Scene 2: Analyzing */
+    .scene-analyze { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .analyze-spinner {
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.06);
+      border-top-color: var(--accent);
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .analyze-text { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
+    .analyze-steps { width: 100%; max-width: 260px; }
+    .analyze-step {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11px; color: var(--text-muted); padding: 4px 0;
+      opacity: 0; transform: translateX(-8px);
+      transition: all 0.3s ease;
+    }
+    .analyze-step.show { opacity: 1; transform: translateX(0); }
+    .analyze-step.done { color: var(--must); }
+    .analyze-step .step-icon { width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; }
+    .analyze-step .step-icon svg { width: 10px; height: 10px; }
+    .analyze-bar { width: 100%; max-width: 260px; height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; margin-top: 12px; }
+    .analyze-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--must)); border-radius: 2px; transition: width 0.6s ease; }
+
+    /* Scene 3: Results */
+    .scene-results {}
+    .result-tabs {
+      display: flex; gap: 0; margin-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .result-tab {
+      padding: 7px 12px; font-size: 10px; font-weight: 600;
+      color: var(--text-muted); letter-spacing: 0.02em;
+      border-bottom: 2px solid transparent; cursor: default;
+    }
+    .result-tab.active { color: var(--must); border-bottom-color: var(--must); }
+    .result-item {
+      padding: 12px 14px; border-radius: 8px; margin-bottom: 6px;
+      border-left: 3px solid; opacity: 0; transform: translateX(-12px);
+      transition: all 0.4s ease;
+    }
+    .result-item.show { opacity: 1; transform: translateX(0); }
+    .result-item.must { border-color: var(--must); background: var(--must-soft); }
+    .result-item.nice { border-color: var(--nice); background: var(--nice-soft); }
+    .result-item.skip { border-color: var(--skip); background: var(--skip-soft); }
+    .result-tag { font-size: 8px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 3px; }
+    .result-item.must .result-tag { color: var(--must); }
+    .result-item.nice .result-tag { color: var(--nice); }
+    .result-item.skip .result-tag { color: var(--skip); }
+    .result-title { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
+    .result-desc { font-size: 10px; color: var(--text-secondary); line-height: 1.45; }
+    .result-hint { margin-top: 4px; font-size: 9px; color: var(--must); font-family: var(--mono); }
+    .result-score {
+      display: flex; align-items: center; gap: 8px; margin-top: 10px;
+      padding: 8px 12px; background: rgba(255,255,255,0.02);
+      border-radius: 6px; border: 1px solid var(--border);
+      opacity: 0; transition: opacity 0.4s 0.8s;
+    }
+    .result-score.show { opacity: 1; }
+    .result-score-label { font-size: 9px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .result-score-bar { flex: 1; height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+    .result-score-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--must)); border-radius: 2px; transition: width 1s ease 1s; }
+    .result-score.show .result-score-fill { width: 82%; }
+    .result-score-pct { font-size: 10px; font-weight: 700; color: var(--must); font-family: var(--mono); }
+
+    /* Demo progress dots */
+    .demo-progress { display: flex; justify-content: center; gap: 6px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+    .demo-progress-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.08); transition: all 0.3s;
+    }
+    .demo-progress-dot.active { background: var(--accent); width: 20px; border-radius: 3px; }
+
+    /* ── SECTIONS ── */
+    section { padding: 100px 0; }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
+    .section-title { font-size: clamp(26px, 4vw, 40px); font-weight: 800; line-height: 1.15; letter-spacing: -0.025em; margin-bottom: 14px; }
+    .section-sub { font-size: 15px; color: var(--text-secondary); max-width: 520px; line-height: 1.7; }
+    .centered { text-align: center; }
+    .centered .section-sub { margin: 0 auto; }
+
+    /* ── HOW ── */
+    .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 56px; }
+    .how-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 32px 24px;
+      position: relative; transition: border-color 0.3s, transform 0.3s;
+    }
+    .how-card:hover { border-color: var(--border-hover); transform: translateY(-3px); }
+    .how-num { position: absolute; top: 16px; right: 20px; font-size: 11px; font-weight: 700; color: var(--text-muted); font-family: var(--mono); }
+    .how-icon-wrap {
+      width: 40px; height: 40px; border-radius: 10px; margin-bottom: 18px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .how-icon-wrap svg { width: 18px; height: 18px; }
+    .how-card:nth-child(1) .how-icon-wrap { background: var(--accent-soft); color: var(--accent); }
+    .how-card:nth-child(2) .how-icon-wrap { background: rgba(92,124,250,0.08); color: #5c7cfa; }
+    .how-card:nth-child(3) .how-icon-wrap { background: var(--must-soft); color: var(--must); }
+    .how-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .how-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* ── COMPARE ── */
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 56px; }
+    .compare-card { border-radius: var(--radius); padding: 32px; border: 1px solid var(--border); }
+    .compare-card.without { background: rgba(255,255,255,0.01); }
+    .compare-card.with { background: linear-gradient(160deg, rgba(52,211,153,0.03), rgba(255,77,109,0.03)); border-color: var(--must-border); }
+    .compare-label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 7px; }
+    .compare-card.without .compare-label { color: var(--text-muted); }
+    .compare-card.with .compare-label { color: var(--must); }
+    .compare-row { display: flex; gap: 10px; margin-bottom: 14px; font-size: 13px; line-height: 1.55; }
+    .compare-mark { flex-shrink: 0; margin-top: 2px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .compare-mark svg { width: 8px; height: 8px; }
+    .compare-card.without .compare-mark { background: rgba(255,255,255,0.04); color: var(--text-muted); }
+    .compare-card.with .compare-mark { background: var(--must-soft); color: var(--must); }
+    .compare-row strong { display: block; margin-bottom: 1px; }
+    .compare-row span { color: var(--text-secondary); font-size: 12px; }
+
+    /* ── FEATURES ── */
+    .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 56px; }
+    .feat-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px 20px;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .feat-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+    .feat-icon {
+      width: 36px; height: 36px; border-radius: 8px; margin-bottom: 14px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--accent-soft); color: var(--accent);
+    }
+    .feat-icon svg { width: 16px; height: 16px; }
+    .feat-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 5px; }
+    .feat-card p { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* ── STATS ── */
+    .stats-strip {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      overflow: hidden; margin: 80px 0;
+    }
+    .stat-cell { padding: 28px 20px; text-align: center; border-right: 1px solid var(--border); }
+    .stat-cell:last-child { border-right: none; }
+    .stat-val { font-size: 30px; font-weight: 800; color: var(--accent); margin-bottom: 2px; letter-spacing: -0.02em; }
+    .stat-lbl { font-size: 12px; color: var(--text-secondary); }
+
+    /* ── TESTIMONIALS ── */
+    .test-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px; }
+    .test-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .test-stars { color: var(--nice); font-size: 12px; letter-spacing: 1px; margin-bottom: 12px; }
+    .test-quote { font-size: 13px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 16px; }
+    .test-author { display: flex; align-items: center; gap: 10px; }
+    .test-av { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), #5c7cfa); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; }
+    .test-name { font-size: 13px; font-weight: 700; }
+    .test-meta { font-size: 11px; color: var(--text-muted); }
+
+    /* ── PRICING ── */
+    .pricing-note { text-align: center; font-size: 14px; color: var(--text-secondary); margin-bottom: 40px; }
+    .pricing-note strong { color: var(--text); }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; margin-top: 16px; }
+    .price-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 32px 24px;
+      position: relative; transition: transform 0.3s;
+    }
+    .price-card:hover { transform: translateY(-3px); }
+    .price-card.pop { border-color: rgba(255,77,109,0.3); box-shadow: 0 0 80px rgba(255,77,109,0.08); }
+    .price-tag { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 14px; border-radius: 100px; }
+    .price-name { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .price-amt { font-size: 36px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 2px; }
+    .price-amt span { font-size: 14px; font-weight: 500; color: var(--text-secondary); }
+    .price-desc { font-size: 12px; color: var(--text-secondary); margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .price-list { list-style: none; margin-bottom: 24px; }
+    .price-list li { font-size: 12px; color: var(--text-secondary); padding: 5px 0; display: flex; align-items: flex-start; gap: 8px; }
+    .price-list li .li-i { flex-shrink: 0; margin-top: 2px; }
+    .price-list li .li-i svg { width: 12px; height: 12px; }
+    .price-list li.on .li-i { color: var(--must); }
+    .price-list li.off { opacity: 0.3; }
+    .price-list li.off .li-i { color: var(--text-muted); }
+    .p-btn a {
+      display: block; width: 100%; text-align: center; padding: 12px;
+      border-radius: var(--radius-sm); font-size: 13px; font-weight: 700;
+      font-family: var(--font); transition: all 0.2s;
+    }
+    .p-btn-s { background: rgba(255,255,255,0.04); color: var(--text); border: 1px solid var(--border); }
+    .p-btn-s:hover { border-color: var(--accent); color: var(--accent); }
+    .p-btn-a { background: var(--accent); color: #fff; border: none; }
+    .p-btn-a:hover { background: var(--accent-hover); }
+    .pricing-footer { text-align: center; margin-top: 16px; font-size: 12px; color: var(--text-muted); }
+
+    /* ── FAQ ── */
+    .faq-list { max-width: 680px; margin: 40px auto 0; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-q { width: 100%; background: none; border: none; color: var(--text); padding: 18px 0; font-size: 14px; font-weight: 600; font-family: var(--font); cursor: pointer; text-align: left; display: flex; justify-content: space-between; align-items: center; }
+    .faq-q:hover { color: var(--accent); }
+    .faq-icon { font-size: 16px; color: var(--text-muted); transition: transform 0.3s; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+    .faq-item.open .faq-a { max-height: 160px; }
+    .faq-a p { padding-bottom: 18px; font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+
+    /* ── CTA ── */
+    .cta { text-align: center; padding: 100px 0; border-top: 1px solid var(--border); background: linear-gradient(180deg, var(--bg), var(--bg-card)); }
+    .cta .section-sub { margin: 0 auto 28px; }
+
+    /* ── FOOTER ── */
+    .footer { padding: 32px 0; border-top: 1px solid var(--border); }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; }
+    .footer-brand { font-size: 13px; font-weight: 700; color: var(--text-secondary); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 12px; color: var(--text-muted); }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy { font-size: 11px; color: var(--text-muted); }
+
+    /* ── COOKIE ── */
+    .cookie-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: var(--bg-card); border-top: 1px solid var(--border); padding: 12px 24px; display: none; align-items: center; justify-content: center; gap: 14px; }
+    .cookie-bar.show { display: flex; }
+    .cookie-bar p { font-size: 12px; color: var(--text-secondary); }
+    .cookie-bar a { color: var(--accent); }
+    .ck-btn { padding: 6px 16px; border-radius: 6px; font-size: 11px; font-weight: 700; font-family: var(--font); cursor: pointer; border: none; }
+    .ck-y { background: var(--accent); color: #fff; }
+    .ck-n { background: rgba(255,255,255,0.04); color: var(--text-secondary); border: 1px solid var(--border); }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .reveal.vis { opacity: 1; transform: none; }
+    .rd1 { transition-delay: 0.08s; } .rd2 { transition-delay: 0.16s; } .rd3 { transition-delay: 0.24s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 48px; text-align: center; }
+      .hero-content { max-width: 100%; }
+      .hero-sub { margin: 0 auto 28px; }
+      .hero-actions { justify-content: center; }
+      .hero-proof { justify-content: center; flex-wrap: wrap; }
+      .demo-card { max-width: 480px; margin: 0 auto; transform: none; }
+      .demo-card:hover { transform: none; }
+      .how-grid, .feat-grid, .test-grid, .pricing-grid { grid-template-columns: 1fr; max-width: 440px; margin-left: auto; margin-right: auto; }
+      .compare-grid { grid-template-columns: 1fr; }
+      .stats-strip { grid-template-columns: 1fr 1fr; }
+      .nav-center, .nav-right { display: none; }
+      .mobile-toggle { display: block; }
+      .footer-inner { flex-direction: column; gap: 12px; text-align: center; }
+    }
+    @media (max-width: 480px) {
+      section { padding: 64px 0; }
+      .hero-actions { flex-direction: column; width: 100%; }
+      .btn-lg, .btn-outline { width: 100%; }
+    }
   </style>
 </head>
 <body>
-<header class="header"><div class="header-inner"><a href="/" class="logo"><div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>StudyBrain</a><nav class="nav-center"><a href="#how">Hoe het werkt</a><a href="#features">Functies</a><a href="#pricing">Abonnementen</a><a href="#faq">FAQ</a><a href="mailto:info@studybrain.nl">Contact</a></nav><div class="nav-right"><a href="login.html" class="btn btn-ghost">Inloggen</a><a href="login.html#signup" class="btn btn-primary">Gratis proberen</a></div><button class="mobile-toggle" onclick="document.getElementById('mob').classList.add('open')" aria-label="Menu"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button></div></header>
-<div class="mobile-menu" id="mob"><button class="mobile-close" onclick="this.parentElement.classList.remove('open')">&#x2715;</button><a href="#how" onclick="this.parentElement.classList.remove('open')">Hoe het werkt</a><a href="#features" onclick="this.parentElement.classList.remove('open')">Functies</a><a href="#pricing" onclick="this.parentElement.classList.remove('open')">Abonnementen</a><a href="#faq" onclick="this.parentElement.classList.remove('open')">FAQ</a><a href="mailto:info@studybrain.nl" onclick="this.parentElement.classList.remove('open')">Contact</a><a href="login.html" class="btn btn-ghost" style="margin-top:12px">Inloggen</a><a href="login.html#signup" class="btn btn-primary">Gratis proberen</a></div>
-<section class="hero"><div class="hero-inner"><div class="hero-content"><div class="hero-tag"><span class="hero-tag-dot"></span> AI-gestuurd studieplan</div><h1>Stop met alles leren.<br><em>Leer wat telt.</em></h1><p class="hero-sub">Upload je lesstof. StudyBrain vertelt je in 30 seconden wat sowieso in de toets komt, wat handig is, en wat je veilig kunt skippen.</p><div class="hero-actions"><a href="login.html#signup" class="btn btn-primary btn-lg">Probeer gratis</a><a href="#how" class="btn btn-outline">Hoe werkt het?</a></div><div class="hero-proof"><span><span class="hero-proof-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 6l3 3 5-5"/></svg></span>Gratis te proberen</span><span><span class="hero-proof-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 6l3 3 5-5"/></svg></span>Geen creditcard</span><span><span class="hero-proof-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 6l3 3 5-5"/></svg></span>Direct resultaat</span></div></div><div class="demo-card"><div class="demo-chrome"><div class="demo-dot-r"></div><div class="demo-dot-r"></div><div class="demo-dot-r"></div><div class="demo-url-bar">studybrain.nl/analyse</div></div><div class="demo-content"><div class="demo-tabs"><div class="demo-tab active">Must Learn</div><div class="demo-tab">Nice to Know</div><div class="demo-tab">Skip</div><div class="demo-tab">Cheatsheet</div></div><div class="demo-result must"><div class="demo-result-tag">Must Learn</div><div class="demo-result-title">Oorzaken WO2</div><div class="demo-result-desc">Drie hoofdoorzaken: Verdrag van Versailles, economische crisis van 1929 en de opkomst van Hitler. Docenten toetsen dit altijd als vergelijkingsvraag.</div><div class="demo-result-hint"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"/><path d="M8 5v3"/><circle cx="8" cy="11" r=".5" fill="currentColor"/></svg>VEH = Versailles → Economie → Hitler</div></div><div class="demo-result nice"><div class="demo-result-tag">Nice to Know</div><div class="demo-result-title">D-Day (6 juni 1944)</div><div class="demo-result-desc">Geallieerde landing in Normandië — keerpunt van de oorlog in West-Europa.</div></div><div class="demo-result skip"><div class="demo-result-tag">Skip</div><div class="demo-result-title">Namen van alle generaals</div><div class="demo-result-desc">Eenmalig genoemd, nooit getoetst. Sla over.</div></div><div class="demo-score"><div class="demo-score-label">Toetsgereedheid</div><div class="demo-score-bar"><div class="demo-score-fill"></div></div><div class="demo-score-pct">78%</div></div></div></div></div></section>
-<section id="how"><div class="container"><div class="centered"><div class="section-label">Zo simpel is het</div><h2 class="section-title reveal">Van PDF naar studieplan in 30 seconden</h2></div><div class="how-grid"><div class="how-card reveal rd1"><div class="how-num">01</div><div class="how-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><h3>Upload je PDF</h3><p>Sleep je samenvatting of syllabus erin. Meerdere bestanden tegelijk mag met Pro en Elite.</p></div><div class="how-card reveal rd2"><div class="how-num">02</div><div class="how-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><h3>Kies je beschikbare tijd</h3><p>30 minuten of een hele avond? Het studieplan past zich automatisch aan jouw deadline aan.</p></div><div class="how-card reveal rd3"><div class="how-num">03</div><div class="how-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><h3>Krijg je prioriteiten</h3><p>Must Learn, Nice to Know en Skip — met uitleg, ezelsbruggetjes en een persoonlijk studieplan.</p></div></div></div></section>
-<section id="compare"><div class="container"><div class="centered"><div class="section-label">Het verschil</div><h2 class="section-title reveal">Studeren zonder vs. met StudyBrain</h2></div><div class="compare-grid"><div class="compare-card without reveal rd1"><div class="compare-label"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg>Zonder StudyBrain</div><div class="compare-row"><span class="compare-mark"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg></span><div><strong>Alles lezen, niks onthouden</strong><span>Je leest 40 pagina's maar weet niet wat belangrijk is.</span></div></div><div class="compare-row"><span class="compare-mark"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg></span><div><strong>Tijd verspillen aan irrelevante stof</strong><span>Je leert dingen die nooit in de toets komen.</span></div></div><div class="compare-row"><span class="compare-mark"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg></span><div><strong>Geen structuur, wel stress</strong><span>De avond voor de toets weet je niet waar je moet beginnen.</span></div></div><div class="compare-row"><span class="compare-mark"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg></span><div><strong>Alles vergeten de volgende dag</strong><span>Zonder herhalingsschema verdwijnt de stof uit je hoofd.</span></div></div></div><div class="compare-card with reveal rd2"><div class="compare-label"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg>Met StudyBrain</div><div class="compare-row"><span class="compare-mark"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span><div><strong>Weet in 30 seconden wat telt</strong><span>Must Learn, Nice to Know en Skip — direct duidelijk.</span></div></div><div class="compare-row"><span class="compare-mark"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span><div><strong>Focus op wat in de toets komt</strong><span>StudyBrain herkent toetspatronen zoals een ervaren leraar.</span></div></div><div class="compare-row"><span class="compare-mark"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span><div><strong>Persoonlijk studieplan op maat</strong><span>Leerroute, ezelsbruggetjes en herhalingsschema in één overzicht.</span></div></div><div class="compare-row"><span class="compare-mark"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span><div><strong>Onthoud de stof echt</strong><span>Spaced repetition zorgt dat je het de dag erna nog weet.</span></div></div></div></div></div></section>
-<section id="features"><div class="container"><div class="centered"><div class="section-label">Waarom StudyBrain</div><h2 class="section-title reveal">Niet gewoon een samenvatting.<br>Een compleet studieplan.</h2></div><div class="feat-grid"><div class="feat-card reveal rd1"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div><h3>Must Learn prioritering</h3><p>Weet precies wat in de toets komt. AI analyseert herhaling, definities en structuur.</p></div><div class="feat-card reveal rd2"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div><h3>Echte uitleg</h3><p>Elk onderwerp krijgt uitleg in gewone taal met een voorbeeld uit het dagelijks leven.</p></div><div class="feat-card reveal rd3"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></div><h3>Ezelsbruggetjes</h3><p>Grappige trucjes zodat het blijft hangen, ook met maar 30 minuten studeren.</p></div><div class="feat-card reveal rd1"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></div><h3>Durft te skippen</h3><p>Eerlijk advies over wat je niet hoeft te leren. Geen tijd verspillen.</p></div><div class="feat-card reveal rd2"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div><h3>Oefentoets</h3><p>Maak een echte oefentoets met meerkeuzevragen en check je antwoorden.</p></div><div class="feat-card reveal rd3"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg></div><h3>Herhalingsschema</h3><p>Spaced repetition — bewezen de meest effectieve leertechniek die er bestaat.</p></div></div></div></section>
+
+<header class="header"><div class="header-inner">
+  <a href="/" class="logo"><div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>StudyBrain</a>
+  <nav class="nav-center"><a href="#how">Hoe het werkt</a><a href="#features">Functies</a><a href="#pricing">Abonnementen</a><a href="#faq">FAQ</a><a href="mailto:info@studybrain.nl">Contact</a></nav>
+  <div class="nav-right"><a href="login.html" class="btn btn-ghost">Inloggen</a><a href="login.html#signup" class="btn btn-primary">Gratis proberen</a></div>
+  <button class="mobile-toggle" onclick="document.getElementById('mob').classList.add('open')" aria-label="Menu"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+</div></header>
+
+<div class="mobile-menu" id="mob"><button class="mobile-close" onclick="this.parentElement.classList.remove('open')">&#x2715;</button><a href="#how" onclick="this.parentElement.classList.remove('open')">Hoe het werkt</a><a href="#features" onclick="this.parentElement.classList.remove('open')">Functies</a><a href="#pricing" onclick="this.parentElement.classList.remove('open')">Abonnementen</a><a href="#faq" onclick="this.parentElement.classList.remove('open')">FAQ</a><a href="mailto:info@studybrain.nl">Contact</a><a href="login.html" class="btn btn-ghost" style="margin-top:12px">Inloggen</a><a href="login.html#signup" class="btn btn-primary">Gratis proberen</a></div>
+
+<!-- HERO -->
+<section class="hero"><div class="hero-inner">
+  <div class="hero-content">
+    <div class="hero-tag"><span class="hero-tag-dot"></span> AI-gestuurd studieplan</div>
+    <h1>Stop met alles leren.<br><em>Leer wat telt.</em></h1>
+    <p class="hero-sub">Upload je lesstof. StudyBrain vertelt je in 30 seconden wat sowieso in de toets komt, wat handig is, en wat je veilig kunt skippen.</p>
+    <div class="hero-actions">
+      <a href="login.html#signup" class="btn btn-primary btn-lg">Probeer gratis</a>
+      <a href="#how" class="btn btn-outline">Hoe werkt het?</a>
+    </div>
+    <div class="hero-proof">
+      <span><span class="hero-proof-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 6l3 3 5-5"/></svg></span>Gratis te proberen</span>
+      <span><span class="hero-proof-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 6l3 3 5-5"/></svg></span>Geen creditcard</span>
+      <span><span class="hero-proof-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 6l3 3 5-5"/></svg></span>Direct resultaat</span>
+    </div>
+  </div>
+
+  <!-- ANIMATED DEMO -->
+  <div class="demo-wrapper">
+    <div class="demo-card">
+      <div class="demo-chrome">
+        <div class="demo-dots"><span></span><span></span><span></span></div>
+        <div class="demo-url-bar">studybrain.nl</div>
+      </div>
+      <div class="demo-body">
+        <!-- Scene 1: Upload -->
+        <div class="demo-scene active" id="scene1">
+          <div class="upload-zone" id="uploadZoneSim">
+            <div class="upload-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+            <div class="upload-text">Sleep je PDF hier naartoe<br>of <strong>klik om te uploaden</strong></div>
+          </div>
+          <div class="file-row" id="fileRow">
+            <span class="file-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+            <span class="file-name">biologie_h3_samenvatting.pdf</span>
+            <span class="file-size">2.4 MB</span>
+            <span class="file-check" id="fileCheck"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>
+          </div>
+        </div>
+
+        <!-- Scene 2: Analyzing -->
+        <div class="demo-scene" id="scene2">
+          <div class="analyze-spinner"></div>
+          <div class="analyze-text">Lesstof analyseren...</div>
+          <div class="analyze-steps">
+            <div class="analyze-step" id="astep0"><span class="step-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="2"/></svg></span> PDF tekst extraheren</div>
+            <div class="analyze-step" id="astep1"><span class="step-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="2"/></svg></span> Toetspatronen herkennen</div>
+            <div class="analyze-step" id="astep2"><span class="step-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="2"/></svg></span> Prioriteiten bepalen</div>
+            <div class="analyze-step" id="astep3"><span class="step-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="2"/></svg></span> Studieplan genereren</div>
+          </div>
+          <div class="analyze-bar"><div class="analyze-fill" id="analyzeFill"></div></div>
+        </div>
+
+        <!-- Scene 3: Results -->
+        <div class="demo-scene" id="scene3">
+          <div class="result-tabs">
+            <div class="result-tab active">Must Learn</div>
+            <div class="result-tab">Nice to Know</div>
+            <div class="result-tab">Skip</div>
+            <div class="result-tab">Cheatsheet</div>
+          </div>
+          <div class="result-item must" id="r0">
+            <div class="result-tag">Must Learn</div>
+            <div class="result-title">Celademhaling aeroob vs anaeroob</div>
+            <div class="result-desc">Aeroob levert 38 ATP, anaeroob slechts 2 ATP. Vergelijkingsvraag op de toets.</div>
+            <div class="result-hint">Ezelsbruggetje: AERoob = meer AER (meer energie)</div>
+          </div>
+          <div class="result-item nice" id="r1">
+            <div class="result-tag">Nice to Know</div>
+            <div class="result-title">Enzymen en denaturatie</div>
+            <div class="result-desc">Boven 40°C verliezen enzymen hun vorm. Nuttig als context.</div>
+          </div>
+          <div class="result-item skip" id="r2">
+            <div class="result-tag">Skip</div>
+            <div class="result-title">Namen van alle onderzoekers</div>
+            <div class="result-desc">Eenmalig genoemd, nooit getoetst.</div>
+          </div>
+          <div class="result-score" id="rScore">
+            <div class="result-score-label">Toetsgereedheid</div>
+            <div class="result-score-bar"><div class="result-score-fill"></div></div>
+            <div class="result-score-pct">82%</div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-progress">
+        <div class="demo-progress-dot active" id="pd0"></div>
+        <div class="demo-progress-dot" id="pd1"></div>
+        <div class="demo-progress-dot" id="pd2"></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- HOW -->
+<section id="how"><div class="container"><div class="centered"><div class="section-label">Zo simpel is het</div><h2 class="section-title reveal">Van PDF naar studieplan in 30 seconden</h2></div>
+<div class="how-grid">
+  <div class="how-card reveal rd1"><div class="how-num">01</div><div class="how-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><h3>Upload je PDF</h3><p>Sleep je samenvatting of syllabus erin. Meerdere bestanden tegelijk mag met Pro en Elite.</p></div>
+  <div class="how-card reveal rd2"><div class="how-num">02</div><div class="how-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><h3>Kies je beschikbare tijd</h3><p>30 minuten of een hele avond? Het studieplan past zich automatisch aan jouw deadline aan.</p></div>
+  <div class="how-card reveal rd3"><div class="how-num">03</div><div class="how-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><h3>Krijg je prioriteiten</h3><p>Must Learn, Nice to Know en Skip — met uitleg, ezelsbruggetjes en een persoonlijk studieplan.</p></div>
+</div></div></section>
+
+<!-- COMPARE -->
+<section id="compare"><div class="container"><div class="centered"><div class="section-label">Het verschil</div><h2 class="section-title reveal">Studeren zonder vs. met StudyBrain</h2></div>
+<div class="compare-grid">
+  <div class="compare-card without reveal rd1"><div class="compare-label"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg>Zonder StudyBrain</div><div class="compare-row"><span class="compare-mark"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg></span><div><strong>Alles lezen, niks onthouden</strong><span>Je leest 40 pagina's maar weet niet wat belangrijk is.</span></div></div><div class="compare-row"><span class="compare-mark"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg></span><div><strong>Tijd verspillen aan irrelevante stof</strong><span>Je leert dingen die nooit in de toets komen.</span></div></div><div class="compare-row"><span class="compare-mark"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg></span><div><strong>Geen structuur, wel stress</strong><span>De avond voor de toets weet je niet waar je moet beginnen.</span></div></div><div class="compare-row"><span class="compare-mark"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg></span><div><strong>Alles vergeten de volgende dag</strong><span>Zonder herhalingsschema verdwijnt de stof uit je hoofd.</span></div></div></div>
+  <div class="compare-card with reveal rd2"><div class="compare-label"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg>Met StudyBrain</div><div class="compare-row"><span class="compare-mark"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span><div><strong>Weet in 30 seconden wat telt</strong><span>Must Learn, Nice to Know en Skip — direct duidelijk.</span></div></div><div class="compare-row"><span class="compare-mark"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span><div><strong>Focus op wat in de toets komt</strong><span>StudyBrain herkent toetspatronen zoals een ervaren leraar.</span></div></div><div class="compare-row"><span class="compare-mark"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span><div><strong>Persoonlijk studieplan op maat</strong><span>Leerroute, ezelsbruggetjes en herhalingsschema in één overzicht.</span></div></div><div class="compare-row"><span class="compare-mark"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span><div><strong>Onthoud de stof echt</strong><span>Spaced repetition zorgt dat je het de dag erna nog weet.</span></div></div></div>
+</div></div></section>
+
+<!-- FEATURES -->
+<section id="features"><div class="container"><div class="centered"><div class="section-label">Waarom StudyBrain</div><h2 class="section-title reveal">Niet gewoon een samenvatting.<br>Een compleet studieplan.</h2></div>
+<div class="feat-grid">
+  <div class="feat-card reveal rd1"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div><h3>Must Learn prioritering</h3><p>Weet precies wat in de toets komt. AI analyseert herhaling, definities en structuur.</p></div>
+  <div class="feat-card reveal rd2"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div><h3>Echte uitleg</h3><p>Elk onderwerp krijgt uitleg in gewone taal met een voorbeeld uit het dagelijks leven.</p></div>
+  <div class="feat-card reveal rd3"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></div><h3>Ezelsbruggetjes</h3><p>Grappige trucjes zodat het blijft hangen, ook met maar 30 minuten studeren.</p></div>
+  <div class="feat-card reveal rd1"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></div><h3>Durft te skippen</h3><p>Eerlijk advies over wat je niet hoeft te leren. Geen tijd verspillen.</p></div>
+  <div class="feat-card reveal rd2"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div><h3>Oefentoets</h3><p>Maak een echte oefentoets met meerkeuzevragen en check je antwoorden.</p></div>
+  <div class="feat-card reveal rd3"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg></div><h3>Herhalingsschema</h3><p>Spaced repetition — bewezen de meest effectieve leertechniek die er bestaat.</p></div>
+</div></div></section>
+
+<!-- STATS -->
 <div class="container"><div class="stats-strip reveal"><div class="stat-cell"><div class="stat-val">50+</div><div class="stat-lbl">Studenten</div></div><div class="stat-cell"><div class="stat-val">4.8</div><div class="stat-lbl">Beoordeling</div></div><div class="stat-cell"><div class="stat-val">3x</div><div class="stat-lbl">Sneller studeren</div></div><div class="stat-cell"><div class="stat-val">30s</div><div class="stat-lbl">Analyse klaar</div></div></div></div>
-<section><div class="container"><div class="centered"><div class="section-label">Ervaringen</div><h2 class="section-title reveal">Wat studenten zeggen</h2></div><div class="test-grid"><div class="test-card reveal rd1"><div class="test-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="test-quote">"Ik had 2 uur voor mijn toets geschiedenis. StudyBrain gaf me precies wat ik moest weten. Een 7,5 gehaald."</p><div class="test-author"><div class="test-av">S</div><div><div class="test-name">Selin, 16</div><div class="test-meta">VWO 4 · Geschiedenis</div></div></div></div><div class="test-card reveal rd2"><div class="test-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="test-quote">"Eindelijk weet ik wat ik kan overslaan. Geen paniek meer de avond voor een toets."</p><div class="test-author"><div class="test-av">M</div><div><div class="test-name">Milan, 17</div><div class="test-meta">HAVO 5 · Economie</div></div></div></div><div class="test-card reveal rd3"><div class="test-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="test-quote">"De ezelsbruggetjes zijn geniaal. Ik onthou dingen nu veel makkelijker dan met gewoon lezen."</p><div class="test-author"><div class="test-av">J</div><div><div class="test-name">Jasmijn, 15</div><div class="test-meta">HAVO 3 · Biologie</div></div></div></div></div></div></section>
-<section id="pricing"><div class="container"><div class="centered"><div class="section-label">Abonnementen</div><h2 class="section-title reveal">Kies jouw plan</h2><p class="section-sub">Begin gratis met 1 analyse. Upgrade wanneer je wil.</p></div><p class="pricing-note">Eén uur bijles kost gemiddeld <strong>&euro;30</strong>. StudyBrain Pro kost <strong>&euro;14,99/maand</strong> — en is er altijd, voor elk vak.</p><div class="pricing-grid"><div class="price-card reveal rd1"><div class="price-name">Starter</div><div class="price-amt">&euro;12,99<span>/mnd</span></div><div class="price-desc">Toets morgen? Weet in 30 seconden wat je moet leren.</div><ul class="price-list"><li class="on"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>10 analyses per maand</li><li class="on"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Must / Nice to Know / Skip</li><li class="on"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Cheatsheet overzicht</li><li class="on"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>5 oefenvragen per analyse</li><li class="off"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg></span>Volledige uitleg + ezelsbruggetjes</li><li class="off"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg></span>Persoonlijk studieplan</li><li class="off"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg></span>Meerdere PDFs tegelijk</li></ul><div class="price-btn-wrap"><a href="https://buy.stripe.com/bJe5kv1RudhP9b36SA8IU02" class="price-btn-std">Begin met Starter</a></div></div><div class="price-card pop reveal rd2"><div class="price-tag">Meest gekozen</div><div class="price-name">Pro</div><div class="price-amt">&euro;14,99<span>/mnd</span></div><div class="price-desc">Analyse + studieplan. Volledig voorbereid op elke toets.</div><ul class="price-list"><li class="on"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span><strong>Onbeperkt</strong> analyses</li><li class="on"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Must / Nice to Know / Skip</li><li class="on"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Volledige uitleg + ezelsbruggetjes</li><li class="on"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>10 oefenvragen per analyse</li><li class="on"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Tot 3 PDFs tegelijk</li><li class="on"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Persoonlijk studieplan</li><li class="on"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Meerdere vakken combineren</li></ul><div class="price-btn-wrap"><a href="https://buy.stripe.com/6oUdR1cw891zfzrfp68IU01" class="price-btn-accent">Begin met Pro</a></div></div><div class="price-card reveal rd3"><div class="price-name">Elite</div><div class="price-amt">&euro;22,99<span>/mnd</span></div><div class="price-desc">Voor wie meerdere vakken tegelijk wil aanpakken.</div><ul class="price-list"><li class="on"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span><strong>Onbeperkt</strong> analyses</li><li class="on"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Volledige uitleg + ezelsbruggetjes</li><li class="on"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>20 oefenvragen per analyse</li><li class="on"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Tot 4 vakken combineren</li><li class="on"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Studieplan per vak</li><li class="on"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Gecombineerd weekoverzicht</li><li class="on"><span class="li-icon"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Prioriteit support</li></ul><div class="price-btn-wrap"><a href="https://buy.stripe.com/eVq6ozcw82Db1IBgta8IU00" class="price-btn-std">Begin met Elite</a></div></div></div><p class="pricing-footer">Veilig betalen met iDEAL · Maandelijks opzegbaar · Geen verborgen kosten</p></div></section>
-<section id="faq"><div class="container"><div class="centered"><div class="section-label">Veelgestelde vragen</div><h2 class="section-title reveal">Alles wat je wil weten</h2></div><div class="faq-list"><div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Werkt StudyBrain voor elk vak?<span class="faq-icon">+</span></button><div class="faq-a"><p>Ja. StudyBrain werkt voor alle vakken waarbij je een PDF hebt — van geschiedenis en biologie tot economie en recht.</p></div></div><div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Wat krijg ik met mijn gratis analyse?<span class="faq-icon">+</span></button><div class="faq-a"><p>Je krijgt 1 gratis analyse met Must Learn, Nice to Know en Skip overzicht. Volledige uitleg en ezelsbruggetjes zijn beschikbaar vanaf Starter.</p></div></div><div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Hoe groot mag mijn PDF zijn?<span class="faq-icon">+</span></button><div class="faq-a"><p>Je PDF mag maximaal 20MB zijn. Wij verwerken tot 15 pagina's per analyse voor de beste resultaten.</p></div></div><div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Hoe nauwkeurig is de analyse?<span class="faq-icon">+</span></button><div class="faq-a"><p>StudyBrain gebruikt AI die herhaling, vetgedrukte tekst, definities en structuur analyseert en toetspatronen herkent die docenten keer op keer gebruiken.</p></div></div><div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Kan ik mijn abonnement opzeggen?<span class="faq-icon">+</span></button><div class="faq-a"><p>Ja, maandelijks opzegbaar. Geen verborgen kosten of lange contracten. Je houdt toegang tot het einde van je betaalperiode.</p></div></div><div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is mijn lesstof veilig?<span class="faq-icon">+</span></button><div class="faq-a"><p>Je PDFs worden alleen gebruikt voor de analyse en worden niet opgeslagen of gedeeld. We verwerken de tekst, niet het bestand zelf.</p></div></div></div></div></section>
+
+<!-- TESTIMONIALS -->
+<section><div class="container"><div class="centered"><div class="section-label">Ervaringen</div><h2 class="section-title reveal">Wat studenten zeggen</h2></div>
+<div class="test-grid">
+  <div class="test-card reveal rd1"><div class="test-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="test-quote">"Ik had 2 uur voor mijn toets geschiedenis. StudyBrain gaf me precies wat ik moest weten. Een 7,5 gehaald."</p><div class="test-author"><div class="test-av">S</div><div><div class="test-name">Selin, 16</div><div class="test-meta">VWO 4 · Geschiedenis</div></div></div></div>
+  <div class="test-card reveal rd2"><div class="test-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="test-quote">"Eindelijk weet ik wat ik kan overslaan. Geen paniek meer de avond voor een toets."</p><div class="test-author"><div class="test-av">M</div><div><div class="test-name">Milan, 17</div><div class="test-meta">HAVO 5 · Economie</div></div></div></div>
+  <div class="test-card reveal rd3"><div class="test-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="test-quote">"De ezelsbruggetjes zijn geniaal. Ik onthou dingen nu veel makkelijker dan met gewoon lezen."</p><div class="test-author"><div class="test-av">J</div><div><div class="test-name">Jasmijn, 15</div><div class="test-meta">HAVO 3 · Biologie</div></div></div></div>
+</div></div></section>
+
+<!-- PRICING -->
+<section id="pricing"><div class="container"><div class="centered"><div class="section-label">Abonnementen</div><h2 class="section-title reveal">Kies jouw plan</h2><p class="section-sub">Begin gratis met 1 analyse. Upgrade wanneer je wil.</p></div>
+<p class="pricing-note">Eén uur bijles kost gemiddeld <strong>&euro;30</strong>. StudyBrain Pro kost <strong>&euro;14,99/maand</strong> — en is er altijd, voor elk vak.</p>
+<div class="pricing-grid">
+  <div class="price-card reveal rd1"><div class="price-name">Starter</div><div class="price-amt">&euro;12,99<span>/mnd</span></div><div class="price-desc">Toets morgen? Weet in 30 seconden wat je moet leren.</div><ul class="price-list"><li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>10 analyses per maand</li><li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Must / Nice to Know / Skip</li><li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Cheatsheet overzicht</li><li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>5 oefenvragen per analyse</li><li class="off"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg></span>Volledige uitleg + ezelsbruggetjes</li><li class="off"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg></span>Persoonlijk studieplan</li><li class="off"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg></span>Meerdere PDFs tegelijk</li></ul><div class="p-btn"><a href="https://buy.stripe.com/bJe5kv1RudhP9b36SA8IU02" class="p-btn-s">Begin met Starter</a></div></div>
+  <div class="price-card pop reveal rd2"><div class="price-tag">Meest gekozen</div><div class="price-name">Pro</div><div class="price-amt">&euro;14,99<span>/mnd</span></div><div class="price-desc">Analyse + studieplan. Volledig voorbereid op elke toets.</div><ul class="price-list"><li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span><strong>Onbeperkt</strong> analyses</li><li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Must / Nice to Know / Skip</li><li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Volledige uitleg + ezelsbruggetjes</li><li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>10 oefenvragen per analyse</li><li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Tot 3 PDFs tegelijk</li><li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Persoonlijk studieplan</li><li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Meerdere vakken combineren</li></ul><div class="p-btn"><a href="https://buy.stripe.com/6oUdR1cw891zfzrfp68IU01" class="p-btn-a">Begin met Pro</a></div></div>
+  <div class="price-card reveal rd3"><div class="price-name">Elite</div><div class="price-amt">&euro;22,99<span>/mnd</span></div><div class="price-desc">Voor wie meerdere vakken tegelijk wil aanpakken.</div><ul class="price-list"><li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span><strong>Onbeperkt</strong> analyses</li><li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Volledige uitleg + ezelsbruggetjes</li><li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>20 oefenvragen per analyse</li><li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Tot 4 vakken combineren</li><li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Studieplan per vak</li><li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Gecombineerd weekoverzicht</li><li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Prioriteit support</li></ul><div class="p-btn"><a href="https://buy.stripe.com/eVq6ozcw82Db1IBgta8IU00" class="p-btn-s">Begin met Elite</a></div></div>
+</div>
+<p class="pricing-footer">Veilig betalen met iDEAL · Maandelijks opzegbaar · Geen verborgen kosten</p>
+</div></section>
+
+<!-- FAQ -->
+<section id="faq"><div class="container"><div class="centered"><div class="section-label">Veelgestelde vragen</div><h2 class="section-title reveal">Alles wat je wil weten</h2></div>
+<div class="faq-list">
+  <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Werkt StudyBrain voor elk vak?<span class="faq-icon">+</span></button><div class="faq-a"><p>Ja. StudyBrain werkt voor alle vakken waarbij je een PDF hebt — van geschiedenis en biologie tot economie en recht.</p></div></div>
+  <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Wat krijg ik met mijn gratis analyse?<span class="faq-icon">+</span></button><div class="faq-a"><p>Je krijgt 1 gratis analyse met Must Learn, Nice to Know en Skip overzicht. Volledige uitleg en ezelsbruggetjes zijn beschikbaar vanaf Starter.</p></div></div>
+  <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Hoe groot mag mijn PDF zijn?<span class="faq-icon">+</span></button><div class="faq-a"><p>Je PDF mag maximaal 20MB zijn. Wij verwerken tot 15 pagina's per analyse voor de beste resultaten.</p></div></div>
+  <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Hoe nauwkeurig is de analyse?<span class="faq-icon">+</span></button><div class="faq-a"><p>StudyBrain gebruikt AI die herhaling, vetgedrukte tekst, definities en structuur analyseert en toetspatronen herkent die docenten keer op keer gebruiken.</p></div></div>
+  <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Kan ik mijn abonnement opzeggen?<span class="faq-icon">+</span></button><div class="faq-a"><p>Ja, maandelijks opzegbaar. Geen verborgen kosten of lange contracten.</p></div></div>
+  <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is mijn lesstof veilig?<span class="faq-icon">+</span></button><div class="faq-a"><p>Je PDFs worden alleen gebruikt voor de analyse en worden niet opgeslagen of gedeeld.</p></div></div>
+</div></div></section>
+
+<!-- CTA -->
 <section class="cta"><div class="container"><h2 class="section-title reveal">Klaar om slimmer te leren?</h2><p class="section-sub reveal">Maak gratis een account aan en doe je eerste analyse. Geen creditcard nodig.</p><a href="login.html#signup" class="btn btn-primary btn-lg reveal">Gratis starten</a></div></section>
+
+<!-- FOOTER -->
 <footer class="footer"><div class="container"><div class="footer-inner"><div class="footer-brand">StudyBrain</div><div class="footer-links"><a href="privacy.html">Privacy</a><a href="voorwaarden.html">Voorwaarden</a><a href="mailto:info@studybrain.nl">Contact</a></div><div class="footer-copy">&copy; 2026 StudyBrain</div></div></div></footer>
-<div class="cookie-bar" id="ck"><p>Wij gebruiken cookies om de site goed te laten werken. <a href="privacy.html">Meer info</a></p><button class="ck-btn ck-yes" onclick="document.getElementById('ck').style.display='none';localStorage.setItem('ck','1')">Accepteren</button><button class="ck-btn ck-no" onclick="document.getElementById('ck').style.display='none';localStorage.setItem('ck','0')">Weigeren</button></div>
-<script>if(!localStorage.getItem('ck'))document.getElementById('ck').classList.add('show');const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis')})},{threshold:.08,rootMargin:'0px 0px -30px 0px'});document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));</script>
+
+<!-- COOKIE -->
+<div class="cookie-bar" id="ck"><p>Wij gebruiken cookies om de site goed te laten werken. <a href="privacy.html">Meer info</a></p><button class="ck-btn ck-y" onclick="document.getElementById('ck').style.display='none';localStorage.setItem('ck','1')">Accepteren</button><button class="ck-btn ck-n" onclick="document.getElementById('ck').style.display='none';localStorage.setItem('ck','0')">Weigeren</button></div>
+
+<script>
+// Cookie
+if(!localStorage.getItem('ck')) document.getElementById('ck').classList.add('show');
+
+// Scroll reveal
+const obs = new IntersectionObserver(e => {
+  e.forEach(x => { if(x.isIntersecting) x.target.classList.add('vis'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// ── ANIMATED DEMO ──
+(function() {
+  const scenes = [document.getElementById('scene1'), document.getElementById('scene2'), document.getElementById('scene3')];
+  const dots = [document.getElementById('pd0'), document.getElementById('pd1'), document.getElementById('pd2')];
+  let current = 0;
+
+  function setScene(idx) {
+    scenes.forEach((s, i) => s.classList.toggle('active', i === idx));
+    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    current = idx;
+  }
+
+  function runDemo() {
+    // Scene 1: Upload
+    setScene(0);
+    const uploadZone = document.getElementById('uploadZoneSim');
+    const fileRow = document.getElementById('fileRow');
+    const fileCheck = document.getElementById('fileCheck');
+
+    uploadZone.classList.remove('drag');
+    fileRow.classList.remove('show');
+    fileCheck.classList.remove('show');
+
+    setTimeout(() => uploadZone.classList.add('drag'), 800);
+    setTimeout(() => {
+      uploadZone.classList.remove('drag');
+      fileRow.classList.add('show');
+    }, 1600);
+    setTimeout(() => fileCheck.classList.add('show'), 2200);
+
+    // Scene 2: Analyzing
+    setTimeout(() => {
+      setScene(1);
+      const fill = document.getElementById('analyzeFill');
+      fill.style.width = '0%';
+
+      const steps = [
+        document.getElementById('astep0'),
+        document.getElementById('astep1'),
+        document.getElementById('astep2'),
+        document.getElementById('astep3')
+      ];
+      steps.forEach(s => { s.classList.remove('show', 'done'); });
+
+      setTimeout(() => { steps[0].classList.add('show'); fill.style.width = '15%'; }, 300);
+      setTimeout(() => { steps[0].classList.add('done'); steps[1].classList.add('show'); fill.style.width = '40%'; }, 900);
+      setTimeout(() => { steps[1].classList.add('done'); steps[2].classList.add('show'); fill.style.width = '65%'; }, 1500);
+      setTimeout(() => { steps[2].classList.add('done'); steps[3].classList.add('show'); fill.style.width = '90%'; }, 2100);
+      setTimeout(() => { steps[3].classList.add('done'); fill.style.width = '100%'; }, 2700);
+    }, 3200);
+
+    // Scene 3: Results
+    setTimeout(() => {
+      setScene(2);
+      const items = [document.getElementById('r0'), document.getElementById('r1'), document.getElementById('r2')];
+      const score = document.getElementById('rScore');
+
+      items.forEach(i => i.classList.remove('show'));
+      score.classList.remove('show');
+
+      setTimeout(() => items[0].classList.add('show'), 200);
+      setTimeout(() => items[1].classList.add('show'), 500);
+      setTimeout(() => items[2].classList.add('show'), 800);
+      setTimeout(() => score.classList.add('show'), 1100);
+    }, 6500);
+
+    // Restart loop
+    setTimeout(runDemo, 12000);
+  }
+
+  // Start when hero is visible
+  const heroObs = new IntersectionObserver(entries => {
+    if(entries[0].isIntersecting) { runDemo(); heroObs.disconnect(); }
+  }, { threshold: 0.3 });
+  heroObs.observe(document.querySelector('.hero'));
+})();
+</script>
 </body>
 </html>
