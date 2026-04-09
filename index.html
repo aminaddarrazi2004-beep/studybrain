@@ -1,723 +1,1021 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>StudyBrain — Leer slimmer, niet harder</title>
-<meta name="description" content="Upload je lesstof. StudyBrain analyseert wat sowieso in de toets komt, wat handig is, en wat je veilig kunt overslaan.">
-<link rel="canonical" href="https://studybrain.app/">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://studybrain.app/">
-<meta property="og:title" content="StudyBrain — Leer slimmer, niet harder">
-<meta property="og:description" content="Upload je lesstof. Weet in 30 seconden wat je MOET leren voor je toets.">
-<meta property="og:image" content="https://studybrain.app/og-image.png">
-<meta property="og:locale" content="nl_NL">
-<meta property="og:site_name" content="StudyBrain">
-<meta name="robots" content="index, follow">
-<meta name="theme-color" content="#ff4d6d">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="sb-design.css">
-<link rel="stylesheet" href="landing.css">
-<style>
-* { font-synthesis: none; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyBrain — Leer slimmer, niet harder</title>
+  <meta name="description" content="Upload je lesstof. StudyBrain analyseert wat sowieso in de toets komt, wat handig is, en wat je veilig kunt overslaan.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #05050f;
+      --bg-card: #0c0c1d;
+      --bg-card-hover: #10102a;
+      --bg-elevated: #141428;
+      --surface: #1a1a35;
+      --border: rgba(255,255,255,0.06);
+      --border-hover: rgba(255,255,255,0.12);
+      --text: #f0f0f5;
+      --text-secondary: #8888a8;
+      --text-muted: #5a5a78;
+      --accent: #ff4d6d;
+      --accent-glow: rgba(255,77,109,0.25);
+      --accent-soft: rgba(255,77,109,0.08);
+      --green: #00c853;
+      --green-soft: rgba(0,200,83,0.1);
+      --amber: #ffc107;
+      --amber-soft: rgba(255,193,7,0.1);
+      --blue: #5c7cfa;
+      --blue-soft: rgba(92,124,250,0.1);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --radius-xs: 6px;
+      --font: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      --max-w: 1200px;
+      --header-h: 72px;
+    }
 
-.plan-price { font-family: 'DM Sans', sans-serif; font-size: 38px; font-weight: 700; line-height: 1; margin-bottom: 8px; letter-spacing: -1px; }
-.plan-price .euro { font-size: 22px; font-weight: 500; vertical-align: super; margin-right: 1px; }
-.plan-price .cents { font-size: 18px; font-weight: 400; color: var(--muted); }
-.plan-price .per { font-size: 13px; font-weight: 400; color: var(--muted); margin-left: 2px; letter-spacing: 0; }
-.pricing-compare { text-align: center; background: rgba(255,77,109,0.07); border: 1px solid rgba(255,77,109,0.2); border-radius: 14px; padding: 14px 24px; font-size: 14px; color: var(--muted); margin-bottom: 36px; max-width: 560px; margin-left: auto; margin-right: auto; }
-.pricing-compare strong { color: var(--text); }
-.nav-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; margin-right: auto; }
-.nav-logo-text { font-family: 'DM Sans', Arial, sans-serif; font-size: 18px; font-weight: 700; color: var(--text); white-space: nowrap; }
-.footer-logo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; }
-.footer-logo-text { font-family: 'DM Sans', Arial, sans-serif; font-size: 20px; font-weight: 700; color: var(--text); }
-.login-toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: rgba(0,230,118,0.12); border: 1px solid rgba(0,230,118,0.3); color: #00e676; padding: 14px 24px; border-radius: 14px; font-size: 14px; font-weight: 600; z-index: 9999; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s; opacity: 0; pointer-events: none; white-space: nowrap; }
-.login-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* ── SIDEBAR ── */
-.sidebar { position: fixed; top: 0; left: 0; height: 100vh; width: 240px; background: rgba(10,10,15,0.97); border-right: 1px solid rgba(255,255,255,0.07); backdrop-filter: blur(20px); z-index: 1095; display: flex; flex-direction: column; padding: 0; transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); }
-.sidebar.open { transform: translateX(0); }
-.sidebar-logo { display: none; }
-.sidebar-close { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 20px; padding: 4px; line-height: 1; transition: color 0.2s; }
-.sidebar-close:hover { color: var(--text); }
-.sidebar-nav { padding: 16px 12px; flex: 1; display: flex; flex-direction: column; gap: 4px; }
-.sidebar-link { display: flex; align-items: center; gap: 10px; padding: 11px 12px; border-radius: 10px; text-decoration: none; color: var(--muted); font-size: 14px; transition: all 0.18s; border: none; background: none; cursor: pointer; width: 100%; text-align: left; font-family: 'DM Sans', sans-serif; }
-.sidebar-link:hover { background: rgba(255,255,255,0.05); color: var(--text); }
-.sidebar-link .icon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
-.sidebar-divider { height: 1px; background: rgba(255,255,255,0.07); margin: 8px 12px; }
-.sidebar-footer { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,0.07); }
-.sidebar-plan-badge { display: inline-block; padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: rgba(255,77,109,0.15); color: var(--accent); border: 1px solid rgba(255,77,109,0.3); margin-bottom: 10px; }
-.sidebar-toggle { position: fixed; top: 14px; left: 16px; z-index: 1100; background: rgba(10,10,15,0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: var(--text); cursor: pointer; padding: 8px 10px; font-size: 18px; line-height: 1; backdrop-filter: blur(10px); transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
-.sidebar-toggle:hover { border-color: rgba(255,77,109,0.5); color: var(--accent); }
-.sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1090; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-.sidebar-overlay.visible { opacity: 1; pointer-events: all; }
-.nav-inner { padding-left: 52px; }
-.step-num { font-family: 'Arial Black', 'Impact', Arial, sans-serif !important; font-style: normal !important; font-stretch: normal !important; }
-h1, h2, h3, .step h3, .plan-name, .feat-card h3 { font-family: 'DM Sans', Arial, sans-serif !important; font-stretch: normal !important; font-style: normal !important; }
-.feat-card h3 { font-size: 17px !important; font-weight: 800 !important; color: #f0f0f8 !important; margin-top: 4px !important; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
 
-/* ── Feature tags ── */
-.feat-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 6px; margin-bottom: 12px; }
-.feat-tag-must { background: rgba(0,230,118,0.12); color: #00e676; border: 1px solid rgba(0,230,118,0.2); }
-.feat-tag-blue { background: rgba(99,102,241,0.12); color: #818cf8; border: 1px solid rgba(99,102,241,0.2); }
-.feat-tag-yellow { background: rgba(255,214,0,0.1); color: #ffd600; border: 1px solid rgba(255,214,0,0.2); }
-.feat-tag-red { background: rgba(255,77,109,0.1); color: #ff4d6d; border: 1px solid rgba(255,77,109,0.2); }
-.feat-tag-orange { background: rgba(255,152,0,0.1); color: #ff9800; border: 1px solid rgba(255,152,0,0.2); }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
 
-/* ── 3D Mockup ── */
-.hero-mockup { perspective: 1200px; cursor: default; }
-.mockup-3d-inner { transform: rotateY(-12deg) rotateX(6deg) scale(1); transform-style: preserve-3d; transition: transform 0.08s linear, box-shadow 0.08s linear; box-shadow: 20px 20px 50px rgba(0,0,0,0.6), -4px -4px 20px rgba(255,77,109,0.06), 0 0 0 1px rgba(255,255,255,0.04); will-change: transform; border-radius: 16px; }
+    /* ── GLOBAL ── */
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
 
-/* ── FAQ ── */
-.faq-section { background: var(--bg); }
-.faq-section .label, .faq-section h2 { display: block; text-align: center; }
-.faq-section h2 { margin-bottom: 40px; }
-.faq-list { max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
-.faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: border-color 0.2s; }
-.faq-item:hover { border-color: rgba(255,77,109,0.3); }
-.faq-q { width: 100%; background: none; border: none; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; padding: 18px 20px; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-.faq-arrow { color: var(--muted); font-size: 12px; flex-shrink: 0; transition: transform 0.3s; }
-.faq-item.open .faq-arrow { transform: rotate(180deg); color: var(--accent); }
-.faq-a { font-size: 14px; color: var(--muted); line-height: 1.7; padding: 0 20px 18px; display: none; }
-.faq-item.open .faq-a { display: block; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--accent); background: var(--accent-soft);
+      padding: 6px 14px; border-radius: 100px;
+      border: 1px solid rgba(255,77,109,0.15);
+    }
+    .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse-dot 2s infinite; }
+    @keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-/* ── BEFORE/AFTER ── */
-.before-after { background: var(--bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-.ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 48px; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); }
-.ba-col { padding: 32px; }
-.ba-col.before { background: rgba(255,77,109,0.04); }
-.ba-col.after { background: rgba(0,230,118,0.04); }
-.ba-header { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
-.ba-pill { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 14px; border-radius: 100px; }
-.ba-pill.before { background: rgba(255,77,109,0.12); color: #ff4d6d; border: 1px solid rgba(255,77,109,0.2); }
-.ba-pill.after { background: rgba(0,230,118,0.12); color: #00e676; border: 1px solid rgba(0,230,118,0.2); }
-.ba-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
-.ba-icon { width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
-.ba-col.before .ba-icon { background: rgba(255,77,109,0.12); color: #ff4d6d; }
-.ba-col.after .ba-icon { background: rgba(0,230,118,0.12); color: #00e676; }
-.ba-item-text { font-size: 14px; color: var(--muted); line-height: 1.5; }
-.ba-item-text strong { color: var(--text); display: block; margin-bottom: 2px; font-size: 14px; }
+    .section-label {
+      font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 12px;
+    }
 
-/* ── SOCIAL PROOF ── */
-.social-proof-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-.sp-stats { display: flex; justify-content: center; gap: 0; margin-bottom: 48px; flex-wrap: wrap; }
-.sp-stat { text-align: center; padding: 0 48px; border-right: 1px solid var(--border); }
-.sp-stat:last-child { border-right: none; }
-.sp-stat-num { font-size: 40px; font-weight: 800; color: var(--text); letter-spacing: -1.5px; line-height: 1; margin-bottom: 6px; }
-.sp-stat-num span { color: var(--accent); }
-.sp-stat-label { font-size: 13px; color: var(--muted); }
-.sp-reviews { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.sp-review { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 16px; padding: 22px; transition: border-color 0.2s; }
-.sp-review:hover { border-color: rgba(255,77,109,0.2); }
-.sp-stars { color: #f59e0b; font-size: 12px; margin-bottom: 12px; letter-spacing: 2px; }
-.sp-text { font-size: 14px; color: var(--text); line-height: 1.65; margin-bottom: 16px; font-style: italic; }
-.sp-text::before { content: '"'; }
-.sp-text::after { content: '"'; }
-.sp-author { display: flex; align-items: center; gap: 10px; }
-.sp-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: white; flex-shrink: 0; }
-.sp-name { font-size: 13px; font-weight: 600; color: var(--text); }
-.sp-meta { font-size: 11px; color: var(--muted); }
+    .section-title {
+      font-size: clamp(28px, 4.5vw, 44px); font-weight: 800; line-height: 1.15;
+      letter-spacing: -0.02em; margin-bottom: 16px;
+    }
 
-/* ── HOE HET WERKT ANIMATIE ── */
-.how-animated { background: var(--surface); }
-.how-steps-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-top: 48px; }
-.how-steps-list { display: flex; flex-direction: column; gap: 8px; }
-.how-step-item { display: flex; gap: 16px; padding: 18px; border-radius: 14px; cursor: pointer; transition: all 0.2s; border: 1px solid transparent; }
-.how-step-item:hover, .how-step-item.active { background: rgba(255,77,109,0.06); border-color: rgba(255,77,109,0.15); }
-.how-step-item.active .how-step-num { background: var(--accent); color: white; }
-.how-step-num { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--muted); flex-shrink: 0; transition: all 0.2s; }
-.how-step-content h3 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-.how-step-content p { font-size: 13px; color: var(--muted); line-height: 1.5; }
-.how-preview { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 24px; min-height: 320px; position: relative; overflow: hidden; }
-.how-preview-pane { display: none; animation: fadeUp 0.3s ease both; }
-.how-preview-pane.visible { display: block; }
-@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-.prev-upload { text-align: center; padding: 40px 20px; border: 2px dashed rgba(255,255,255,0.1); border-radius: 14px; }
-.prev-upload-icon { width: 48px; height: 48px; background: rgba(255,77,109,0.1); border-radius: 12px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; }
-.prev-upload-icon svg { width: 24px; height: 24px; color: var(--accent); }
-.prev-upload h4 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
-.prev-upload p { font-size: 13px; color: var(--muted); }
-.prev-file { display: flex; align-items: center; gap: 12px; background: rgba(255,77,109,0.08); border: 1px solid rgba(255,77,109,0.2); border-radius: 10px; padding: 12px 16px; margin-top: 16px; }
-.prev-file-name { font-size: 13px; font-weight: 600; color: var(--accent); }
-.prev-file-size { font-size: 12px; color: var(--muted); }
-.prev-time-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; margin-top: 8px; }
-.prev-time-btn { padding: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; font-size: 13px; color: var(--muted); text-align: center; }
-.prev-time-btn.sel { background: rgba(255,77,109,0.12); border-color: rgba(255,77,109,0.3); color: var(--accent); font-weight: 600; }
-.prev-result { display: flex; flex-direction: column; gap: 8px; }
-.prev-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
-.prev-badge.must { background: rgba(0,230,118,0.12); color: #00e676; }
-.prev-badge.skip { background: rgba(255,77,109,0.1); color: #ff4d6d; }
-.prev-result-item { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 10px 12px; font-size: 13px; }
-.prev-result-item strong { display: block; margin-bottom: 2px; font-size: 13px; }
-.prev-result-item span { color: var(--muted); font-size: 12px; }
-.how-progress { display: flex; gap: 6px; margin-top: 16px; }
-.how-progress-dot { height: 3px; border-radius: 3px; background: rgba(255,255,255,0.1); flex: 1; transition: background 0.3s; }
-.how-progress-dot.active { background: var(--accent); }
+    .section-subtitle {
+      font-size: 17px; color: var(--text-secondary); max-width: 560px; line-height: 1.65;
+    }
 
-@media (max-width: 900px) {
-  .how-steps-wrap { grid-template-columns: 1fr; }
-  .how-preview { display: none; }
-  .ba-grid { grid-template-columns: 1fr; }
-  .sp-reviews { grid-template-columns: 1fr; }
-  .sp-stat { padding: 16px 24px; border-right: none; border-bottom: 1px solid var(--border); }
-  .sp-stat:last-child { border-bottom: none; }
-}
-@media (max-width: 600px) {
-  .nav-inner { padding-left: 48px; }
-  .nav-logo-text { font-size: 14px; }
-  .btn-ghost { padding: 5px 8px; font-size: 11px; border-radius: 8px; }
-  .btn-nav { padding: 5px 8px; font-size: 11px; border-radius: 8px; }
-  .nav-actions { gap: 4px; }
-  .sidebar { width: 80vw; max-width: 280px; }
-  .sidebar-toggle { top: 10px; left: 10px; padding: 7px 9px; font-size: 17px; }
-  .sp-stat-num { font-size: 28px; }
-}
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px; border-radius: var(--radius-sm); font-size: 15px; font-weight: 700;
+      font-family: var(--font); cursor: pointer; border: none;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-primary {
+      background: var(--accent); color: #fff;
+      box-shadow: 0 4px 24px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.15);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px var(--accent-glow); }
+    .btn-secondary {
+      background: transparent; color: var(--text-secondary); border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { border-color: var(--border-hover); color: var(--text); }
 
-/* ── NOVA PILL NAV ── */
-.nav-pill-wrap { position: fixed; top: 20px; left: 0; right: 0; z-index: 999; display: flex; justify-content: center; padding: 0 20px; }
-.nav-pill {
-  display: flex; align-items: center; gap: 0;
-  background: rgba(5,5,15,0.7);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 100px;
-  padding: 8px 8px 8px 24px;
-  width: 100%; max-width: 920px;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.03) inset;
-  transition: all 0.3s;
-}
-.nav-pill.scrolled { background: rgba(3,3,12,0.95); box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 30px rgba(255,77,109,0.05); }
-.nav-pill-logo { font-size: 18px; font-weight: 800; color: var(--text); text-decoration: none; margin-right: auto; letter-spacing: -0.3px; font-family: 'DM Sans', sans-serif; }
-.nav-pill-logo span { color: var(--accent); }
-.nav-pill-links { display: flex; gap: 2px; margin: 0 12px; }
-.nav-pill-links a { padding: 8px 14px; border-radius: 100px; font-size: 12px; font-weight: 600; color: var(--muted); text-decoration: none; letter-spacing: 0.05em; text-transform: uppercase; transition: all 0.2s; white-space: nowrap; font-family: 'DM Sans', sans-serif; }
-.nav-pill-links a:hover { color: var(--text); background: rgba(255,255,255,0.06); }
-.nav-pill-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-.nav-pill-ghost { padding: 10px 16px; border-radius: 100px; font-size: 13px; font-weight: 600; color: var(--muted); text-decoration: none; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
-.nav-pill-ghost:hover { color: var(--text); }
-.nav-pill-cta { display: inline-flex; align-items: center; padding: 10px 22px; border-radius: 100px; background: var(--accent); color: white; font-size: 13px; font-weight: 700; text-decoration: none; transition: all 0.25s; font-family: 'DM Sans', sans-serif; box-shadow: 0 0 20px rgba(255,77,109,0.3); white-space: nowrap; }
-.nav-pill-cta:hover { transform: scale(1.04); box-shadow: 0 0 32px rgba(255,77,109,0.45); }
-</style>
+    section { padding: 100px 0; position: relative; }
+
+    /* ── GRAIN OVERLAY ── */
+    body::after {
+      content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      background-repeat: repeat; opacity: 0.4;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--header-h); display: flex; align-items: center;
+      background: rgba(5,5,15,0.8); backdrop-filter: blur(20px) saturate(1.5);
+      border-bottom: 1px solid var(--border);
+      transition: all 0.3s;
+    }
+    .header-inner {
+      max-width: var(--max-w); margin: 0 auto; padding: 0 24px;
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo {
+      font-size: 20px; font-weight: 800; letter-spacing: -0.02em;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .logo-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), #ff8fa3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 800; color: #fff;
+    }
+    .nav { display: flex; align-items: center; gap: 32px; }
+    .nav a { font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: color 0.2s; }
+    .nav a:hover { color: var(--text); }
+    .nav-cta {
+      display: flex; gap: 8px; align-items: center;
+    }
+    .nav-cta .btn { padding: 10px 20px; font-size: 13px; }
+
+    /* Mobile menu */
+    .mobile-toggle { display: none; background: none; border: none; color: var(--text); cursor: pointer; padding: 8px; }
+    .mobile-menu {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(5,5,15,0.97); backdrop-filter: blur(24px);
+      flex-direction: column; align-items: center; justify-content: center; gap: 24px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { font-size: 20px; font-weight: 600; color: var(--text); }
+    .mobile-close { position: absolute; top: 20px; right: 24px; background: none; border: none; color: var(--text); font-size: 28px; cursor: pointer; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center;
+      padding-top: var(--header-h); position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 0%, rgba(255,77,109,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 80% 20%, rgba(92,124,250,0.06) 0%, transparent 60%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0; z-index: 0; opacity: 0.03;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-inner {
+      position: relative; z-index: 1;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+      width: 100%; max-width: var(--max-w); margin: 0 auto; padding: 0 24px;
+    }
+    .hero-content { max-width: 560px; }
+    .hero h1 {
+      font-size: clamp(36px, 5.5vw, 56px); font-weight: 800; line-height: 1.08;
+      letter-spacing: -0.03em; margin: 20px 0 20px;
+    }
+    .hero h1 .highlight {
+      background: linear-gradient(135deg, var(--accent), #ff8fa3);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 18px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 36px;
+      max-width: 460px;
+    }
+    .hero-buttons { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+    .hero-proof {
+      display: flex; align-items: center; gap: 16px;
+      font-size: 13px; color: var(--text-muted);
+    }
+    .hero-proof span { display: flex; align-items: center; gap: 4px; }
+    .hero-proof span::before { content: '✓'; color: var(--green); font-size: 11px; }
+
+    /* Hero demo card */
+    .hero-demo {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px; overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.03);
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .demo-topbar {
+      display: flex; align-items: center; gap: 8px;
+      padding: 14px 20px;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+    }
+    .demo-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .demo-dot:nth-child(1) { background: #ff5f57; }
+    .demo-dot:nth-child(2) { background: #ffbd2e; }
+    .demo-dot:nth-child(3) { background: #27c93f; }
+    .demo-url {
+      flex: 1; text-align: center;
+      font-size: 11px; font-family: var(--mono); color: var(--text-muted);
+    }
+    .demo-body { padding: 24px; }
+    .demo-item {
+      padding: 16px; border-radius: var(--radius-sm); margin-bottom: 10px;
+      border-left: 3px solid; position: relative;
+    }
+    .demo-item.must { border-color: var(--accent); background: var(--accent-soft); }
+    .demo-item.nice { border-color: var(--amber); background: var(--amber-soft); }
+    .demo-item.skip { border-color: var(--text-muted); background: rgba(255,255,255,0.02); }
+    .demo-tag {
+      font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .demo-item.must .demo-tag { color: var(--accent); }
+    .demo-item.nice .demo-tag { color: var(--amber); }
+    .demo-item.skip .demo-tag { color: var(--text-muted); }
+    .demo-topic { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .demo-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+    .demo-ezel {
+      font-size: 11px; color: var(--green); font-style: italic; margin-top: 6px;
+      font-family: var(--mono);
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how { background: var(--bg); }
+    .how-header { text-align: center; margin-bottom: 64px; }
+    .how-header .section-subtitle { margin: 0 auto; }
+    .how-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    }
+    .how-step {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 36px 28px;
+      position: relative; transition: all 0.3s;
+    }
+    .how-step:hover { border-color: var(--border-hover); transform: translateY(-4px); }
+    .how-num {
+      font-size: 48px; font-weight: 800; color: rgba(255,77,109,0.1);
+      position: absolute; top: 20px; right: 24px; line-height: 1;
+      font-family: var(--mono);
+    }
+    .how-icon {
+      width: 48px; height: 48px; border-radius: 12px; margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+    .how-step:nth-child(1) .how-icon { background: var(--accent-soft); }
+    .how-step:nth-child(2) .how-icon { background: var(--blue-soft); }
+    .how-step:nth-child(3) .how-icon { background: var(--green-soft); }
+    .how-step h3 {
+      font-size: 18px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.01em;
+    }
+    .how-step p {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.65;
+    }
+
+    /* ── INTERACTIVE DEMO ── */
+    .demo-section { background: var(--bg-card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .demo-section-inner {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+    }
+    .demo-left {}
+    .demo-right {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .demo-upload-sim {
+      padding: 32px; text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .upload-zone-sim {
+      border: 2px dashed var(--border-hover);
+      border-radius: var(--radius-sm); padding: 32px;
+      transition: all 0.3s;
+    }
+    .upload-zone-sim:hover { border-color: var(--accent); background: var(--accent-soft); }
+    .upload-icon-sim { font-size: 32px; margin-bottom: 8px; opacity: 0.5; }
+    .upload-text-sim { font-size: 13px; color: var(--text-muted); }
+    .file-sim {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--bg-elevated); border-radius: var(--radius-xs);
+      padding: 10px 14px; margin-top: 16px;
+    }
+    .file-sim-icon { font-size: 16px; }
+    .file-sim-name { font-size: 12px; font-family: var(--mono); flex: 1; }
+    .file-sim-size { font-size: 11px; color: var(--text-muted); }
+    .file-sim-check { color: var(--green); font-size: 14px; }
+
+    .time-btns-sim {
+      display: flex; gap: 8px; padding: 20px 32px;
+      border-bottom: 1px solid var(--border); flex-wrap: wrap;
+    }
+    .time-btn-sim {
+      padding: 8px 16px; border-radius: 100px; font-size: 12px; font-weight: 600;
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      color: var(--text-secondary); cursor: default; transition: all 0.2s;
+    }
+    .time-btn-sim.active {
+      background: var(--accent-soft); border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .result-sim { padding: 24px 32px; }
+    .result-sim-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 12px;
+    }
+    .result-sim-item {
+      padding: 12px 14px; border-radius: var(--radius-xs);
+      margin-bottom: 8px; border-left: 3px solid;
+    }
+    .result-sim-item.must { border-color: var(--accent); background: var(--accent-soft); }
+    .result-sim-item.skip { border-color: var(--text-muted); background: rgba(255,255,255,0.02); }
+    .result-sim-topic { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+    .result-sim-desc { font-size: 11px; color: var(--text-secondary); }
+    .result-sim-ezel { font-size: 11px; color: var(--green); font-family: var(--mono); margin-top: 4px; }
+
+    /* ── COMPARISON ── */
+    .compare { background: var(--bg); }
+    .compare-header { text-align: center; margin-bottom: 64px; }
+    .compare-header .section-subtitle { margin: 0 auto; }
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .compare-card {
+      border-radius: var(--radius); padding: 36px; border: 1px solid var(--border);
+    }
+    .compare-card.without { background: rgba(255,255,255,0.01); }
+    .compare-card.with {
+      background: linear-gradient(135deg, var(--accent-soft), rgba(92,124,250,0.04));
+      border-color: rgba(255,77,109,0.2);
+    }
+    .compare-card-title {
+      font-size: 14px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+      margin-bottom: 24px; display: flex; align-items: center; gap: 8px;
+    }
+    .compare-card.without .compare-card-title { color: var(--text-muted); }
+    .compare-card.with .compare-card-title { color: var(--accent); }
+    .compare-item {
+      display: flex; gap: 12px; margin-bottom: 18px; font-size: 14px; line-height: 1.55;
+    }
+    .compare-icon { font-size: 14px; flex-shrink: 0; margin-top: 3px; }
+    .compare-card.without .compare-icon { color: var(--text-muted); }
+    .compare-card.with .compare-icon { color: var(--green); }
+    .compare-item strong { display: block; margin-bottom: 2px; }
+    .compare-item span { color: var(--text-secondary); font-size: 13px; }
+
+    /* ── FEATURES ── */
+    .features { background: var(--bg); }
+    .features-header { text-align: center; margin-bottom: 64px; }
+    .features-header .section-subtitle { margin: 0 auto; }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+    }
+    .feature-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px 24px;
+      transition: all 0.3s; position: relative; overflow: hidden;
+    }
+    .feature-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+    .feature-card::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .feature-card:hover::after { opacity: 1; }
+    .feature-emoji { font-size: 28px; margin-bottom: 14px; }
+    .feature-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .feature-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* ── STATS ── */
+    .stats-bar {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+      background: var(--border); border-radius: var(--radius); overflow: hidden;
+      margin: 80px 0;
+    }
+    .stat {
+      background: var(--bg-card); padding: 32px; text-align: center;
+    }
+    .stat-num { font-size: 36px; font-weight: 800; color: var(--accent); margin-bottom: 4px; }
+    .stat-label { font-size: 13px; color: var(--text-secondary); }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials { background: var(--bg); }
+    .testimonials-header { text-align: center; margin-bottom: 48px; }
+    .test-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .test-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px;
+    }
+    .test-stars { color: var(--amber); font-size: 14px; letter-spacing: 2px; margin-bottom: 14px; }
+    .test-text { font-size: 14px; line-height: 1.65; color: var(--text-secondary); margin-bottom: 18px; font-style: italic; }
+    .test-author { display: flex; align-items: center; gap: 12px; }
+    .test-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--blue));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 700; color: #fff;
+    }
+    .test-name { font-size: 14px; font-weight: 700; }
+    .test-info { font-size: 12px; color: var(--text-muted); }
+
+    /* ── PRICING ── */
+    .pricing { background: var(--bg); }
+    .pricing-header { text-align: center; margin-bottom: 16px; }
+    .pricing-header .section-subtitle { margin: 0 auto; }
+    .pricing-context {
+      text-align: center; font-size: 14px; color: var(--text-secondary);
+      margin-bottom: 48px;
+    }
+    .pricing-context strong { color: var(--text); }
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+      align-items: start;
+    }
+    .price-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 36px 28px;
+      position: relative; transition: all 0.3s;
+    }
+    .price-card:hover { transform: translateY(-4px); }
+    .price-card.featured {
+      border-color: var(--accent);
+      box-shadow: 0 0 60px var(--accent-glow);
+      transform: scale(1.03);
+    }
+    .price-card.featured:hover { transform: scale(1.03) translateY(-4px); }
+    .price-badge {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      background: var(--accent); color: #fff;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 4px 16px; border-radius: 100px;
+    }
+    .price-name { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .price-amount {
+      font-size: 40px; font-weight: 800; letter-spacing: -0.03em;
+      margin-bottom: 4px;
+    }
+    .price-amount span { font-size: 16px; font-weight: 500; color: var(--text-secondary); }
+    .price-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+    .price-features { list-style: none; margin-bottom: 28px; }
+    .price-features li {
+      font-size: 13px; padding: 6px 0; display: flex; align-items: flex-start; gap: 10px;
+      color: var(--text-secondary);
+    }
+    .price-features li::before { content: '✓'; color: var(--green); font-weight: 700; font-size: 12px; flex-shrink: 0; margin-top: 2px; }
+    .price-features li.disabled { opacity: 0.35; }
+    .price-features li.disabled::before { content: '—'; color: var(--text-muted); }
+    .price-btn {
+      display: block; width: 100%; text-align: center;
+      padding: 14px; border-radius: var(--radius-sm);
+      font-size: 14px; font-weight: 700; font-family: var(--font);
+      cursor: pointer; border: none; transition: all 0.25s;
+    }
+    .price-btn-default {
+      background: var(--bg-elevated); color: var(--text); border: 1px solid var(--border);
+    }
+    .price-btn-default:hover { border-color: var(--accent); color: var(--accent); }
+    .price-btn-primary {
+      background: var(--accent); color: #fff;
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+    .price-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 28px var(--accent-glow); }
+    .pricing-footer { text-align: center; margin-top: 20px; font-size: 13px; color: var(--text-muted); }
+
+    /* ── FAQ ── */
+    .faq { background: var(--bg); }
+    .faq-header { text-align: center; margin-bottom: 48px; }
+    .faq-list { max-width: 720px; margin: 0 auto; }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .faq-q {
+      width: 100%; background: none; border: none; color: var(--text);
+      padding: 20px 0; font-size: 15px; font-weight: 600;
+      font-family: var(--font); cursor: pointer; text-align: left;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .faq-q:hover { color: var(--accent); }
+    .faq-arrow { font-size: 18px; transition: transform 0.3s; color: var(--text-muted); }
+    .faq-item.open .faq-arrow { transform: rotate(45deg); }
+    .faq-a {
+      max-height: 0; overflow: hidden; transition: max-height 0.3s ease;
+    }
+    .faq-item.open .faq-a { max-height: 200px; }
+    .faq-a p {
+      padding: 0 0 20px; font-size: 14px; color: var(--text-secondary); line-height: 1.65;
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+      padding: 100px 0; text-align: center;
+      background: linear-gradient(180deg, var(--bg), var(--bg-card));
+      border-top: 1px solid var(--border);
+    }
+    .cta-section .section-title { margin-bottom: 12px; }
+    .cta-section .section-subtitle { margin: 0 auto 32px; }
+
+    /* ── FOOTER ── */
+    .footer {
+      padding: 40px 0; border-top: 1px solid var(--border);
+    }
+    .footer-inner {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-brand { font-size: 14px; font-weight: 700; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 13px; color: var(--text-muted); transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy { font-size: 12px; color: var(--text-muted); }
+
+    /* ── COOKIE ── */
+    .cookie-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+      background: var(--bg-card); border-top: 1px solid var(--border);
+      padding: 14px 24px; display: none; /* shown via JS */
+      align-items: center; justify-content: center; gap: 16px;
+    }
+    .cookie-bar.show { display: flex; }
+    .cookie-bar p { font-size: 13px; color: var(--text-secondary); }
+    .cookie-bar a { color: var(--accent); }
+    .cookie-btn {
+      padding: 8px 20px; border-radius: var(--radius-xs);
+      font-size: 12px; font-weight: 700; font-family: var(--font);
+      cursor: pointer; border: none;
+    }
+    .cookie-accept { background: var(--accent); color: #fff; }
+    .cookie-reject { background: var(--bg-elevated); color: var(--text-secondary); border: 1px solid var(--border); }
+
+    /* ── SCROLL ANIMATIONS ── */
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+      .hero-content { max-width: 100%; }
+      .hero-sub { margin: 0 auto 32px; }
+      .hero-buttons { justify-content: center; }
+      .hero-proof { justify-content: center; }
+      .hero-demo { max-width: 500px; margin: 0 auto; }
+      .how-grid { grid-template-columns: 1fr; }
+      .demo-section-inner { grid-template-columns: 1fr; }
+      .compare-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+      .price-card.featured { transform: none; }
+      .price-card.featured:hover { transform: translateY(-4px); }
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .test-grid { grid-template-columns: 1fr; }
+      .nav { display: none; }
+      .nav-cta { display: none; }
+      .mobile-toggle { display: block; }
+      .footer-inner { flex-direction: column; gap: 16px; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      section { padding: 64px 0; }
+      .hero h1 { font-size: 32px; }
+      .stats-bar { grid-template-columns: 1fr 1fr; }
+      .hero-buttons { flex-direction: column; align-items: center; }
+      .btn { width: 100%; justify-content: center; }
+    }
+  </style>
 </head>
 <body>
 
-<button class="sidebar-toggle" id="sidebarToggle" aria-label="Menu openen">☰</button>
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-<!-- NAV -->
-<div class="sb-nav">
-  <div class="sb-nav-pill" id="navPill">
-    <a href="/" class="sb-nav-logo">Study<span>Brain</span></a>
-    <div class="sb-nav-links">
+<!-- ── HEADER ── -->
+<header class="header">
+  <div class="header-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">S</div>
+      StudyBrain
+    </a>
+    <nav class="nav">
       <a href="#how">Hoe het werkt</a>
       <a href="#pricing">Abonnementen</a>
       <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="login.html" class="btn btn-secondary">Inloggen</a>
+      <a href="login.html#signup" class="btn btn-primary">Gratis proberen →</a>
     </div>
-    <div class="sb-nav-actions" id="navPillActions">
-      <a href="login.html" class="sb-btn-ghost hide-mobile">Inloggen</a>
-      <a href="login.html#signup" class="sb-btn-primary">Gratis proberen &rarr;</a>
-    </div>
-    <button class="sb-nav-mobile-btn" id="mobileMenuBtn">☰</button>
+    <button class="mobile-toggle" onclick="document.getElementById('mobileMenu').classList.add('open')" aria-label="Menu">
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
   </div>
+</header>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="this.parentElement.classList.remove('open')">✕</button>
+  <a href="#how" onclick="this.parentElement.classList.remove('open')">Hoe het werkt</a>
+  <a href="#pricing" onclick="this.parentElement.classList.remove('open')">Abonnementen</a>
+  <a href="#faq" onclick="this.parentElement.classList.remove('open')">FAQ</a>
+  <a href="login.html" class="btn btn-secondary" style="margin-top:16px;">Inloggen</a>
+  <a href="login.html#signup" class="btn btn-primary">Gratis proberen →</a>
 </div>
 
-<!-- MOBILE DRAWER -->
-<div class="sb-drawer" id="drawer">
-  <div class="sb-drawer-overlay" id="drawerOverlay"></div>
-  <div class="sb-drawer-panel">
-    <div class="sb-drawer-head">
-      <div class="sb-drawer-logo">Study<span>Brain</span></div>
-      <button class="sb-drawer-close" id="drawerClose">✕</button>
-    </div>
-    <div class="sb-drawer-links">
-      <a href="app.html" class="sb-drawer-link cta">Open de app &rarr;</a>
-      <div class="sb-drawer-sep"></div>
-      <a href="#how" class="sb-drawer-link" onclick="closeDrawer()">Hoe het werkt</a>
-      <a href="#pricing" class="sb-drawer-link" onclick="closeDrawer()">Abonnementen</a>
-      <a href="#faq" class="sb-drawer-link" onclick="closeDrawer()">Veelgestelde vragen</a>
-      <div class="sb-drawer-sep"></div>
-      <a href="privacy.html" class="sb-drawer-link">Privacy</a>
-      <a href="voorwaarden.html" class="sb-drawer-link">Voorwaarden</a>
-      <a href="mailto:info@studybrain.app" class="sb-drawer-link">Contact</a>
-    </div>
-    <div class="sb-drawer-foot" id="drawerFoot"></div>
-  </div>
-</div>
-
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-logo">
-    <span class="sidebar-logo-text">StudyBrain</span>
-    <button class="sidebar-close" id="sidebarClose">✕</button>
-  </div>
-  <nav class="sidebar-nav">
-    <a href="app.html" class="sidebar-link" style="background:rgba(255,77,109,0.08);border:1px solid rgba(255,77,109,0.2);border-radius:10px;color:#ff4d6d;font-weight:600;margin-bottom:4px;">
-      <span class="icon">→</span> Open de app
-    </a>
-    <div class="sidebar-divider"></div>
-    <a href="#how" class="sidebar-link" onclick="closeSidebar()"><span class="icon">·</span> Hoe het werkt</a>
-    <a href="#pricing" class="sidebar-link" onclick="closeSidebar()"><span class="icon">·</span> Abonnementen</a>
-    <a href="#faq" class="sidebar-link" onclick="closeSidebar()"><span class="icon">·</span> Veelgestelde vragen</a>
-    <div class="sidebar-divider"></div>
-    <a href="privacy.html" class="sidebar-link"><span class="icon">·</span> Privacy</a>
-    <a href="voorwaarden.html" class="sidebar-link"><span class="icon">·</span> Voorwaarden</a>
-    <a href="/cdn-cgi/l/email-protection#cfa6a1a9a08fbcbbbaabb6adbdaea6a1e1aebfbf" class="sidebar-link"><span class="icon">·</span> Contact</a>
-  </nav>
-  <div class="sidebar-footer" id="sidebarFooter"></div>
-</aside>
-
-<nav style="display:none;">
-  <div class="nav-inner">
-    <a href="/" class="nav-logo"><span class="nav-logo-text">StudyBrain</span></a>
-    <div class="nav-links">
-      <a href="#how">Hoe het werkt</a>
-      <a href="#pricing">Abonnementen</a>
-    </div>
-    <div class="nav-actions" id="navActions">
-      <a href="login.html" class="btn-ghost">Inloggen</a>
-      <a href="login.html#signup" class="btn-nav">Gratis proberen</a>
-    </div>
-  </div>
-</nav>
-
-<div class="login-toast" id="loginToast">Succesvol ingelogd — welkom bij StudyBrain.</div>
-
-<!-- HERO -->
+<!-- ── HERO ── -->
 <section class="hero">
-  <div class="orb orb1"></div>
-  <div class="orb orb2"></div>
-  <div class="orb orb3"></div>
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
   <div class="hero-inner">
     <div class="hero-content">
-      <div class="hero-badge"><span class="badge-dot"></span> StudyBrain &middot; Leer slimmer, niet harder</div>
-      <h1>Stop met alles leren<br><span class="gradient-text">wat niet telt.</span></h1>
-      <p class="hero-sub">Upload je lesstof. StudyBrain analyseert wat <strong>sowieso in de toets komt</strong>, wat handig is, en wat je veilig kunt overslaan.</p>
-      <div class="hero-cta">
-        <a href="login.html#signup" class="btn-primary">Probeer 1x gratis &#8594;</a>
-        <a href="#how" class="btn-secondary">Hoe werkt het?</a>
+      <div class="badge">AI-gestuurd studieplan</div>
+      <h1>Stop met alles leren.<br><span class="highlight">Leer wat telt.</span></h1>
+      <p class="hero-sub">Upload je lesstof. StudyBrain vertelt je in 30 seconden wat sowieso in de toets komt, wat handig is, en wat je veilig kunt skippen.</p>
+      <div class="hero-buttons">
+        <a href="login.html#signup" class="btn btn-primary">Probeer gratis →</a>
+        <a href="#how" class="btn btn-secondary">Hoe werkt het?</a>
       </div>
-      <div class="social-proof">
-        <span style="font-size:13px;color:var(--muted);">Gratis te proberen &middot; Geen creditcard nodig &middot; Direct resultaat</span>
-      </div>
-    </div>
-    <div class="hero-mockup">
-      <div class="mockup-3d-inner">
-        <div class="mockup">
-          <div class="mockup-bar">
-            <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-            <span class="mockup-url">studybrain.app</span>
-          </div>
-          <div class="mockup-content">
-            <div class="m-badge green-badge">MUST LEARN — start hier</div>
-            <div class="m-card">
-              <div class="m-title">Oorzaken WO2</div>
-              <div class="m-text">3 hoofdoorzaken: <strong>verdrag van Versailles</strong>, <strong>economische crisis</strong> (1929), <strong>opkomst Hitler</strong>. Docenten toetsen dit ALTIJD. <em>VEH = Versailles → Economie → Hitler</em></div>
-              <div class="m-expand">Volledige uitleg + ezelsbruggetjes &#9660;</div>
-            </div>
-            <div class="m-badge" style="background:rgba(255,152,0,0.12);color:#ff9800;display:inline-block;padding:4px 12px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:0.1em;width:fit-content;margin-top:4px;">NICE TO KNOW</div>
-            <div class="m-card" style="opacity:0.85">
-              <div class="m-title">D-Day (6 juni 1944)</div>
-              <div class="m-text">Geallieerde landing in Normandië → keerpunt van de oorlog.</div>
-              <div class="m-expand">Volledige uitleg + ezelsbruggetjes &#9660;</div>
-            </div>
-            <div class="m-badge red-badge">SKIP — geen tijd aan verspillen</div>
-            <div class="m-card m-card-skip">
-              <div class="m-title">Namen van alle generaals</div>
-              <div class="m-text">1x genoemd in de tekst, nooit getoetst. Sla over.</div>
-            </div>
-          </div>
-        </div>
+      <div class="hero-proof">
+        <span>Gratis te proberen</span>
+        <span>Geen creditcard nodig</span>
+        <span>Direct resultaat</span>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- HOE HET WERKT -->
-<section class="how-animated" id="how">
-  <div class="section-inner">
-    <div class="label">Zo simpel is het</div>
-    <h2>Van PDF naar studieplan<br><span class="gradient-text">in 30 seconden.</span></h2>
-    <div class="how-steps-wrap">
-      <div class="how-steps-list" id="howStepsList">
-        <div class="how-step-item active" onclick="setHowStep(0, this)">
-          <div class="how-step-num">1</div>
-          <div class="how-step-content">
-            <h3>Upload je PDF</h3>
-            <p>Sleep je samenvatting of syllabus erin. Meerdere bestanden tegelijk mag met Pro.</p>
-          </div>
-        </div>
-        <div class="how-step-item" onclick="setHowStep(1, this)">
-          <div class="how-step-num">2</div>
-          <div class="how-step-content">
-            <h3>Kies je beschikbare tijd</h3>
-            <p>30 minuten of een avond? Het analyse-plan past zich automatisch aan jouw deadline aan.</p>
-          </div>
-        </div>
-        <div class="how-step-item" onclick="setHowStep(2, this)">
-          <div class="how-step-num">3</div>
-          <div class="how-step-content">
-            <h3>Krijg je prioriteiten</h3>
-            <p>Must Learn, Nice to Know en Skip — met uitleg, ezelsbruggetjes en een persoonlijk studieplan.</p>
-          </div>
-        </div>
+    <div class="hero-demo">
+      <div class="demo-topbar">
+        <div class="demo-dot"></div>
+        <div class="demo-dot"></div>
+        <div class="demo-dot"></div>
+        <div class="demo-url">studybrain.nl</div>
       </div>
-      <div class="how-preview">
-        <div class="how-preview-pane visible" id="howPane0">
-          <div class="prev-upload">
-            <div class="prev-upload-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-            </div>
-            <h4>Sleep je PDF hier naartoe</h4>
-            <p>PDF, max 20MB per bestand</p>
-          </div>
-          <div class="prev-file">
-            <div style="font-size:18px;color:var(--accent)">↑</div>
-            <div>
-              <div class="prev-file-name">geschiedenis_h4_samenvatting.pdf</div>
-              <div class="prev-file-size">2.4 MB · klaar om te analyseren</div>
-            </div>
-          </div>
+      <div class="demo-body">
+        <div class="demo-item must">
+          <div class="demo-tag">Must Learn — start hier</div>
+          <div class="demo-topic">Oorzaken WO2</div>
+          <div class="demo-desc">3 hoofdoorzaken: Verdrag van Versailles, economische crisis (1929), opkomst Hitler. Docenten toetsen dit altijd.</div>
+          <div class="demo-ezel">💡 VEH = Versailles → Economie → Hitler</div>
         </div>
-        <div class="how-preview-pane" id="howPane1">
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">Hoeveel tijd heb je nog?</div>
-          <div class="prev-time-grid">
-            <div class="prev-time-btn">30 min</div>
-            <div class="prev-time-btn">1 uur</div>
-            <div class="prev-time-btn sel">Een avond</div>
-            <div class="prev-time-btn">1–2 dagen</div>
-          </div>
-          <div style="margin-top:16px;background:rgba(255,77,109,0.06);border:1px solid rgba(255,77,109,0.15);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--muted);line-height:1.5;">
-            <strong style="color:var(--text);display:block;margin-bottom:4px;">Plan voor een avond</strong>
-            5–6 must-learn onderwerpen · herhalingsschema voor 4 momenten
-          </div>
+        <div class="demo-item nice">
+          <div class="demo-tag">Nice to Know</div>
+          <div class="demo-topic">D-Day (6 juni 1944)</div>
+          <div class="demo-desc">Geallieerde landing in Normandië → keerpunt van de oorlog.</div>
         </div>
-        <div class="how-preview-pane" id="howPane2">
-          <div class="prev-result">
-            <div class="prev-badge must">Must Learn — 5 onderwerpen</div>
-            <div class="prev-result-item" style="border-left:2px solid rgba(0,230,118,0.4);padding-left:12px;">
-              <strong>Oorzaken WO2</strong>
-              <span style="display:block;margin-bottom:6px;">Verdrag van Versailles, economische crisis, opkomst Hitler.</span>
-              <span style="display:block;background:rgba(0,230,118,0.08);border:1px solid rgba(0,230,118,0.15);border-radius:6px;padding:5px 8px;font-size:11px;color:#00e676;">Onthoud: VEH = Versailles → Economie → Hitler</span>
-            </div>
-            <div style="height:6px"></div>
-            <div class="prev-badge skip">Skip — 4 onderwerpen</div>
-            <div class="prev-result-item" style="opacity:0.5;border-left:2px solid rgba(255,77,109,0.3);padding-left:12px;">
-              <strong>Namen van alle generaals</strong>
-              <span>1x genoemd in de tekst, nooit getoetst.</span>
-            </div>
-          </div>
-        </div>
-        <div class="how-progress">
-          <div class="how-progress-dot active" id="dot0"></div>
-          <div class="how-progress-dot" id="dot1"></div>
-          <div class="how-progress-dot" id="dot2"></div>
+        <div class="demo-item skip">
+          <div class="demo-tag">Skip — geen tijd aan verspillen</div>
+          <div class="demo-topic">Namen van alle generaals</div>
+          <div class="demo-desc">1x genoemd in de tekst, nooit getoetst. Sla over.</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- BEFORE / AFTER -->
-<section class="before-after">
-  <div class="section-inner">
-    <div class="label">Het verschil</div>
-    <h2>Studeren zonder vs. <span class="gradient-text">met StudyBrain</span></h2>
-    <div class="ba-grid">
-      <div class="ba-col before">
-        <div class="ba-header"><div class="ba-pill before">Zonder StudyBrain</div></div>
-        <div class="ba-item"><div class="ba-icon">✗</div><div class="ba-item-text"><strong>Alles lezen, niks onthouden</strong>Je leest 40 pagina's maar weet niet wat écht belangrijk is.</div></div>
-        <div class="ba-item"><div class="ba-icon">✗</div><div class="ba-item-text"><strong>Tijd verspillen aan irrelevante stof</strong>Je leert dingen die nooit in de toets komen.</div></div>
-        <div class="ba-item"><div class="ba-icon">✗</div><div class="ba-item-text"><strong>Geen structuur, wel stress</strong>De avond voor de toets weet je niet waar je moet beginnen.</div></div>
-        <div class="ba-item"><div class="ba-icon">✗</div><div class="ba-item-text"><strong>Alles vergeten de volgende dag</strong>Zonder herhalingsschema verdwijnt de stof uit je hoofd.</div></div>
+<!-- ── HOW IT WORKS ── -->
+<section class="how" id="how">
+  <div class="container">
+    <div class="how-header">
+      <div class="section-label">Zo simpel is het</div>
+      <h2 class="section-title reveal">Van PDF naar studieplan<br>in 30 seconden.</h2>
+    </div>
+    <div class="how-grid">
+      <div class="how-step reveal reveal-delay-1">
+        <div class="how-num">01</div>
+        <div class="how-icon">📄</div>
+        <h3>Upload je PDF</h3>
+        <p>Sleep je samenvatting, syllabus of boek erin. Meerdere bestanden tegelijk mag met Pro en Elite.</p>
       </div>
-      <div class="ba-col after">
-        <div class="ba-header"><div class="ba-pill after">Met StudyBrain</div></div>
-        <div class="ba-item"><div class="ba-icon">✓</div><div class="ba-item-text"><strong>Weet in 30 seconden wat telt</strong>Must Learn, Nice to Know en Skip — direct duidelijk.</div></div>
-        <div class="ba-item"><div class="ba-icon">✓</div><div class="ba-item-text"><strong>Focus op wat in de toets komt</strong>StudyBrain herkent toetspatronen zoals een ervaren leraar.</div></div>
-        <div class="ba-item"><div class="ba-icon">✓</div><div class="ba-item-text"><strong>Persoonlijk studieplan op maat</strong>Leerroute, ezelsbruggetjes en herhalingsschema in één overzicht.</div></div>
-        <div class="ba-item"><div class="ba-icon">✓</div><div class="ba-item-text"><strong>Onthoud de stof echt</strong>Spaced repetition schema zorgt dat je het de dag erna nog weet.</div></div>
+      <div class="how-step reveal reveal-delay-2">
+        <div class="how-num">02</div>
+        <div class="how-icon">⏱️</div>
+        <h3>Kies je beschikbare tijd</h3>
+        <p>30 minuten of een hele avond? Het studieplan past zich automatisch aan jouw deadline aan.</p>
+      </div>
+      <div class="how-step reveal reveal-delay-3">
+        <div class="how-num">03</div>
+        <div class="how-icon">🎯</div>
+        <h3>Krijg je prioriteiten</h3>
+        <p>Must Learn, Nice to Know en Skip — met uitleg, ezelsbruggetjes en een persoonlijk studieplan.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FEATURES -->
-<section class="features">
-  <div class="section-inner">
-    <div class="label">Waarom StudyBrain</div>
-    <h2>Niet gewoon een samenvatting.<br><span class="gradient-text">Een studieplan.</span></h2>
-    <div class="feat-grid">
-      <div class="feat-card feat-big">
-        <div class="feat-tag feat-tag-must">Must Learn</div>
-        <h3>Weet precies wat in de toets komt</h3>
-        <p>StudyBrain analyseert herhaling, definities, vetgedrukte tekst en structuur. Precies zoals een ervaren leraar. Geen giswerk meer.</p>
+<!-- ── COMPARISON ── -->
+<section class="compare" id="compare">
+  <div class="container">
+    <div class="compare-header">
+      <div class="section-label">Het verschil</div>
+      <h2 class="section-title reveal">Studeren zonder vs. met StudyBrain</h2>
+    </div>
+    <div class="compare-grid reveal">
+      <div class="compare-card without">
+        <div class="compare-card-title"><span>✗</span> Zonder StudyBrain</div>
+        <div class="compare-item">
+          <span class="compare-icon">✗</span>
+          <div><strong>Alles lezen, niks onthouden</strong><span>Je leest 40 pagina's maar weet niet wat écht belangrijk is.</span></div>
+        </div>
+        <div class="compare-item">
+          <span class="compare-icon">✗</span>
+          <div><strong>Tijd verspillen aan irrelevante stof</strong><span>Je leert dingen die nooit in de toets komen.</span></div>
+        </div>
+        <div class="compare-item">
+          <span class="compare-icon">✗</span>
+          <div><strong>Geen structuur, wel stress</strong><span>De avond voor de toets weet je niet waar je moet beginnen.</span></div>
+        </div>
+        <div class="compare-item">
+          <span class="compare-icon">✗</span>
+          <div><strong>Alles vergeten de volgende dag</strong><span>Zonder herhalingsschema verdwijnt de stof uit je hoofd.</span></div>
+        </div>
       </div>
-      <div class="feat-card">
-        <div class="feat-tag feat-tag-blue">Uitleg</div>
+      <div class="compare-card with">
+        <div class="compare-card-title"><span>✓</span> Met StudyBrain</div>
+        <div class="compare-item">
+          <span class="compare-icon">✓</span>
+          <div><strong>Weet in 30 seconden wat telt</strong><span>Must Learn, Nice to Know en Skip — direct duidelijk.</span></div>
+        </div>
+        <div class="compare-item">
+          <span class="compare-icon">✓</span>
+          <div><strong>Focus op wat in de toets komt</strong><span>StudyBrain herkent toetspatronen zoals een ervaren leraar.</span></div>
+        </div>
+        <div class="compare-item">
+          <span class="compare-icon">✓</span>
+          <div><strong>Persoonlijk studieplan op maat</strong><span>Leerroute, ezelsbruggetjes en herhalingsschema in één overzicht.</span></div>
+        </div>
+        <div class="compare-item">
+          <span class="compare-icon">✓</span>
+          <div><strong>Onthoud de stof echt</strong><span>Spaced repetition schema zorgt dat je het de dag erna nog weet.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURES ── -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="features-header">
+      <div class="section-label">Waarom StudyBrain</div>
+      <h2 class="section-title reveal">Niet gewoon een samenvatting.<br>Een compleet studieplan.</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="feature-emoji">🎯</div>
+        <h3>Must Learn prioritering</h3>
+        <p>Weet precies wat in de toets komt. StudyBrain analyseert herhaling, definities en structuur — zoals een ervaren leraar.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="feature-emoji">💡</div>
         <h3>Echte uitleg</h3>
-        <p>Elk onderwerp krijgt uitleg in gewone taal, met een voorbeeld uit het dagelijks leven.</p>
+        <p>Elk onderwerp krijgt uitleg in gewone taal, met een voorbeeld uit het dagelijks leven. Geen droge opsommingen.</p>
       </div>
-      <div class="feat-card">
-        <div class="feat-tag feat-tag-yellow">Onthoud</div>
+      <div class="feature-card reveal reveal-delay-3">
+        <div class="feature-emoji">🧠</div>
         <h3>Ezelsbruggetjes</h3>
-        <p>Trucjes zodat het blijft hangen, ook met maar 30 minuten studeren.</p>
+        <p>Grappige trucjes zodat het blijft hangen, ook als je maar 30 minuten hebt om te studeren.</p>
       </div>
-      <div class="feat-card">
-        <div class="feat-tag feat-tag-red">Skip</div>
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="feature-emoji">⏭️</div>
         <h3>Durft te skippen</h3>
-        <p>Eerlijk advies over wat niet de moeite waard is met jouw beschikbare tijd.</p>
+        <p>Eerlijk advies over wat je niet hoeft te leren. Geen tijdverspilling aan dingen die toch niet gevraagd worden.</p>
       </div>
-      <div class="feat-card">
-        <div class="feat-tag feat-tag-orange">Oefentoets</div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="feature-emoji">📝</div>
         <h3>Oefentoets</h3>
-        <p>Maak een echte oefentoets na het leren en check daarna pas je antwoorden.</p>
+        <p>Maak een echte oefentoets met meerkeuzevragen na het leren. Check daarna je antwoorden met uitleg.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-3">
+        <div class="feature-emoji">🔄</div>
+        <h3>Herhalingsschema</h3>
+        <p>Spaced repetition — bewezen de meest effectieve leertechniek. Onthoud de stof de dag van de toets.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SOCIAL PROOF -->
-<section class="social-proof-section">
-  <div class="section-inner">
-    <div class="sp-stats">
-      <div class="sp-stat">
-        <div class="sp-stat-num">50<span>+</span></div>
-        <div class="sp-stat-label">Studenten gingen je voor</div>
-      </div>
-      <div class="sp-stat">
-        <div class="sp-stat-num">4.8<span>/5</span></div>
-        <div class="sp-stat-label">Gemiddelde beoordeling</div>
-      </div>
-      <div class="sp-stat">
-        <div class="sp-stat-num">3x</div>
-        <div class="sp-stat-label">Sneller dan normaal studeren</div>
-      </div>
-      <div class="sp-stat">
-        <div class="sp-stat-num">1<span>e</span></div>
-        <div class="sp-stat-label">Analyse altijd gratis</div>
-      </div>
+<!-- ── STATS ── -->
+<div class="container">
+  <div class="stats-bar reveal">
+    <div class="stat">
+      <div class="stat-num">50+</div>
+      <div class="stat-label">Studenten</div>
     </div>
-    <div class="sp-reviews">
-      <div class="sp-review">
-        <div class="sp-stars">★★★★★</div>
-        <div class="sp-text">Ik had 2 uur voor mijn toets geschiedenis. StudyBrain gaf me precies wat ik moest weten. Een 7,5 gehaald.</div>
-        <div class="sp-author">
-          <div class="sp-avatar" style="background:linear-gradient(135deg,#ff4d6d,#c9184a)">S</div>
-          <div><div class="sp-name">Selin, 16</div><div class="sp-meta">VWO 4 · Geschiedenis</div></div>
+    <div class="stat">
+      <div class="stat-num">4.8/5</div>
+      <div class="stat-label">Beoordeling</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">3x</div>
+      <div class="stat-label">Sneller studeren</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">30s</div>
+      <div class="stat-label">Analyse klaar</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TESTIMONIALS ── -->
+<section class="testimonials">
+  <div class="container">
+    <div class="testimonials-header">
+      <div class="section-label">Ervaringen</div>
+      <h2 class="section-title reveal">Wat studenten zeggen</h2>
+    </div>
+    <div class="test-grid">
+      <div class="test-card reveal reveal-delay-1">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-text">"Ik had 2 uur voor mijn toets geschiedenis. StudyBrain gaf me precies wat ik moest weten. Een 7,5 gehaald."</p>
+        <div class="test-author">
+          <div class="test-avatar">S</div>
+          <div>
+            <div class="test-name">Selin, 16</div>
+            <div class="test-info">VWO 4 · Geschiedenis</div>
+          </div>
         </div>
       </div>
-      <div class="sp-review">
-        <div class="sp-stars">★★★★★</div>
-        <div class="sp-text">Eindelijk weet ik wat ik kan overslaan. Geen paniek meer de avond voor een toets.</div>
-        <div class="sp-author">
-          <div class="sp-avatar" style="background:linear-gradient(135deg,#6366f1,#4f46e5)">M</div>
-          <div><div class="sp-name">Milan, 17</div><div class="sp-meta">HAVO 5 · Economie</div></div>
+      <div class="test-card reveal reveal-delay-2">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-text">"Eindelijk weet ik wat ik kan overslaan. Geen paniek meer de avond voor een toets."</p>
+        <div class="test-author">
+          <div class="test-avatar">M</div>
+          <div>
+            <div class="test-name">Milan, 17</div>
+            <div class="test-info">HAVO 5 · Economie</div>
+          </div>
         </div>
       </div>
-      <div class="sp-review">
-        <div class="sp-stars">★★★★★</div>
-        <div class="sp-text">De ezelsbruggetjes zijn geniaal. Ik onthou dingen nu veel makkelijker dan met gewoon lezen.</div>
-        <div class="sp-author">
-          <div class="sp-avatar" style="background:linear-gradient(135deg,#f59e0b,#d97706)">J</div>
-          <div><div class="sp-name">Jasmijn, 15</div><div class="sp-meta">HAVO 3 · Biologie</div></div>
+      <div class="test-card reveal reveal-delay-3">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-text">"De ezelsbruggetjes zijn geniaal. Ik onthou dingen nu veel makkelijker dan met gewoon lezen."</p>
+        <div class="test-author">
+          <div class="test-avatar">J</div>
+          <div>
+            <div class="test-name">Jasmijn, 15</div>
+            <div class="test-info">HAVO 3 · Biologie</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PRICING -->
+<!-- ── PRICING ── -->
 <section class="pricing" id="pricing">
-  <div class="section-inner">
-    <div class="label">Abonnementen</div>
-    <h2>Kies jouw plan</h2>
-    <p class="pricing-sub">Begin gratis met 1 analyse. Upgrade wanneer je wil.</p>
-    <div class="pricing-compare">
-      Een bijles kost gemiddeld <strong>€30 per uur</strong>. StudyBrain Pro kost <strong>€14,99 per maand</strong> — en is er altijd, voor elk vak.
+  <div class="container">
+    <div class="pricing-header">
+      <div class="section-label">Abonnementen</div>
+      <h2 class="section-title reveal">Kies jouw plan</h2>
+      <p class="section-subtitle">Begin gratis met 1 analyse. Upgrade wanneer je wil.</p>
     </div>
-    <div class="plans">
-      <div class="plan">
-        <div class="plan-name">Starter</div>
-        <div class="plan-price"><span class="euro">€</span>12<span class="cents">,99</span><span class="per">/mnd</span></div>
-        <div class="plan-desc">Toets morgen? Weet in 30 seconden wat je moet leren.</div>
-        <ul class="plan-list">
-          <li class="yes">10 analyses per maand</li>
-          <li class="yes">Must / Nice to Know / Skip overzicht</li>
-          <li class="yes">Cheatsheet overzicht</li>
-          <li class="yes">5 oefenvragen per analyse</li>
-          <li class="no">Volledige uitleg + ezelsbruggetjes</li>
-          <li class="no">Meerdere PDFs tegelijk</li>
-          <li class="no">Persoonlijk studieplan</li>
+    <p class="pricing-context">Eén uur bijles kost gemiddeld <strong>€30</strong>. StudyBrain Pro kost <strong>€14,99/maand</strong> — en is er altijd, voor elk vak.</p>
+    <div class="pricing-grid">
+
+      <div class="price-card reveal reveal-delay-1">
+        <div class="price-name">Starter</div>
+        <div class="price-amount">€12,99<span>/mnd</span></div>
+        <div class="price-desc">Toets morgen? Weet in 30 seconden wat je moet leren.</div>
+        <ul class="price-features">
+          <li>10 analyses per maand</li>
+          <li>Must / Nice to Know / Skip</li>
+          <li>Cheatsheet overzicht</li>
+          <li>5 oefenvragen per analyse</li>
+          <li class="disabled">Volledige uitleg + ezelsbruggetjes</li>
+          <li class="disabled">Persoonlijk studieplan</li>
+          <li class="disabled">Meerdere PDFs tegelijk</li>
         </ul>
-        <a href="https://buy.stripe.com/bJe5kv1RudhP9b36SA8IU02" target="_blank" class="plan-cta ghost-cta">Begin met Starter</a>
+        <a href="https://buy.stripe.com/bJe5kv1RudhP9b36SA8IU02" class="price-btn price-btn-default">Begin met Starter</a>
       </div>
-      <div class="plan plan-hot">
-        <div class="hot-label">Meest gekozen</div>
-        <div class="plan-name">Pro</div>
-        <div class="plan-price"><span class="euro">€</span>14<span class="cents">,99</span><span class="per">/mnd</span></div>
-        <div class="plan-desc">Analyse + studieplan. Volledig voorbereid op elke toets.</div>
-        <ul class="plan-list">
-          <li class="yes"><strong>Onbeperkt</strong> analyses</li>
-          <li class="yes">Must / Nice to Know / Skip overzicht</li>
-          <li class="yes"><strong>Volledige uitleg + ezelsbruggetjes</strong></li>
-          <li class="yes"><strong>10 oefenvragen per analyse</strong></li>
-          <li class="yes">Tot <strong>3 PDFs</strong> tegelijk uploaden</li>
-          <li class="yes"><strong>Persoonlijk studieplan</strong> — leerroute + herhalingsschema</li>
-          <li class="no">Meerdere vakken combineren</li>
+
+      <div class="price-card featured reveal reveal-delay-2">
+        <div class="price-badge">Meest gekozen</div>
+        <div class="price-name">Pro</div>
+        <div class="price-amount">€14,99<span>/mnd</span></div>
+        <div class="price-desc">Analyse + studieplan. Volledig voorbereid op elke toets.</div>
+        <ul class="price-features">
+          <li><strong>Onbeperkt</strong> analyses</li>
+          <li>Must / Nice to Know / Skip</li>
+          <li>Volledige uitleg + ezelsbruggetjes</li>
+          <li>10 oefenvragen per analyse</li>
+          <li>Tot 3 PDFs tegelijk uploaden</li>
+          <li>Persoonlijk studieplan</li>
+          <li>Meerdere vakken combineren</li>
         </ul>
-        <a href="https://buy.stripe.com/6oUdR1cw891zfzrfp68IU01" target="_blank" class="plan-cta hot-cta">Begin met Pro</a>
+        <a href="https://buy.stripe.com/6oUdR1cw891zfzrfp68IU01" class="price-btn price-btn-primary">Begin met Pro</a>
       </div>
-      <div class="plan">
-        <div class="plan-name">Elite</div>
-        <div class="plan-price"><span class="euro">€</span>22<span class="cents">,99</span><span class="per">/mnd</span></div>
-        <div class="plan-desc">Voor wie meerdere vakken tegelijk wil aanpakken.</div>
-        <ul class="plan-list">
-          <li class="yes"><strong>Onbeperkt</strong> analyses</li>
-          <li class="yes">Volledige uitleg + ezelsbruggetjes</li>
-          <li class="yes"><strong>20 oefenvragen per analyse</strong></li>
-          <li class="yes">Tot <strong>4 vakken</strong> combineren</li>
-          <li class="yes"><strong>Persoonlijk studieplan per vak</strong></li>
-          <li class="yes"><strong>Gecombineerd weekoverzicht</strong></li>
+
+      <div class="price-card reveal reveal-delay-3">
+        <div class="price-name">Elite</div>
+        <div class="price-amount">€22,99<span>/mnd</span></div>
+        <div class="price-desc">Voor wie meerdere vakken tegelijk wil aanpakken.</div>
+        <ul class="price-features">
+          <li><strong>Onbeperkt</strong> analyses</li>
+          <li>Volledige uitleg + ezelsbruggetjes</li>
+          <li>20 oefenvragen per analyse</li>
+          <li>Tot 4 vakken combineren</li>
+          <li>Persoonlijk studieplan per vak</li>
+          <li>Gecombineerd weekoverzicht</li>
+          <li>Prioriteit support</li>
         </ul>
-        <a href="https://buy.stripe.com/eVq6ozcw82Db1IBgta8IU00" target="_blank" class="plan-cta ghost-cta">Begin met Elite</a>
+        <a href="https://buy.stripe.com/eVq6ozcw82Db1IBgta8IU00" class="price-btn price-btn-default">Begin met Elite</a>
       </div>
+
     </div>
-    <p class="pricing-note">Veilig betalen &middot; Maandelijks opzegbaar &middot; Geen verborgen kosten</p>
+    <p class="pricing-footer">Veilig betalen met iDEAL · Maandelijks opzegbaar · Geen verborgen kosten</p>
   </div>
 </section>
 
-<!-- FAQ -->
-<section class="faq-section" id="faq">
-  <div class="section-inner">
-    <div class="label">Veelgestelde vragen</div>
-    <h2>Alles wat je wil weten</h2>
+<!-- ── FAQ ── -->
+<section class="faq" id="faq">
+  <div class="container">
+    <div class="faq-header">
+      <div class="section-label">Veelgestelde vragen</div>
+      <h2 class="section-title reveal">Alles wat je wil weten</h2>
+    </div>
     <div class="faq-list">
-      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Werkt StudyBrain voor elk vak? <span class="faq-arrow">▼</span></button><div class="faq-a">Ja. StudyBrain werkt voor alle vakken waarbij je een PDF hebt — van geschiedenis en biologie tot economie en recht.</div></div>
-      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Wat krijg ik met mijn gratis analyse? <span class="faq-arrow">▼</span></button><div class="faq-a">Je krijgt 1 gratis analyse. Je ziet het Must Learn / Nice to Know / Skip overzicht. Uitleg en ezelsbruggetjes zijn beschikbaar vanaf het Starter abonnement.</div></div>
-      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Hoe groot mag mijn PDF zijn? <span class="faq-arrow">▼</span></button><div class="faq-a">Je PDF mag maximaal 20MB zijn. Voor Pro en Elite kun je meerdere PDFs tegelijk uploaden.</div></div>
-      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Hoe nauwkeurig is de analyse? <span class="faq-arrow">▼</span></button><div class="faq-a">StudyBrain analyseert herhaling, vetgedrukte tekst, definities en structuur, en herkent toetspatronen die docenten keer op keer gebruiken.</div></div>
-      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Kan ik mijn abonnement opzeggen? <span class="faq-arrow">▼</span></button><div class="faq-a">Ja, maandelijks opzegbaar. Geen verborgen kosten of lange contracten.</div></div>
-      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Is mijn lesstof veilig? <span class="faq-arrow">▼</span></button><div class="faq-a">Je PDFs worden alleen gebruikt voor de analyse en worden niet opgeslagen of gedeeld.</div></div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Werkt StudyBrain voor elk vak? <span class="faq-arrow">+</span></button>
+        <div class="faq-a"><p>Ja. StudyBrain werkt voor alle vakken waarbij je een PDF hebt — van geschiedenis en biologie tot economie en recht.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Wat krijg ik met mijn gratis analyse? <span class="faq-arrow">+</span></button>
+        <div class="faq-a"><p>Je krijgt 1 gratis analyse met Must Learn, Nice to Know en Skip overzicht. Volledige uitleg, ezelsbruggetjes en het studieplan zijn beschikbaar vanaf Starter.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Hoe groot mag mijn PDF zijn? <span class="faq-arrow">+</span></button>
+        <div class="faq-a"><p>Je PDF mag maximaal 20MB zijn. Wij verwerken tot 15 pagina's per analyse voor de beste resultaten.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Hoe nauwkeurig is de analyse? <span class="faq-arrow">+</span></button>
+        <div class="faq-a"><p>StudyBrain gebruikt AI die herhaling, vetgedrukte tekst, definities en structuur analyseert. Het herkent toetspatronen die docenten keer op keer gebruiken.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Kan ik mijn abonnement opzeggen? <span class="faq-arrow">+</span></button>
+        <div class="faq-a"><p>Ja, maandelijks opzegbaar. Geen verborgen kosten of lange contracten. Je houdt toegang tot het einde van je betaalperiode.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is mijn lesstof veilig? <span class="faq-arrow">+</span></button>
+        <div class="faq-a"><p>Je PDFs worden alleen gebruikt voor de analyse en worden niet opgeslagen of gedeeld. We verwerken de tekst, niet het bestand zelf.</p></div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- CTA -->
-<section class="cta-band">
-  <div class="orb cta-orb1"></div>
-  <div class="orb cta-orb2"></div>
-  <div class="section-inner">
-    <h2>Klaar om slimmer te leren?</h2>
-    <p>Maak gratis een account aan en doe je eerste analyse. Geen creditcard nodig.</p>
-    <a href="login.html#signup" class="btn-primary btn-xl">Gratis starten &mdash; 1 analyse cadeau &#8594;</a>
+<!-- ── CTA ── -->
+<section class="cta-section">
+  <div class="container">
+    <h2 class="section-title reveal">Klaar om slimmer te leren?</h2>
+    <p class="section-subtitle reveal">Maak gratis een account aan en doe je eerste analyse. Geen creditcard nodig.</p>
+    <a href="login.html#signup" class="btn btn-primary reveal">Gratis starten — 1 analyse cadeau →</a>
   </div>
 </section>
 
-<footer>
-  <div class="footer-inner">
-    <div class="footer-logo"><span class="footer-logo-text">StudyBrain</span></div>
-    <p>Slimmer studeren voor iedereen.</p>
-    <div class="footer-links">
-      <a href="privacy.html">Privacy</a>
-      <a href="voorwaarden.html">Voorwaarden</a>
-      <a href="/cdn-cgi/l/email-protection#a1c8cfc7cee1d2d5d4c5d8c3d3c0c8cf8fc0d1d1">Contact</a>
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">StudyBrain</div>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a>
+        <a href="voorwaarden.html">Voorwaarden</a>
+        <a href="mailto:info@studybrain.nl">Contact</a>
+      </div>
+      <div class="footer-copy">© 2026 StudyBrain. Alle rechten voorbehouden.</div>
     </div>
-    <p class="copy">&copy; 2026 StudyBrain. Alle rechten voorbehouden.</p>
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- ── COOKIE BAR ── -->
+<div class="cookie-bar" id="cookieBar">
+  <p>Wij gebruiken cookies om de site goed te laten werken. <a href="privacy.html">Meer info</a></p>
+  <button class="cookie-btn cookie-accept" onclick="document.getElementById('cookieBar').style.display='none'; localStorage.setItem('cookies','1')">Accepteren</button>
+  <button class="cookie-btn cookie-reject" onclick="document.getElementById('cookieBar').style.display='none'; localStorage.setItem('cookies','0')">Weigeren</button>
+</div>
+
 <script>
-const SUPABASE_URL = 'https://wtfzqpaectqrbprmxjqp.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0ZnpxcGFlY3RxcmJwcm14anFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NzE4NDYsImV4cCI6MjA4ODE0Nzg0Nn0.LeJqnukvUpVJZyG_2pjwS0xnl24ATdV6Mi6qqZeVbJ4';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-  auth: { persistSession: true, storageKey: 'studybrain-auth', storage: window.localStorage, autoRefreshToken: true, detectSessionInUrl: false }
-});
-
-function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('visible'); document.body.style.overflow = 'hidden'; }
-function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('visible'); document.body.style.overflow = ''; }
-document.getElementById('sidebarToggle').addEventListener('click', openSidebar);
-document.getElementById('sidebarClose').addEventListener('click', closeSidebar);
-document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
-
-sb.auth.onAuthStateChange((event, session) => { updateNav(session); });
-(async () => {
-  const { data: { session } } = await sb.auth.getSession();
-  updateNav(session);
-  if (session) {
-    let plan = 'gratis';
-    try { const { data } = await sb.from('profiles').select('plan').eq('id', session.user.id).single(); if (data?.plan) plan = data.plan; } catch(e) {}
-    document.getElementById('sidebarFooter').innerHTML = `
-      <div class="sidebar-plan-badge">${plan.toUpperCase()}</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:10px;word-break:break-all;">${session.user.email}</div>
-      <button onclick="sb.auth.signOut().then(()=>location.reload())" style="background:none;border:1px solid rgba(255,255,255,0.1);color:var(--muted);padding:8px 12px;border-radius:8px;cursor:pointer;font-size:13px;width:100%;">Uitloggen</button>`;
-  } else {
-    document.getElementById('sidebarFooter').innerHTML = `
-      <a href="login.html" style="display:block;text-align:center;padding:10px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--muted);font-size:13px;text-decoration:none;margin-bottom:8px;">Inloggen</a>
-      <a href="login.html#signup" style="display:block;text-align:center;padding:10px;background:linear-gradient(135deg,#ff4d6d,#c9184a);border-radius:8px;color:white;font-size:13px;font-weight:700;text-decoration:none;">Gratis proberen</a>`;
+  // Cookie bar
+  if (!localStorage.getItem('cookies')) {
+    document.getElementById('cookieBar').classList.add('show');
   }
-  if (new URLSearchParams(window.location.search).get('ingelogd') === '1' && session) {
-    const toast = document.getElementById('loginToast');
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 4000);
-    window.history.replaceState({}, '', window.location.pathname);
-  }
-})();
 
-function updateNav(session) {
-  const actions = document.getElementById('navActions');
-  if (!actions) return;
-  if (session) {
-    actions.innerHTML = `<span style="font-size:13px;color:#6b6b8a">${session.user.email}</span><a href="dashboard.html" class="btn-nav">Dashboard →</a>`;
-  } else {
-    actions.innerHTML = `<a href="login.html" class="btn-ghost">Inloggen</a><a href="login.html#signup" class="btn-nav">Gratis proberen</a>`;
-  }
-}
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-function toggleFaq(btn) { btn.closest('.faq-item').classList.toggle('open'); }
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-function setHowStep(idx, el) {
-  document.querySelectorAll('.how-step-item').forEach(i => i.classList.remove('active'));
-  el.classList.add('active');
-  document.querySelectorAll('.how-preview-pane').forEach(p => p.classList.remove('visible'));
-  document.getElementById('howPane' + idx).classList.add('visible');
-  document.querySelectorAll('.how-progress-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
-}
-let howIdx = 0;
-setInterval(() => {
-  howIdx = (howIdx + 1) % 3;
-  const items = document.querySelectorAll('.how-step-item');
-  if (items[howIdx]) setHowStep(howIdx, items[howIdx]);
-}, 3500);
-
-const wrap = document.querySelector('.hero-mockup');
-const inner = document.querySelector('.mockup-3d-inner');
-if (wrap && inner) {
-  wrap.addEventListener('mousemove', (e) => {
-    const r = wrap.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width - 0.5;
-    const y = (e.clientY - r.top) / r.height - 0.5;
-    inner.style.transform = `rotateY(${-12 + x * 20}deg) rotateX(${6 - y * 14}deg) scale(1.02)`;
-    inner.style.boxShadow = `${20+x*10}px ${20-y*10}px 60px rgba(0,0,0,0.7), 0 0 40px rgba(255,77,109,0.1)`;
+  // Header scroll effect
+  let lastScroll = 0;
+  window.addEventListener('scroll', () => {
+    const header = document.querySelector('.header');
+    const scrollY = window.scrollY;
+    if (scrollY > 100) {
+      header.style.borderBottomColor = 'rgba(255,255,255,0.08)';
+    } else {
+      header.style.borderBottomColor = 'rgba(255,255,255,0.06)';
+    }
   });
-  wrap.addEventListener('mouseleave', () => {
-    inner.style.transition = 'transform 0.6s cubic-bezier(0.23,1,0.32,1), box-shadow 0.6s ease';
-    inner.style.transform = 'rotateY(-12deg) rotateX(6deg) scale(1)';
-    inner.style.boxShadow = '20px 20px 50px rgba(0,0,0,0.6)';
-    setTimeout(() => { inner.style.transition = 'transform 0.08s linear, box-shadow 0.08s linear'; }, 600);
-  });
-}
 </script>
 
-<div id="cookieBanner" style="display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a26;border:1px solid #2a2a3d;border-radius:16px;padding:20px 24px;max-width:560px;width:calc(100% - 48px);z-index:9999;box-shadow:0 16px 48px rgba(0,0,0,0.5);font-family:'DM Sans',sans-serif;align-items:center;gap:16px;flex-wrap:wrap;">
-  <p style="font-size:13px;color:#6b6b8a;flex:1;min-width:200px;margin:0;line-height:1.6;">Wij gebruiken cookies om de site goed te laten werken. <a href="privacy.html" style="color:#ff4d6d;text-decoration:none;">Meer info</a></p>
-  <div style="display:flex;gap:8px;flex-shrink:0;">
-    <button onclick="acceptCookies()" style="padding:9px 18px;background:linear-gradient(135deg,#ff4d6d,#c9184a);border:none;border-radius:10px;color:white;font-size:13px;font-weight:700;cursor:pointer;">Accepteren</button>
-    <button onclick="rejectCookies()" style="padding:9px 18px;background:none;border:1px solid #2a2a3d;border-radius:10px;color:#6b6b8a;font-size:13px;cursor:pointer;">Weigeren</button>
-  </div>
-</div>
-<script>
-function acceptCookies() { localStorage.setItem('sb-cookie-consent','accepted'); document.getElementById('cookieBanner').style.display='none'; }
-function rejectCookies() { localStorage.setItem('sb-cookie-consent','rejected'); document.get
+</body>
+</html>
