@@ -28,7 +28,7 @@ async function loadUserPlan() {
 }
 
 function getVragenCount() {
-  if (userPlan === 'gratis') return 1;
+  if (userPlan === 'gratis') return 3;
   if (userPlan === 'starter') return 5;
   return 10;
 }
@@ -111,6 +111,7 @@ async function getAuthToken() {
 async function callAnalyzeAPI(text, vakNaam, vragenCount) {
   const token = await getAuthToken();
   if (!token) throw new Error('Niet ingelogd');
+
   const res = await fetch('https://analyze.aminaddarrazi2004.workers.dev', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -119,38 +120,83 @@ async function callAnalyzeAPI(text, vakNaam, vragenCount) {
       messages: [
         {
           role: 'system',
-          content: `Je bent een Nederlandse ex-examinator met 15 jaar ervaring. Je schrijft studieplannen vanuit het perspectief van de docent die de toets maakt.
+          content: `Je bent een leraar die weet wat er op de toets komt. Je helpt een leerling van 15-17 jaar om slim te studeren.
 
-IJZEREN REGELS — NOOIT BREKEN:
-- Vergelijkingstabellen (X vs Y met getallen zoals 38 ATP vs 2 ATP) → ALTIJD must
-- Enzymen + denaturatie → ALTIJD must
-- Celademhaling aeroob/anaeroob → ALTIJD must
-- Fotosynthese met formule → ALTIJD must als het een eigen hoofdstuk heeft
-- VERBODEN zinnen in reason: "essentieel voor het begrijpen", "kritisch voor", "belangrijk onderwerp", "komt vaak terug"
-- reason moet ALTIJD een specifiek toetstype noemen: "definitievraag", "vergelijkingsvraag", "rekenvraag", "invulvraag"
+TAALREGEL — ABSOLUTE PRIORITEIT BOVEN ALLES:
+Schrijf op taalniveau B1. Dat betekent: gewone taal die iedereen begrijpt.
+
+GOUDEN REGEL: Na elk vaktechnisch of moeilijk woord dat je gebruikt, schrijf je ALTIJD tussen haakjes wat het betekent in gewone taal.
+Voorbeelden:
+- "ATP (de energiebrandstof van je cel)"
+- "enzymen (eiwitten die processen versnellen)"
+- "mitochondriën (de energiefabriekjes in je cel)"
+- "fotosynthese (hoe planten suiker maken van zonlicht)"
+
+Stel je voor: je legt het uit aan je beste vriend die dit vak nooit heeft gevolgd.
+Test jezelf altijd: als een 14-jarige het niet begrijpt, schrijf je het opnieuw.
+Korte zinnen. Maximaal 15 woorden per zin. Geen uitzonderingen.
+
+IJZEREN REGELS VOOR PRIORITEIT:
+- Vergelijkingen met getallen (bijv. 38 ATP vs 2 ATP) → ALTIJD must
+- Formules en reactievergelijkingen → ALTIJD must
+- Processen met stappen → ALTIJD must
+- Namen van onderzoekers, jaartallen, details die nooit gevraagd worden → ALTIJD skip
+- reason moet ALTIJD zeggen wat voor vraag het is: "Dit wordt gevraagd als invulvraag", "Dit komt als vergelijkingsvraag"
+- VERBODEN in reason: "essentieel", "kritisch", "belangrijk", "komt vaak terug"
 
 Geef ALLEEN JSON terug. Geen tekst ervoor of erna.
 
 JSON formaat:
 {
-  "must": [{"topic":"...","summary":"4-5 zinnen met echte feiten, getallen en formules uit de tekst. Simpele taal voor 16-jarige. Dagelijks leven voorbeeld.","reason":"Docenten toetsen dit als [type vraag] omdat [specifieke reden].","tip":"2-3 gekke ezelsbruggetjes die blijven hangen."}],
-  "should": [{"topic":"...","summary":"3 zinnen met echte inhoud.","reason":"Specifiek waarom nuttig maar niet kritisch.","tip":"1 ezelsbruggetje."}],
-  "skip": [{"topic":"...","reason":"Max 1 zin. Direct en eerlijk."}],
-  "cheatsheet": "Spiekbriefje met → = ! symbolen. Groepeer per thema. Max 400 woorden. Alleen kernwoorden.",
-  "toetsvragen": [{"vraag":"...","a":"...","b":"...","c":"...","d":"...","antwoord":"A","uitleg":"1-2 zinnen waarom correct."}]
+  "must": [
+    {
+      "topic": "Korte simpele titel die een 16-jarige begrijpt",
+      "summary": "4-5 zinnen in gewone taal. Gebruik getallen en formules uit de tekst. Geef een voorbeeld uit het dagelijks leven. Geen moeilijke woorden.",
+      "reason": "Dit wordt gevraagd als [type vraag] — [concrete reden in 1 zin].",
+      "tip": "2-3 grappige ezelsbruggetjes die blijven hangen. Hoe raarder, hoe beter."
+    }
+  ],
+  "should": [
+    {
+      "topic": "Korte simpele titel",
+      "summary": "2-3 zinnen in gewone taal.",
+      "reason": "Handig om te weten maar niet het belangrijkste.",
+      "tip": "1 ezelsbruggetje."
+    }
+  ],
+  "skip": [
+    {
+      "topic": "Wat je kunt overslaan",
+      "reason": "1 zin waarom je dit kunt skippen. Direct en eerlijk."
+    }
+  ],
+  "cheatsheet": "Spiekbriefje in gewone taal. Gebruik → en ! symbolen. Groepeer per thema. Max 400 woorden. Alleen de kern.",
+  "toetsvragen": [
+    {
+      "vraag": "Vraag in gewone taal zoals een leraar het zou stellen",
+      "a": "...",
+      "b": "...",
+      "c": "...",
+      "d": "...",
+      "antwoord": "A",
+      "uitleg": "Leg in 1-2 simpele zinnen uit waarom dit het goede antwoord is."
+    }
+  ]
 }`
         },
         {
           role: 'user',
-          content: `Analyseer deze leerstof (${vakNaam}) voor een student met ${selectedTime} beschikbaar.
+          content: `Analyseer deze leerstof (${vakNaam}) voor een leerling met ${selectedTime} beschikbaar.
 
-TIJDSLOT REGELS:
-${selectedTime === '30 minuten' ? '- Must: MAX 2 onderwerpen\n- Should: MAX 1\n- Skip: alles wat niet must is' : ''}
-${selectedTime === '1 uur' ? '- Must: MAX 3 onderwerpen\n- Should: MAX 2\n- Skip: alles wat niet kritisch is' : ''}
-${selectedTime === '2-3 uur' ? '- Must: 4-5 onderwerpen\n- Should: 2-3\n- Skip: onbelangrijke details' : ''}
-${selectedTime === 'een avond' ? '- Must: 5-6 onderwerpen\n- Should: 3-4\n- Skip: randgevallen en voetnoten' : ''}
+HOEVEEL ONDERWERPEN:
+${selectedTime === '30 minuten' ? '- Must: MAX 2 onderwerpen — alleen het allerbelangrijkste\n- Should: MAX 1\n- Skip: alles wat niet must is' : ''}
+${selectedTime === '1 uur' ? '- Must: MAX 3 onderwerpen\n- Should: MAX 2\n- Skip: alles wat niet echt getoetst wordt' : ''}
+${selectedTime === '2-3 uur' ? '- Must: 4-5 onderwerpen\n- Should: 2-3\n- Skip: details en voetnoten' : ''}
+${selectedTime === 'een avond' ? '- Must: 5-6 onderwerpen\n- Should: 3-4\n- Skip: randgevallen en details die nooit gevraagd worden' : ''}
+${'1-2 dagen' === selectedTime ? '- Must: 6-7 onderwerpen\n- Should: 4-5\n- Skip: alles wat echt niet gevraagd wordt' : ''}
+${'een week' === selectedTime ? '- Must: 8 onderwerpen\n- Should: 5-6\n- Skip: minieme details' : ''}
 
-TOETSVRAGEN: Genereer precies ${vragenCount} toetsvragen met 4 opties (a,b,c,d).
+TOETSVRAGEN: Maak precies ${vragenCount} meerkeuzevragen. Maak ze zoals een echte leraar ze zou stellen.
 
 LEERSTOF:
 ${text}`
@@ -166,6 +212,7 @@ ${text}`
     if (err.error === 'upgrade_required') throw new Error('upgrade_required');
     throw new Error(err.error?.message || err.error || 'API fout');
   }
+
   const data = await res.json();
   const raw = data.choices?.[0]?.message?.content || '';
   const cleaned = raw.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
@@ -188,16 +235,25 @@ async function buildCombinedStudieplan(vakResultaten) {
       body: JSON.stringify({
         is_studieplan: true,
         messages: [
-          { role: 'system', content: `Je bent een studiecoach. Geef ALLEEN JSON terug.\n\nJSON formaat:\n{\n  "weekplan": [{"dag": "Maandag", "taken": ["Vak X — onderwerp A (30 min)"]}],\n  "tips": ["Tip 1", "Tip 2"]\n}` },
-          { role: 'user', content: `Maak een weekplanning voor ${selectedTime} per dag beschikbaar.\n\nVakken:\n${overzicht}` }
+          {
+            role: 'system',
+            content: `Je bent een studiecoach voor middelbare scholieren. Schrijf in gewone spreektaal. Geen moeilijke woorden. Geef ALLEEN JSON terug.
+
+JSON formaat:
+{
+  "weekplan": [{"dag": "Maandag", "taken": ["Vak X — onderwerp (30 min)"]}],
+  "tips": ["Tip in gewone taal", "Tip 2"]
+}`
+          },
+          {
+            role: 'user',
+            content: `Maak een weekplanning voor ${selectedTime} per dag beschikbaar.\n\nVakken:\n${overzicht}`
+          }
         ]
       })
     });
 
-    if (!res.ok) {
-      console.error('Studieplan API error:', res.status);
-      return null;
-    }
+    if (!res.ok) { console.error('Studieplan API error:', res.status); return null; }
     const data = await res.json();
     const raw = data.choices?.[0]?.message?.content || '';
     const cleaned = raw.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
@@ -281,8 +337,14 @@ async function analyze() {
   }
 }
 
-function showUpgradeModal() { document.getElementById('upgradeModal').style.display = 'flex'; }
-function hideUpgradeModal() { document.getElementById('upgradeModal').style.display = 'none'; }
+function showUpgradeModal() {
+  const modal = document.getElementById('upgradeModal');
+  if (modal) modal.classList.add('open');
+}
+function hideUpgradeModal() {
+  const modal = document.getElementById('upgradeModal');
+  if (modal) modal.classList.remove('open');
+}
 
 // ── RESULTATEN ──
 function showResults(data, vakNaam) {
@@ -290,31 +352,38 @@ function showResults(data, vakNaam) {
   document.getElementById('resultsSection').style.display = 'block';
   document.getElementById('resultsSubtitle').textContent = `${vakNaam} · ${selectedTime}`;
 
-  const hasAccess = (userPlan === 'pro' || userPlan === 'elite');
+  const hasAccess = (userPlan === 'pro' || userPlan === 'elite' || userPlan === 'starter' || userPlan === 'gratis');
 
   document.getElementById('mustList').innerHTML = (data.must || []).map(item => `
-    <div class="res-item">
+    <div class="res-item must">
+      <div class="res-item-header">
+        <span class="res-item-badge must-badge">Must learn</span>
+        <span class="res-item-badge-right">Zeker in de toets</span>
+      </div>
       <div class="res-item-title">${item.topic}</div>
-      ${hasAccess
-        ? `<div class="res-item-body">${item.summary || ''}</div>
-           ${item.tip ? `<div class="res-item-tip">${item.tip}</div>` : ''}`
-        : `<div class="res-item-locked">Volledige uitleg + ezelsbruggetje beschikbaar vanaf Pro <a href="index.html#pricing" class="upgrade-inline">Upgrade →</a></div>`
-      }
+      <div class="res-item-body">${item.summary || ''}</div>
+      ${item.tip ? `<div class="res-item-tip">💡 ${item.tip}</div>` : ''}
       <div class="res-item-reason">${item.reason || ''}</div>
     </div>`).join('');
 
   document.getElementById('shouldList').innerHTML = (data.should || []).map(item => `
-    <div class="res-item">
+    <div class="res-item should">
+      <div class="res-item-header">
+        <span class="res-item-badge should-badge">Nice to know</span>
+        <span class="res-item-badge-right">Extra punten</span>
+      </div>
       <div class="res-item-title">${item.topic}</div>
-      ${hasAccess
-        ? `<div class="res-item-body">${item.summary || ''}</div>
-           ${item.tip ? `<div class="res-item-tip">${item.tip}</div>` : ''}`
-        : `<div class="res-item-locked">Beschikbaar vanaf Pro <a href="index.html#pricing" class="upgrade-inline">Upgrade →</a></div>`
-      }
+      <div class="res-item-body">${item.summary || ''}</div>
+      ${item.tip ? `<div class="res-item-tip">💡 ${item.tip}</div>` : ''}
+      <div class="res-item-reason">${item.reason || ''}</div>
     </div>`).join('');
 
   document.getElementById('skipList').innerHTML = (data.skip || []).map(item => `
-    <div class="res-item res-item-skip">
+    <div class="res-item skip">
+      <div class="res-item-header">
+        <span class="res-item-badge skip-badge">Skip</span>
+        <span class="res-item-badge-right">Sla dit over</span>
+      </div>
       <div class="res-item-title">${item.topic}</div>
       <div class="res-item-body">${item.reason || ''}</div>
     </div>`).join('');
@@ -324,8 +393,7 @@ function showResults(data, vakNaam) {
   renderToetsvragen(data.toetsvragen || []);
 
   // Pro/Elite: genereer studieplan
-  if (hasAccess) {
-    // Verwijder bestaande container als die er al is (voorkom dubbel)
+  if (userPlan === 'pro' || userPlan === 'elite') {
     const existing = document.getElementById('studieplanContainer');
     if (existing) existing.remove();
 
@@ -353,21 +421,17 @@ function showResults(data, vakNaam) {
       spIdx = (spIdx + 1) % 4;
     }, 1800);
 
-    // FIX: error handling + timeout zodat spinner niet eeuwig draait
     const studieplanTimeout = setTimeout(() => {
       clearInterval(spTimer);
       renderStudieplanError('studieplanContainer', 'Studieplan duurde te lang. Probeer opnieuw.');
-    }, 60000); // 60 seconden timeout
+    }, 60000);
 
     buildStudieplan(data, vakNaam, lastExtractedText)
       .then(sp => {
         clearTimeout(studieplanTimeout);
         clearInterval(spTimer);
-        if (sp) {
-          renderStudieplan(sp, 'studieplanContainer');
-        } else {
-          renderStudieplanError('studieplanContainer', 'Studieplan kon niet worden gegenereerd. Probeer het opnieuw.');
-        }
+        if (sp) renderStudieplan(sp, 'studieplanContainer');
+        else renderStudieplanError('studieplanContainer', 'Studieplan kon niet worden gegenereerd. Probeer het opnieuw.');
       })
       .catch(err => {
         clearTimeout(studieplanTimeout);
@@ -378,15 +442,12 @@ function showResults(data, vakNaam) {
   }
 }
 
-// ── Studieplan error state ──
 function renderStudieplanError(containerId, message) {
   const el = document.getElementById(containerId);
   if (!el) return;
   el.innerHTML = `
     <div class="sp-doc">
-      <div class="sp-doc-header">
-        <div class="sp-doc-label">Persoonlijk studieplan</div>
-      </div>
+      <div class="sp-doc-header"><div class="sp-doc-label">Persoonlijk studieplan</div></div>
       <div class="sp-error">
         <p>${message}</p>
         <button class="sp-retry-btn" onclick="retryStudieplan()">Opnieuw proberen</button>
@@ -394,41 +455,21 @@ function renderStudieplanError(containerId, message) {
     </div>`;
 }
 
-// ── Retry studieplan ──
 async function retryStudieplan() {
   const container = document.getElementById('studieplanContainer');
   if (!container) return;
-
-  container.innerHTML = `
-    <div class="sp-loading">
-      <div class="sp-loading-steps">
-        <div class="sp-loading-step sp-loading-step-active">Opnieuw proberen...</div>
-      </div>
-    </div>`;
-
+  container.innerHTML = `<div class="sp-loading"><div class="sp-loading-steps"><div class="sp-loading-step sp-loading-step-active">Opnieuw proberen...</div></div></div>`;
   try {
-    // Haal laatste analyse data op uit de DOM
     const vakNaam = document.getElementById('resultsSubtitle')?.textContent?.split(' · ')[0] || 'Onbekend';
     const mustItems = document.querySelectorAll('#mustList .res-item');
     const shouldItems = document.querySelectorAll('#shouldList .res-item');
-
     const reconstructed = {
-      must: Array.from(mustItems).map(el => ({
-        topic: el.querySelector('.res-item-title')?.textContent || '',
-        summary: el.querySelector('.res-item-body')?.textContent || ''
-      })),
-      should: Array.from(shouldItems).map(el => ({
-        topic: el.querySelector('.res-item-title')?.textContent || '',
-        summary: el.querySelector('.res-item-body')?.textContent || ''
-      }))
+      must: Array.from(mustItems).map(el => ({ topic: el.querySelector('.res-item-title')?.textContent || '', summary: el.querySelector('.res-item-body')?.textContent || '' })),
+      should: Array.from(shouldItems).map(el => ({ topic: el.querySelector('.res-item-title')?.textContent || '', summary: el.querySelector('.res-item-body')?.textContent || '' }))
     };
-
     const sp = await buildStudieplan(reconstructed, vakNaam, lastExtractedText);
-    if (sp) {
-      renderStudieplan(sp, 'studieplanContainer');
-    } else {
-      renderStudieplanError('studieplanContainer', 'Studieplan kon niet worden gegenereerd.');
-    }
+    if (sp) renderStudieplan(sp, 'studieplanContainer');
+    else renderStudieplanError('studieplanContainer', 'Studieplan kon niet worden gegenereerd.');
   } catch (err) {
     console.error('Retry studieplan error:', err);
     renderStudieplanError('studieplanContainer', 'Er ging iets mis. Probeer later opnieuw.');
@@ -440,7 +481,6 @@ async function buildStudieplan(result, vakNaam, rawText = '') {
   const cfg = getTijdConfig(selectedTime);
   const mustTopics = (result.must || []).map(m => `- ${m.topic}: ${m.summary || ''}`).join('\n');
   const shouldTopics = (result.should || []).map(s => `- ${s.topic}: ${s.summary || ''}`).join('\n');
-
   const token = await getAuthToken();
 
   const res = await fetch('https://analyze.aminaddarrazi2004.workers.dev', {
@@ -451,85 +491,83 @@ async function buildStudieplan(result, vakNaam, rawText = '') {
       messages: [
         {
           role: 'system',
-          content: `Je bent een ervaren eindexamendocent. Je schrijft een studieplan dat een leerling van boven naar beneden leest en daarna de toets kan halen — zonder de originele PDF te hoeven lezen.
+          content: `Je schrijft een studieplan voor een leerling van 15-17 jaar. Schrijf alsof je een vriend bent die de stof al kent en het uitlegt.
 
-ABSOLUTE REGELS:
-1. Geen instructies zoals "lees dit" of "bestudeer dat". JIJ legt de stof direct uit.
-2. Elke uitleg is minimaal 6 zinnen. Gebruik echte feiten, getallen en formules uit de lesstof.
-3. Schrijf voor een 16-jarige. Korte zinnen. Gewone woorden.
-4. Elk onderwerp eindigt met een concreet voorbeeld: "Denk aan..."
-5. Ezelsbruggetje = grappig en memorabel, niet saai.
-6. Valkuil = de meest gemaakte fout, specifiek en eerlijk.
-7. Herhalingsschema gebaseerd op spaced repetition — bewezen leertechniek.
+TAALREGEL — ABSOLUTE PRIORITEIT BOVEN ALLES:
+Schrijf op taalniveau B1. Gewone taal die iedereen begrijpt.
+
+GOUDEN REGEL: Na elk vaktechnisch of moeilijk woord schrijf je ALTIJD tussen haakjes wat het betekent.
+Voorbeelden: "ATP (de energiebrandstof van je cel)", "enzymen (eiwitten die processen versnellen)".
+
+Stel je voor: je legt het uit aan je beste vriend die dit vak nooit heeft gevolgd.
+Test jezelf: als een 14-jarige het niet begrijpt, schrijf je het opnieuw.
+Korte zinnen. Max 15 woorden per zin. Schrijf "je", niet "u" of "men".
+
+INHOUD REGELS:
+- JIJ legt de stof uit. Geen "lees dit" of "bestudeer dat".
+- Elke uitleg is minimaal 5 zinnen met echte feiten en getallen uit de lesstof.
+- Elk onderwerp eindigt met een voorbeeld: "Denk aan..."
+- Ezelsbruggetje: hoe gekker en raarder, hoe beter het blijft hangen.
+- Valkuil: de meest gemaakte fout op toetsen, heel concreet.
 
 Geef ALLEEN JSON terug. Geen tekst ervoor of erna.
 
 JSON formaat:
 {
-  "samenvatting": "2-3 zinnen: het grote plaatje. Waarom hangt deze stof samen?",
+  "samenvatting": "2-3 zinnen in gewone taal: waar gaat dit vak over en waarom hangt het samen?",
   "leerroute": [
     {
       "stap": 1,
-      "onderwerp": "Naam van het onderwerp",
-      "uitleg": "Minimaal 6 zinnen. Leg volledig uit met begrippen, getallen, formules. Eindig met: Denk aan [dagelijks voorbeeld].",
-      "onthoud": "De exacte definitie/regel die op de toets gevraagd wordt. 1-2 zinnen, precies.",
-      "ezelsbruggetje": "Grappig en memorabel. Leg uit hoe je het gebruikt.",
-      "valkuil": "Specifieke fout die leerlingen maken + hoe je hem vermijdt.",
+      "onderwerp": "Simpele naam die een leerling begrijpt",
+      "uitleg": "Minimaal 5 zinnen. Echte feiten, getallen, formules. Gewone taal. Eindig met: Denk aan [herkenbaar voorbeeld uit het dagelijks leven].",
+      "onthoud": "De exacte definitie of regel die op de toets gevraagd wordt. Max 2 zinnen.",
+      "ezelsbruggetje": "Grappig, raar en memorabel. Leg uit hoe je het gebruikt.",
+      "valkuil": "De meest gemaakte fout op toetsen + hoe je hem vermijdt. Heel concreet.",
       "tijd": "15 min"
     }
   ],
   "herhalingsschema": [
-    {"moment": "Direct na het leren", "actie": "Sluit alles. Schrijf uit je hoofd de 3 hoofdpunten op. Check daarna."},
+    {"moment": "Direct na het leren", "actie": "Sluit alles. Schrijf uit je hoofd de 3 belangrijkste dingen op. Check daarna."},
     {"moment": "Na 1 uur", "actie": "Zeg per onderwerp het ezelsbruggetje op. Wat weet je nog?"},
-    {"moment": "Voor het slapen", "actie": "Lees alleen de 'Onthoud' blokken door. Niets meer."},
-    {"moment": "Dag van de toets", "actie": "Lees de cheatsheet 1x door. Schrijf daarna uit je hoofd op wat je weet."}
+    {"moment": "Voor het slapen", "actie": "Lees alleen de 'Onthoud' blokken door. Niks meer."},
+    {"moment": "Dag van de toets", "actie": "Lees het spiekbriefje 1x door. Schrijf daarna uit je hoofd op wat je weet."}
   ],
   "focuspunten": [
-    "Onderwerp — wat voor vraag: definitievraag/rekenvraag/vergelijkingsvraag — Voorbeeldvraag zoals op de toets"
+    "Onderwerp — soort vraag — Voorbeeld zoals de leraar het vraagt"
   ],
-  "geheimtip": "Concrete tip van een docent: wat kosten direct punten, wat wil de corrector zien, welke formuleringen werken."
+  "geheimtip": "Een concrete tip van iemand die weet hoe leraren nakijken: wat levert direct punten op, wat wil de leraar zien."
 }`
         },
         {
           role: 'user',
-          content: `Maak een persoonlijk studieplan voor: ${vakNaam}
+          content: `Maak een studieplan voor: ${vakNaam}
 Beschikbare tijd: ${selectedTime}
 Aantal stappen: ${cfg.planStappen}
 Herhalingsmomenten: ${cfg.herhalingsSchema.join(' → ')}
 
-MUST-onderwerpen (dit staat zeker in de toets):
+Dit moet zeker geleerd worden:
 ${mustTopics}
 
-SHOULD-onderwerpen:
+Dit is handig maar minder belangrijk:
 ${shouldTopics}
 
-ORIGINELE LESSTOF (gebruik alleen feiten hieruit, verzin niets):
+Originele lesstof (gebruik alleen feiten hieruit, verzin niets):
 ${rawText ? rawText.slice(0, 8000) : 'Niet beschikbaar'}`
         }
       ]
     })
   });
 
-  if (!res.ok) {
-    console.error('Studieplan API error:', res.status);
-    return null;
-  }
+  if (!res.ok) { console.error('Studieplan API error:', res.status); return null; }
 
   const data = await res.json();
   const raw = data.choices?.[0]?.message?.content || '';
   const cleaned = raw.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
   const match = cleaned.match(/\{[\s\S]*\}/);
-  if (!match) {
-    console.error('Studieplan JSON parse failed. Raw response:', raw.slice(0, 500));
-    return null;
-  }
+  if (!match) { console.error('Studieplan JSON parse failed:', raw.slice(0, 500)); return null; }
 
-  try {
-    return JSON.parse(match[0]);
-  } catch (err) {
-    console.error('Studieplan JSON parse error:', err, 'Raw:', raw.slice(0, 500));
-    return null;
-  }
+  try { return JSON.parse(match[0]); }
+  catch (err) { console.error('Studieplan JSON parse error:', err); return null; }
 }
 
 function renderStudieplan(studieplan, containerId) {
@@ -538,16 +576,12 @@ function renderStudieplan(studieplan, containerId) {
 
   el.innerHTML = `
     <div class="sp-doc">
-
       <div class="sp-doc-header">
         <div class="sp-doc-label">Persoonlijk studieplan</div>
         <button class="sp-doc-download" onclick="downloadStudieplanPDF()">Opslaan als PDF</button>
       </div>
 
-      ${studieplan.samenvatting ? `
-      <div class="sp-intro">
-        <p>${studieplan.samenvatting}</p>
-      </div>` : ''}
+      ${studieplan.samenvatting ? `<div class="sp-intro"><p>${studieplan.samenvatting}</p></div>` : ''}
 
       ${studieplan.focuspunten?.length ? `
       <div class="sp-block">
@@ -573,7 +607,7 @@ function renderStudieplan(studieplan, containerId) {
               </div>
               <div class="sp-step-body">
                 <p class="sp-step-uitleg">${s.uitleg || ''}</p>
-                ${s.onthoud ? `<div class="sp-onthoud"><span class="sp-onthoud-label">Onthoud</span>${s.onthoud}</div>` : ''}
+                ${s.onthoud ? `<div class="sp-onthoud"><span class="sp-onthoud-label">Onthoud dit</span>${s.onthoud}</div>` : ''}
                 ${s.ezelsbruggetje ? `<div class="sp-ezel"><span class="sp-ezel-label">Ezelsbruggetje</span>${s.ezelsbruggetje}</div>` : ''}
                 ${s.valkuil ? `<div class="sp-valkuil"><span class="sp-valkuil-label">Let op</span>${s.valkuil}</div>` : ''}
               </div>
@@ -582,25 +616,22 @@ function renderStudieplan(studieplan, containerId) {
       </div>
 
       <div class="sp-block">
-        <div class="sp-block-title">Herhalingsschema — bewezen leertechniek</div>
+        <div class="sp-block-title">Herhalingsschema</div>
         <div class="sp-herhaling-list">
-          ${(studieplan.herhalingsschema || []).map((h, i) => `
+          ${(studieplan.herhalingsschema || []).map(h => `
             <div class="sp-herhaling-row">
               <div class="sp-herhaling-moment">${h.moment}</div>
               <div class="sp-herhaling-actie">${h.actie}</div>
             </div>`).join('')}
         </div>
-        <div class="sp-herhaling-uitleg">
-          Spaced repetition: je herhaalt de stof op steeds grotere intervallen. Bewezen de meest effectieve leertechniek.
-        </div>
+        <div class="sp-herhaling-uitleg">Herhalen op de juiste momenten zorgt dat je het echt onthoudt — niet alleen vanavond.</div>
       </div>
 
       ${studieplan.geheimtip ? `
       <div class="sp-tip">
-        <div class="sp-tip-label">Docenttip</div>
+        <div class="sp-tip-label">Tip van een leraar</div>
         <p>${studieplan.geheimtip}</p>
       </div>` : ''}
-
     </div>`;
 }
 
@@ -619,32 +650,28 @@ function getTijdConfig(tijd) {
 function downloadStudieplanPDF() {
   const el = document.querySelector('.sp-doc');
   if (!el) return;
-
   const htmlContent = `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Studieplan — StudyBrain</title>
+<html><head><meta charset="UTF-8"><title>Studieplan — StudyBrain</title>
 <style>
   @media print { .sp-doc-download { display: none !important; } body { margin: 0; } }
   body { font-family: Arial, sans-serif; max-width: 680px; margin: 0 auto; padding: 32px; color: #1a1a2e; font-size: 14px; line-height: 1.6; }
   .sp-doc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #ff4d6d; }
   .sp-doc-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #ff4d6d; }
   .sp-doc-download { padding: 8px 18px; background: #ff4d6d; border: none; border-radius: 6px; color: white; font-size: 13px; font-weight: 700; cursor: pointer; }
-  .sp-intro { background: #f8f8ff; border-left: 3px solid #ff4d6d; padding: 12px 16px; margin-bottom: 24px; border-radius: 0 8px 8px 0; font-size: 14px; color: #333; }
+  .sp-intro { background: #f8f8ff; border-left: 3px solid #ff4d6d; padding: 12px 16px; margin-bottom: 24px; border-radius: 0 8px 8px 0; }
   .sp-block { margin-bottom: 28px; }
   .sp-block-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #888; margin-bottom: 14px; padding-bottom: 6px; border-bottom: 1px solid #eee; }
   .sp-focus-row { display: flex; gap: 10px; margin-bottom: 6px; align-items: flex-start; }
   .sp-focus-n { background: #ff4d6d; color: white; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
   .sp-step { margin-bottom: 20px; page-break-inside: avoid; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
   .sp-step-header { display: flex; align-items: center; gap: 10px; background: #fafafa; padding: 10px 14px; border-bottom: 1px solid #eee; }
-  .sp-step-num { font-size: 10px; font-weight: 700; color: #ff4d6d; text-transform: uppercase; letter-spacing: 0.05em; }
+  .sp-step-num { font-size: 10px; font-weight: 700; color: #ff4d6d; text-transform: uppercase; }
   .sp-step-name { font-weight: 700; font-size: 14px; flex: 1; }
   .sp-step-time { font-size: 11px; color: #888; background: #f0f0f0; padding: 2px 8px; border-radius: 20px; }
   .sp-step-body { padding: 14px; }
   .sp-step-uitleg { margin-bottom: 10px; color: #333; }
   .sp-onthoud { background: #fffde7; border-left: 3px solid #ffc107; padding: 8px 12px; margin: 8px 0; border-radius: 0 6px 6px 0; font-size: 13px; }
-  .sp-onthoud-label, .sp-ezel-label, .sp-valkuil-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 3px; }
+  .sp-onthoud-label, .sp-ezel-label, .sp-valkuil-label { font-size: 10px; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 3px; }
   .sp-onthoud-label { color: #f59e0b; }
   .sp-ezel { background: #f0fff4; border-left: 3px solid #00c853; padding: 8px 12px; margin: 8px 0; border-radius: 0 6px 6px 0; font-size: 13px; }
   .sp-ezel-label { color: #00c853; }
@@ -655,20 +682,13 @@ function downloadStudieplanPDF() {
   .sp-herhaling-actie { font-size: 13px; color: #333; }
   .sp-herhaling-uitleg { font-size: 12px; color: #888; margin-top: 10px; font-style: italic; }
   .sp-tip { background: #fffde7; border: 1px solid #ffc107; border-radius: 8px; padding: 14px 16px; font-size: 13px; color: #333; }
-  .sp-tip-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #f59e0b; margin-bottom: 6px; }
-  .sp-error { text-align: center; padding: 32px 16px; color: #666; }
-  .sp-retry-btn { margin-top: 12px; padding: 10px 24px; background: #ff4d6d; border: none; border-radius: 8px; color: white; font-size: 14px; font-weight: 600; cursor: pointer; }
-  .sp-retry-btn:hover { background: #e8445f; }
+  .sp-tip-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #f59e0b; margin-bottom: 6px; }
   .footer { margin-top: 32px; text-align: center; font-size: 11px; color: #aaa; border-top: 1px solid #eee; padding-top: 12px; }
-</style>
-</head>
-<body>
+</style></head><body>
   <button class="sp-doc-download" onclick="window.print()">Opslaan als PDF</button>
   ${el.innerHTML}
-  <div class="footer">Gegenereerd door StudyBrain — studybrain.nl</div>
-</body>
-</html>`;
-
+  <div class="footer">Gemaakt door StudyBrain — studybrain.nl</div>
+</body></html>`;
   const newWin = window.open('', '_blank', 'width=800,height=900');
   newWin.document.write(htmlContent);
   newWin.document.close();
@@ -686,15 +706,15 @@ function showMultiResults(vakResultaten, weekplan) {
       <h3 class="vak-titel">${vakNaam}</h3>
       <div class="vak-blok must-blok">
         <div class="blok-label">MUST LEARN</div>
-        ${result.must.map(item => `<div class="res-item"><div class="res-item-title">${item.topic}</div><div class="res-item-body">${item.summary || ''}</div>${item.tip ? `<div class="res-item-tip">${item.tip}</div>` : ''}</div>`).join('')}
+        ${result.must.map(item => `<div class="res-item must"><div class="res-item-title">${item.topic}</div><div class="res-item-body">${item.summary || ''}</div>${item.tip ? `<div class="res-item-tip">💡 ${item.tip}</div>` : ''}</div>`).join('')}
       </div>
       <div class="vak-blok should-blok">
         <div class="blok-label">NICE TO KNOW</div>
-        ${result.should.map(item => `<div class="res-item"><div class="res-item-title">${item.topic}</div><div class="res-item-body">${item.summary || ''}</div></div>`).join('')}
+        ${result.should.map(item => `<div class="res-item should"><div class="res-item-title">${item.topic}</div><div class="res-item-body">${item.summary || ''}</div></div>`).join('')}
       </div>
       <div class="vak-blok skip-blok">
         <div class="blok-label">SKIP</div>
-        ${result.skip.map(item => `<div class="res-item res-item-skip"><div class="res-item-title">${item.topic}</div><div class="res-item-body">${item.reason || ''}</div></div>`).join('')}
+        ${result.skip.map(item => `<div class="res-item skip"><div class="res-item-title">${item.topic}</div><div class="res-item-body">${item.reason || ''}</div></div>`).join('')}
       </div>
       <div class="vak-cheatsheet">
         <div class="blok-label">Cheatsheet</div>
@@ -711,7 +731,7 @@ function showMultiResults(vakResultaten, weekplan) {
             <strong>${dag.dag}</strong>
             <ul>${dag.taken.map(t => `<li>${t}</li>`).join('')}</ul>
           </div>`).join('')}
-        ${weekplan.tips ? `<div class="weekplan-tips"><strong>Studietips</strong><ul>${weekplan.tips.map(t => `<li>${t}</li>`).join('')}</ul></div>` : ''}
+        ${weekplan.tips ? `<div class="weekplan-tips"><strong>Tips</strong><ul>${weekplan.tips.map(t => `<li>${t}</li>`).join('')}</ul></div>` : ''}
       </div>`;
   }
 
@@ -771,15 +791,21 @@ function submitToets() {
     });
     if (gekozen === correct) {
       goed++;
-      feedback.innerHTML = `Goed — ${v.uitleg}`;
+      feedback.innerHTML = `Goed! ${v.uitleg}`;
       feedback.className = 'vr-feedback correct-feedback';
     } else {
-      feedback.innerHTML = `Fout. Juist antwoord: <strong>${correct}</strong> — ${v.uitleg}`;
+      feedback.innerHTML = `Fout. Het goede antwoord is <strong>${correct}</strong> — ${v.uitleg}`;
       feedback.className = 'vr-feedback incorrect-feedback';
     }
     feedback.style.display = 'block';
   });
-  document.getElementById('toetsScore').innerHTML = `<div class="score-box">Score: <strong>${goed}/${toetsvragenData.length}</strong>${goed === toetsvragenData.length ? ' — Perfect!' : goed >= toetsvragenData.length / 2 ? ' — Goed bezig!' : ' — Nog even oefenen!'}</div>`;
+  const totaal = toetsvragenData.length;
+  const pct = Math.round((goed / totaal) * 100);
+  document.getElementById('toetsScore').innerHTML = `
+    <div class="score-box">
+      <strong>${goed}/${totaal}</strong> goed — ${pct}%
+      ${pct === 100 ? ' 🎉 Perfect!' : pct >= 70 ? ' — Goed bezig!' : ' — Nog even oefenen!'}
+    </div>`;
   document.getElementById('submitToets').style.display = 'none';
 }
 
