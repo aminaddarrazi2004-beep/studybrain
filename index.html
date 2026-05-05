@@ -369,38 +369,78 @@
 
     <!-- OUTPUT PREVIEW -->
     <div style="perspective:1200px">
-      <div class="result-preview">
-        <div class="preview-chrome">
-          <div class="chrome-dots"><span></span><span></span><span></span></div>
-          <div class="chrome-url">studybrain.nl — Jouw analyse</div>
+      <div class="result-preview" style="background:#0d0d1a;border:0.5px solid rgba(255,255,255,0.1);border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.5);transform:rotateY(-2deg) rotateX(1deg);transition:transform 0.6s ease;" onmouseover="this.style.transform='rotateY(0) rotateX(0)'" onmouseout="this.style.transform='rotateY(-2deg) rotateX(1deg)'">
+        <div style="display:flex;align-items:center;padding:10px 16px;gap:8px;background:#080814;border-bottom:0.5px solid rgba(255,255,255,0.08);">
+          <div style="display:flex;gap:5px;"><span style="width:10px;height:10px;border-radius:50%;background:#ff5f57;display:block;"></span><span style="width:10px;height:10px;border-radius:50%;background:#febc2e;display:block;"></span><span style="width:10px;height:10px;border-radius:50%;background:#28c840;display:block;"></span></div>
+          <div style="flex:1;margin-left:6px;background:rgba(255,255,255,0.06);border-radius:5px;padding:4px 12px;font-size:11px;color:rgba(255,255,255,0.35);text-align:center;font-family:monospace;">studybrain.nl — jouw analyse</div>
         </div>
-        <div class="preview-body">
-          <div class="preview-tabs">
-            <div class="preview-tab active">Must Learn</div>
-            <div class="preview-tab">Nice to Know</div>
-            <div class="preview-tab">Skip</div>
-            <div class="preview-tab">Cheatsheet</div>
+        <div style="padding:18px;">
+          <!-- Meta -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.9);">Biologie H7 — Fotosynthese</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;">Beschikbare tijd: een avond</div>
+            </div>
+            <div style="font-size:9px;font-weight:600;padding:3px 9px;border-radius:20px;background:rgba(0,230,118,0.12);color:#00e676;border:0.5px solid rgba(0,230,118,0.25);">Analyse klaar</div>
           </div>
-          <div class="preview-item must">
-            <div class="pi-tag">Must Learn — zeker in de toets</div>
-            <div class="pi-title">Celademhaling aeroob vs anaeroob</div>
-            <div class="pi-desc">38 ATP aeroob vs 2 ATP anaeroob. Vergelijkingsvraag op elke toets.</div>
-            <div class="pi-tip">💡 "38 aeroob, 2 anaeroob — of je flitst of je fietst"</div>
+          <!-- Tabs -->
+          <div style="display:flex;background:rgba(255,255,255,0.04);border-radius:7px;padding:3px;margin-bottom:12px;gap:2px;">
+            <div style="flex:1;text-align:center;padding:6px 4px;font-size:10px;font-weight:600;color:rgba(255,255,255,0.9);background:rgba(255,255,255,0.1);border-radius:5px;">Must learn</div>
+            <div style="flex:1;text-align:center;padding:6px 4px;font-size:10px;color:rgba(255,255,255,0.4);">Nice to know</div>
+            <div style="flex:1;text-align:center;padding:6px 4px;font-size:10px;color:rgba(255,255,255,0.4);">Skip</div>
+            <div style="flex:1;text-align:center;padding:6px 4px;font-size:10px;color:rgba(255,255,255,0.4);">Cheatsheet</div>
           </div>
-          <div class="preview-item nice">
-            <div class="pi-tag">Nice to Know</div>
-            <div class="pi-title">Enzymen en denaturatie</div>
-            <div class="pi-desc">Boven 40°C verliezen enzymen hun vorm. Nuttig als context.</div>
+          <!-- Must -->
+          <div style="border-radius:9px;padding:11px 13px;margin-bottom:7px;background:rgba(0,230,118,0.07);border:0.5px solid rgba(0,230,118,0.2);position:relative;overflow:hidden;">
+            <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#00e676;border-radius:0;"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+              <div style="font-size:8px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#00e676;">Must learn</div>
+              <div style="font-size:8px;font-weight:600;padding:2px 7px;border-radius:20px;background:rgba(0,230,118,0.12);color:#00e676;">Zeker in de toets</div>
+            </div>
+            <div style="font-size:12px;font-weight:500;color:rgba(255,255,255,0.92);margin-bottom:3px;">De formule van fotosynthese</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.45);line-height:1.5;margin-bottom:7px;">6CO₂ + 6H₂O + licht → glucose + zuurstof. Lichtreacties in thylakoid (het groene zakje), Calvin-cyclus in het stroma.</div>
+            <div style="display:flex;gap:5px;background:rgba(0,230,118,0.08);border-radius:5px;padding:5px 7px;font-size:9px;color:#00e676;line-height:1.45;"><span>→</span><span>"6 Coole Olifanten lopen door het Stroma"</span></div>
           </div>
-          <div class="preview-item skip">
-            <div class="pi-tag">Skip — verspil hier geen tijd aan</div>
-            <div class="pi-title">Namen van alle onderzoekers</div>
-            <div class="pi-desc">Eenmalig genoemd, nooit getoetst. Sla dit volledig over.</div>
+          <!-- Nice -->
+          <div style="border-radius:9px;padding:11px 13px;margin-bottom:7px;background:rgba(255,214,0,0.07);border:0.5px solid rgba(255,214,0,0.2);position:relative;overflow:hidden;">
+            <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#ffd600;border-radius:0;"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+              <div style="font-size:8px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ffd600;">Nice to know</div>
+              <div style="font-size:8px;font-weight:600;padding:2px 7px;border-radius:20px;background:rgba(255,214,0,0.12);color:#ffd600;">Extra punten</div>
+            </div>
+            <div style="font-size:12px;font-weight:500;color:rgba(255,255,255,0.92);margin-bottom:3px;">Hoe energie wordt doorgegeven</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.45);line-height:1.5;">NAD⁺ (een energiekoerier in je cel) pakt waterstof op en brengt het naar de plek waar energie nodig is.</div>
           </div>
-          <div class="preview-footer">
-            <span class="pf-label">Toetsgereedheid</span>
-            <div class="pf-bar"><div class="pf-fill"></div></div>
-            <span class="pf-pct">82%</span>
+          <!-- Skip -->
+          <div style="border-radius:9px;padding:11px 13px;margin-bottom:12px;background:rgba(255,77,109,0.07);border:0.5px solid rgba(255,77,109,0.2);position:relative;overflow:hidden;">
+            <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#ff4d6d;border-radius:0;"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+              <div style="font-size:8px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ff4d6d;">Skip</div>
+              <div style="font-size:8px;font-weight:600;padding:2px 7px;border-radius:20px;background:rgba(255,77,109,0.12);color:#ff4d6d;">Sla dit over</div>
+            </div>
+            <div style="font-size:12px;font-weight:500;color:rgba(255,255,255,0.92);margin-bottom:3px;">Hoe pyruvaat eruitziet als tekening</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.45);line-height:1.5;">Nooit gevraagd op toetsen. Weet alleen dat het bestaat.</div>
+          </div>
+          <!-- Divider -->
+          <div style="height:0.5px;background:rgba(255,255,255,0.07);margin-bottom:12px;"></div>
+          <!-- Studieplan mini -->
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,77,109,0.06);border:0.5px solid rgba(255,77,109,0.2);border-radius:9px;padding:12px 14px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,77,109,0.12);border:0.5px solid rgba(255,77,109,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ff4d6d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+              </div>
+              <div>
+                <div style="font-size:12px;font-weight:500;color:rgba(255,255,255,0.9);margin-bottom:2px;">Persoonlijk studieplan</div>
+                <div style="font-size:10px;color:rgba(255,255,255,0.35);">Uitgebreide samenvatting + ezelsbruggetjes + oefentoets</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:5px;padding:8px 12px;background:#ff4d6d;border-radius:7px;font-size:11px;font-weight:600;color:white;white-space:nowrap;flex-shrink:0;">Bekijk →</div>
+          </div>
+          <!-- Footer -->
+          <div style="display:flex;align-items:center;gap:10px;margin-top:12px;padding-top:12px;border-top:0.5px solid rgba(255,255,255,0.07);">
+            <div style="font-size:9px;color:rgba(255,255,255,0.3);white-space:nowrap;letter-spacing:0.04em;text-transform:uppercase;">Toetsgereedheid</div>
+            <div style="flex:1;height:3px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;"><div style="height:100%;width:82%;background:linear-gradient(90deg,#00e676,#4dffa0);border-radius:3px;"></div></div>
+            <div style="font-size:10px;font-weight:500;color:#00e676;">82%</div>
           </div>
         </div>
       </div>
