@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meneer Tim — StudyBrain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg: #05050f;
+  --surface: #0c0c1a;
+  --card: #10101e;
+  --border: rgba(255,255,255,0.07);
+  --accent: #ff4d6d;
+  --accent-dim: rgba(255,77,109,0.10);
+  --accent-glow: rgba(255,77,109,0.20);
+  --green: #00e676;
+  --yellow: #ffd600;
+  --text: #f0f0f8;
+  --muted: #6b6b8a;
+  --muted2: #3a3a52;
+  --tim: #5c7cfa;
+  --tim-dim: rgba(92,124,250,0.10);
+  --tim-glow: rgba(92,124,250,0.20);
+  --font: 'Plus Jakarta Sans', sans-serif;
+  --sidebar-w: 220px;
+  --radius: 14px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:var(--font); -webkit-font-smoothing:antialiased; min-height:100vh; overflow:hidden; }
+
+body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(rgba(255,77,109,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,77,109,0.015) 1px,transparent 1px); background-size:60px 60px; pointer-events:none; z-index:0; }
+
+.orb { position:fixed; border-radius:50%; filter:blur(100px); pointer-events:none; z-index:0; }
+.orb-1 { width:500px;height:500px;background:radial-gradient(circle,rgba(92,124,250,0.08),transparent 65%);top:-150px;right:-100px; }
+.orb-2 { width:400px;height:400px;background:radial-gradient(circle,rgba(255,77,109,0.05),transparent 65%);bottom:-100px;left:-100px; }
+
+/* ── SIDEBAR ── */
+.sidebar { position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);background:rgba(6,6,16,0.98);border-right:1px solid var(--border);z-index:100;display:flex;flex-direction:column;backdrop-filter:blur(20px); }
+.sidebar-logo { padding:22px 20px 18px;border-bottom:1px solid var(--border);font-size:17px;font-weight:800;letter-spacing:-0.3px;flex-shrink:0; }
+.sidebar-logo span { color:var(--accent); }
+.sidebar-nav { flex:1;padding:14px 10px;display:flex;flex-direction:column;gap:2px;overflow-y:auto; }
+.nav-label { font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);padding:10px 12px 6px; }
+.nav-item { display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none;cursor:pointer;transition:all 0.15s;border:none;background:none;width:100%;text-align:left;font-family:var(--font); }
+.nav-item svg { width:16px;height:16px;flex-shrink:0;opacity:0.5;transition:opacity 0.15s; }
+.nav-item:hover { background:rgba(255,255,255,0.04);color:var(--text); }
+.nav-item:hover svg { opacity:0.8; }
+.nav-item.active { background:var(--tim-dim);color:var(--tim);font-weight:600; }
+.nav-item.active svg { opacity:1; }
+.nav-sep { height:1px;background:var(--border);margin:6px 10px; }
+.sidebar-bottom { padding:12px 10px;border-top:1px solid var(--border);flex-shrink:0; }
+.plan-pill { display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);margin-bottom:8px;cursor:pointer;transition:border-color 0.15s; }
+.plan-pill:hover { border-color:rgba(255,255,255,0.12); }
+.plan-name { font-size:12px;font-weight:700; }
+.plan-label { font-size:10px;color:var(--muted);margin-top:1px; }
+.plan-badge { font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(255,77,109,0.2); }
+.sidebar-email { font-size:11px;color:var(--muted2);padding:4px 12px 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+.logout-btn { display:flex;align-items:center;gap:8px;width:100%;padding:9px 12px;border-radius:10px;font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--font);transition:all 0.15s;text-align:left; }
+.logout-btn:hover { background:rgba(255,77,109,0.08);color:var(--accent); }
+.logout-btn svg { width:15px;height:15px;flex-shrink:0; }
+
+/* ── MAIN ── */
+.main { margin-left:var(--sidebar-w); height:100vh; display:flex; flex-direction:column; position:relative; z-index:1; }
+
+/* ── TOPBAR ── */
+.topbar { display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:60px;background:rgba(5,5,15,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);flex-shrink:0; }
+.topbar-left { display:flex;align-items:center;gap:14px; }
+.tim-avatar-sm { width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--tim),#818cf8);display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid rgba(92,124,250,0.3);flex-shrink:0; position:relative; }
+.tim-status { position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;background:var(--green);border:2px solid var(--bg); }
+.topbar-name { font-size:15px;font-weight:700;letter-spacing:-0.2px; }
+.topbar-sub { font-size:12px;color:var(--muted);margin-top:1px; }
+.topbar-right { display:flex;align-items:center;gap:8px; }
+.clear-btn { padding:8px 16px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all 0.15s; }
+.clear-btn:hover { border-color:rgba(255,255,255,0.12);color:var(--text); }
+
+/* ── CHAT AREA ── */
+.chat-area { flex:1;overflow-y:auto;padding:24px 28px;display:flex;flex-direction:column;gap:16px; }
+.chat-area::-webkit-scrollbar { width:4px; }
+.chat-area::-webkit-scrollbar-track { background:transparent; }
+.chat-area::-webkit-scrollbar-thumb { background:var(--muted2);border-radius:2px; }
+
+/* Welcome state */
+.welcome { display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;text-align:center;padding:40px 20px; }
+.tim-avatar-lg {
+  width:80px;height:80px;border-radius:50%;
+  background:linear-gradient(135deg,var(--tim),#818cf8);
+  display:flex;align-items:center;justify-content:center;
+  font-size:36px;margin-bottom:16px;
+  border:3px solid rgba(92,124,250,0.25);
+  box-shadow:0 0 40px rgba(92,124,250,0.2);
+  position:relative;
+  animation:float 4s ease-in-out infinite;
+}
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.tim-status-lg { position:absolute;bottom:2px;right:2px;width:16px;height:16px;border-radius:50%;background:var(--green);border:3px solid var(--bg); }
+.welcome h2 { font-size:22px;font-weight:800;letter-spacing:-0.3px;margin-bottom:8px; }
+.welcome p { font-size:14px;color:var(--muted);line-height:1.7;max-width:420px;margin-bottom:28px; }
+
+.starter-grid { display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:480px;width:100%; }
+.starter-btn {
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:14px 16px;text-align:left;cursor:pointer;transition:all 0.2s;
+  font-family:var(--font);
+}
+.starter-btn:hover { border-color:rgba(92,124,250,0.4);background:var(--tim-dim);transform:translateY(-2px); }
+.starter-icon { font-size:20px;margin-bottom:8px;display:block; }
+.starter-title { font-size:13px;font-weight:600;color:var(--text);display:block;margin-bottom:3px; }
+.starter-sub { font-size:11px;color:var(--muted);line-height:1.4; }
+
+/* Messages */
+.msg { display:flex;gap:10px;max-width:720px;animation:msgIn 0.3s ease both; }
+@keyframes msgIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+.msg.user { flex-direction:row-reverse;margin-left:auto; }
+
+.msg-avatar { width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700; }
+.msg-avatar.tim { background:linear-gradient(135deg,var(--tim),#818cf8);font-size:16px; }
+.msg-avatar.user { background:linear-gradient(135deg,var(--accent),#ff8fa3);color:white; }
+
+.msg-bubble { padding:12px 16px;border-radius:14px;font-size:14px;line-height:1.65;max-width:580px; }
+.msg.tim .msg-bubble { background:var(--surface);border:1px solid var(--border);border-top-left-radius:4px; }
+.msg.user .msg-bubble { background:var(--accent-dim);border:1px solid rgba(255,77,109,0.2);border-top-right-radius:4px;color:var(--text); }
+
+/* Special bubble types */
+.msg-bubble.uitleg { border-left:3px solid var(--tim); }
+.msg-bubble.oefening { border-left:3px solid var(--yellow); }
+.msg-bubble.goed { border-left:3px solid var(--green); }
+.msg-bubble.fout { border-left:3px solid var(--accent); }
+
+.msg-label { font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px; }
+.uitleg .msg-label { color:var(--tim); }
+.oefening .msg-label { color:var(--yellow); }
+.goed .msg-label { color:var(--green); }
+.fout .msg-label { color:var(--accent); }
+
+/* Typing indicator */
+.typing { display:flex;align-items:center;gap:10px;padding:4px 0; }
+.typing-dots { display:flex;gap:4px;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:14px;border-top-left-radius:4px; }
+.typing-dots span { width:6px;height:6px;border-radius:50%;background:var(--muted);animation:dot 1.4s ease-in-out infinite; }
+.typing-dots span:nth-child(2) { animation-delay:0.2s; }
+.typing-dots span:nth-child(3) { animation-delay:0.4s; }
+@keyframes dot { 0%,60%,100%{transform:translateY(0);opacity:0.4} 30%{transform:translateY(-5px);opacity:1} }
+
+/* Oefenvragen */
+.quiz-options { display:flex;flex-direction:column;gap:6px;margin-top:10px; }
+.quiz-opt {
+  padding:10px 14px;border-radius:9px;
+  background:rgba(255,255,255,0.03);border:1px solid var(--border);
+  font-size:13px;color:var(--muted);cursor:pointer;transition:all 0.15s;
+  font-family:var(--font);text-align:left;width:100%;
+}
+.quiz-opt:hover { border-color:rgba(92,124,250,0.4);color:var(--text);background:var(--tim-dim); }
+.quiz-opt.correct { border-color:rgba(0,230,118,0.4);background:rgba(0,230,118,0.06);color:var(--green); }
+.quiz-opt.wrong { border-color:rgba(255,77,109,0.4);background:rgba(255,77,109,0.06);color:var(--accent); }
+.quiz-opt:disabled { cursor:default; }
+
+/* ── INPUT AREA ── */
+.input-area { padding:16px 28px 20px;border-top:1px solid var(--border);background:rgba(5,5,15,0.85);backdrop-filter:blur(20px);flex-shrink:0; }
+
+.upload-strip { display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap; }
+.upload-chip {
+  display:flex;align-items:center;gap:6px;
+  padding:5px 10px 5px 8px;border-radius:20px;
+  background:rgba(92,124,250,0.1);border:1px solid rgba(92,124,250,0.2);
+  font-size:11px;color:var(--tim);font-weight:600;cursor:pointer;
+  transition:all 0.15s;
+}
+.upload-chip:hover { background:rgba(92,124,250,0.18); }
+.upload-chip svg { width:12px;height:12px; }
+.upload-chip.has-file { background:rgba(0,230,118,0.08);border-color:rgba(0,230,118,0.25);color:var(--green); }
+.file-name-chip { display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;background:rgba(0,230,118,0.06);border:1px solid rgba(0,230,118,0.2);font-size:11px;color:var(--green); }
+.file-remove { cursor:pointer;color:var(--muted);font-size:14px;line-height:1;background:none;border:none;padding:0 2px;transition:color 0.15s; }
+.file-remove:hover { color:var(--accent); }
+
+.input-row { display:flex;gap:10px;align-items:flex-end; }
+.input-box {
+  flex:1;background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:12px 16px;
+  color:var(--text);font-family:var(--font);font-size:14px;
+  outline:none;transition:border-color 0.2s;resize:none;
+  min-height:48px;max-height:140px;line-height:1.5;
+  scrollbar-width:none;
+}
+.input-box::-webkit-scrollbar { display:none; }
+.input-box:focus { border-color:rgba(92,124,250,0.4); }
+.input-box::placeholder { color:var(--muted2); }
+
+.send-btn {
+  width:48px;height:48px;border-radius:12px;
+  background:var(--tim);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;flex-shrink:0;
+  box-shadow:0 0 20px var(--tim-glow);
+}
+.send-btn:hover { transform:translateY(-1px);box-shadow:0 4px 20px var(--tim-glow); }
+.send-btn:disabled { opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none; }
+.send-btn svg { width:18px;height:18px;color:white;stroke:white; }
+
+.input-hint { font-size:11px;color:var(--muted2);margin-top:8px;text-align:center; }
+
+/* Mobile */
+.mob-bar { display:none; }
+@media(max-width:768px) {
+  .sidebar { display:none; }
+  .main { margin-left:0;padding-top:52px; }
+  .mob-bar { display:flex;position:fixed;top:0;left:0;right:0;z-index:200;height:52px;align-items:center;justify-content:space-between;padding:0 20px;background:rgba(5,5,15,0.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border); }
+  .mob-logo { font-size:15px;font-weight:800; }
+  .mob-logo span { color:var(--accent); }
+  .topbar { padding:0 16px; }
+  .chat-area { padding:16px; }
+  .input-area { padding:12px 16px 16px; }
+  .starter-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- Mobile bar -->
+<div class="mob-bar">
+  <div class="mob-logo">Study<span>Brain</span></div>
+</div>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="sidebar-logo">Study<span>Brain</span></div>
+  <div class="sidebar-nav">
+    <div class="nav-label">Menu</div>
+    <a href="index.html" class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2 6.5L8 2l6 4.5V14H10v-3.5H6V14H2V6.5z"/></svg>
+      Hoofdpagina
+    </a>
+    <div class="nav-sep"></div>
+    <div class="nav-label">App</div>
+    <a href="dashboard.html" class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>
+      Dashboard
+    </a>
+    <a href="app.html" class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>
+      Nieuwe analyse
+    </a>
+    <a href="tutor.html" class="nav-item active">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3 2.5-5 6-5s6 2 6 5"/></svg>
+      Meneer Tim
+    </a>
+    <div class="nav-sep"></div>
+    <div class="nav-label">Account</div>
+    <a href="index.html#pricing" class="nav-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M8 1.5l4 4-4 9-4-9 4-4z"/></svg>
+      Abonnementen
+    </a>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="plan-pill" onclick="window.location.href='index.html#pricing'">
+      <div>
+        <div class="plan-name" id="planName">Gratis</div>
+        <div class="plan-label">Klik om te upgraden</div>
+      </div>
+      <div class="plan-badge" id="planBadge">Free</div>
+    </div>
+    <div class="sidebar-email" id="sidebarEmail"></div>
+    <button class="logout-btn" onclick="doLogout()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 11l3-3-3-3M13 8H6M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3"/></svg>
+      Uitloggen
+    </button>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="tim-avatar-sm">
+        <img src="tim-avatar.png" alt="Meneer Tim" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+        <div class="tim-status"></div>
+      </div>
+      <div>
+        <div class="topbar-name">Meneer Tim</div>
+        <div class="topbar-sub">Altijd beschikbaar · Legt alles uit in gewone taal</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="clear-btn" onclick="clearChat()">Nieuw gesprek</button>
+    </div>
+  </div>
+
+  <!-- Chat area -->
+  <div class="chat-area" id="chatArea">
+
+    <!-- Welcome screen -->
+    <div class="welcome" id="welcomeScreen">
+      <div class="tim-avatar-lg">
+        <img src="tim-avatar.png" alt="Meneer Tim" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+        <div class="tim-status-lg"></div>
+      </div>
+      <h2>Hey! Ik ben Meneer Tim 👋</h2>
+      <p>Stuur me je huiswerk of een vraag die je niet snapt. Ik leg het uit in gewone taal — met voorbeelden en oefenvragen zodat je het echt begrijpt.</p>
+      <div class="starter-grid">
+        <button class="starter-btn" onclick="startWith('Ik snap dit niet en wil dat je het uitlegt')">
+          <span class="starter-icon">🤔</span>
+          <span class="starter-title">Ik snap iets niet</span>
+          <span class="starter-sub">Leg me een onderwerp uit in simpele taal</span>
+        </button>
+        <button class="starter-btn" onclick="startWith('Controleer mijn huiswerk en geef feedback')">
+          <span class="starter-icon">📝</span>
+          <span class="starter-title">Controleer mijn huiswerk</span>
+          <span class="starter-sub">Stuur je antwoorden en krijg feedback</span>
+        </button>
+        <button class="starter-btn" onclick="startWith('Ik heb straks een toets en wil oefenvragen')">
+          <span class="starter-icon">🎯</span>
+          <span class="starter-title">Oefen met vragen</span>
+          <span class="starter-sub">Test of je de stof echt snapt</span>
+        </button>
+        <button class="starter-btn" onclick="startWith('Kun je me stap voor stap door dit probleem leiden?')">
+          <span class="starter-icon">🪜</span>
+          <span class="starter-title">Stap voor stap</span>
+          <span class="starter-sub">Loop samen door een moeilijke opdracht</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Input area -->
+  <div class="input-area">
+    <div class="upload-strip" id="uploadStrip">
+      <button class="upload-chip" onclick="document.getElementById('fileUpload').click()">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 3v8M5 6l3-3 3 3"/><path d="M3 13h10"/></svg>
+        Stuur huiswerk of foto mee
+      </button>
+      <input type="file" id="fileUpload" style="display:none" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload(this)">
+    </div>
+    <div class="input-row">
+      <textarea
+        class="input-box"
+        id="userInput"
+        placeholder="Stel Meneer Tim een vraag... bijv. 'Ik snap fotosynthese niet, kun je het uitleggen?'"
+        rows="1"
+        onkeydown="handleKey(event)"
+        oninput="autoResize(this)"
+      ></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+      </button>
+    </div>
+    <div class="input-hint">Meneer Tim legt alles uit in gewone taal · Stel gerust elke vraag</div>
+  </div>
+
+</div>
+
+<!-- Hidden file input for PDF -->
+<input type="file" id="pdfInput" style="display:none" accept=".pdf">
+
+<script src="auth.js"></script>
+<script>
+checkAccess();
+
+// ── State ──
+let messages = []; // conversation history
+let uploadedFile = null;
+let uploadedFileName = '';
+let isTyping = false;
+let userName = '';
+
+// ── Init ──
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+  const email = session.user.email;
+  userName = email.split('@')[0];
+  document.getElementById('sidebarEmail').textContent = email;
+
+  const { data: profile } = await sb.from('profiles').select('plan').eq('id', session.user.id).single();
+  const plan = profile?.plan || 'gratis';
+  const planEl = document.getElementById('planName');
+  const badgeEl = document.getElementById('planBadge');
+  if (plan === 'pro') { planEl.textContent = 'Pro plan'; badgeEl.textContent = 'Pro'; }
+  else if (plan === 'elite') { planEl.textContent = 'Elite plan'; badgeEl.textContent = 'Elite'; badgeEl.style.cssText += 'background:rgba(255,214,0,0.1);color:#ffd600;border-color:rgba(255,214,0,0.25)'; }
+  else if (plan === 'starter') { planEl.textContent = 'Starter plan'; badgeEl.textContent = 'Starter'; }
+})();
+
+// ── File upload ──
+function handleFileUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  uploadedFile = file;
+  uploadedFileName = file.name;
+
+  const strip = document.getElementById('uploadStrip');
+  strip.innerHTML = `
+    <div class="file-name-chip">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 1.5H4a1 1 0 00-1 1v11a1 1 0 001 1h8a1 1 0 001-1v-8L9 1.5z" stroke-linejoin="round"/></svg>
+      ${file.name}
+      <button class="file-remove" onclick="removeFile()">×</button>
+    </div>
+    <button class="upload-chip" onclick="document.getElementById('fileUpload').click()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 3v8M5 6l3-3 3 3"/><path d="M3 13h10"/></svg>
+      Ander bestand
+    </button>
+    <input type="file" id="fileUpload" style="display:none" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload(this)">
+  `;
+}
+
+function removeFile() {
+  uploadedFile = null;
+  uploadedFileName = '';
+  document.getElementById('uploadStrip').innerHTML = `
+    <button class="upload-chip" onclick="document.getElementById('fileUpload').click()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 3v8M5 6l3-3 3 3"/><path d="M3 13h10"/></svg>
+      Stuur huiswerk of foto mee
+    </button>
+    <input type="file" id="fileUpload" style="display:none" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload(this)">
+  `;
+}
+
+// ── Starters ──
+function startWith(text) {
+  document.getElementById('userInput').value = text;
+  autoResize(document.getElementById('userInput'));
+  document.getElementById('userInput').focus();
+}
+
+// ── Auto resize textarea ──
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 140) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+// ── Send message ──
+async function sendMessage() {
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text || isTyping) return;
+
+  // Hide welcome screen
+  document.getElementById('welcomeScreen')?.remove();
+
+  // Add user message
+  addMessage('user', text);
+  input.value = '';
+  input.style.height = 'auto';
+
+  // Build conversation for API
+  const userContent = uploadedFile
+    ? `[Bestand meegestuurd: ${uploadedFileName}]\n\n${text}`
+    : text;
+
+  messages.push({ role: 'user', content: userContent });
+
+  // Clear file after sending
+  if (uploadedFile) removeFile();
+
+  // Show typing
+  showTyping();
+
+  // Call API
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    const token = session?.access_token;
+
+    const res = await fetch('https://analyze.aminaddarrazi2004.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({
+        is_studieplan: false,
+        messages: [
+          {
+            role: 'system',
+            content: `Je bent Meneer Tim, een bijlesleraar voor middelbare scholieren van 14-18 jaar. Je bent grappig, motiverend en slim — zoals een coole oudere broer die toevallig ook goed kan uitleggen.
+
+PERSOONLIJKHEID:
+- Gebruik "je" en "jij", nooit "u"
+- Begin je uitleg soms met "Oké, luister..." of "Goed dat je dit vraagt!" of "Ha, dit snappen veel mensen niet meteen"
+- Geef complimenten als iets goed gaat: "Nice, dat klopt precies!" of "Yes! Je snapt het al"
+- Als iets fout is: motiveer, niet bekritiseer: "Bijna! Je zit op het goede spoor, maar..."
+- Gebruik soms een emoji maar niet overdadig 🎯
+
+TAAL — ABSOLUUT VERPLICHT:
+- Schrijf op B1 niveau. Gewone spreektaal.
+- Na elk moeilijk woord: uitleg tussen haakjes. Bijv: "ATP (de energiebrandstof van je cel)"
+- Maximaal 15 woorden per zin
+- Geen schoolboekentaal. Schrijf zoals je praat.
+
+HOE JE UITLEGT:
+1. Geef eerst een korte simpele uitleg in 2-3 zinnen
+2. Gebruik dan een voorbeeld uit het dagelijks leven
+3. Geef een ezelsbruggetje als het helpt
+4. Vraag daarna of het duidelijk is ÓÓÓF geef direct 1-2 oefenvragen
+
+OEFENVRAGEN:
+- Stel max 2 vragen per keer
+- Geef 4 antwoordopties (A/B/C/D)
+- Wacht op het antwoord van de leerling
+- Bij goed: geef compliment + korte uitleg waarom het goed is
+- Bij fout: leg het opnieuw uit op een andere manier, niet gewoon herhalen
+
+HUISWERK CONTROLEREN:
+- Wijs fouten vriendelijk aan
+- Leg uit waarom iets fout is
+- Geef de leerling de kans het zelf te verbeteren
+
+De leerling heet ${userName}.`
+          },
+          ...messages
+        ]
+      })
+    });
+
+    hideTyping();
+
+    if (!res.ok) throw new Error('API fout');
+
+    const data = await res.json();
+    const reply = data.choices?.[0]?.message?.content || '';
+
+    messages.push({ role: 'assistant', content: reply });
+
+    // Detect if reply contains quiz options
+    if (reply.includes('A)') || reply.includes('A.') || reply.includes('**A**')) {
+      addMessageWithQuiz('tim', reply);
+    } else {
+      addMessage('tim', reply);
+    }
+
+  } catch (err) {
+    hideTyping();
+    addMessage('tim', 'Oeps, er ging iets mis. Probeer het nog een keer! 😅');
+  }
+}
+
+// ── Add message ──
+function addMessage(role, text) {
+  const chatArea = document.getElementById('chatArea');
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+
+  const avatar = role === 'tim'
+    ? '<img src="tim-avatar.png" alt="Tim" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">'
+    : userName.charAt(0).toUpperCase();
+  const avatarClass = role === 'tim' ? 'tim' : 'user';
+
+  // Format text: **bold** → <strong>, newlines → <br>
+  const formatted = text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br>');
+
+  div.innerHTML = `
+    <div class="msg-avatar ${avatarClass}">${avatar}</div>
+    <div class="msg-bubble">${formatted}</div>
+  `;
+
+  chatArea.appendChild(div);
+  chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+// ── Add message with quiz options ──
+function addMessageWithQuiz(role, text) {
+  const chatArea = document.getElementById('chatArea');
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+
+  const avatar = '<img src="tim-avatar.png" alt="Tim" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+
+  // Split text and options
+  const lines = text.split('\n');
+  const optionLines = lines.filter(l => /^[A-D][).:]/.test(l.trim()));
+  const textLines = lines.filter(l => !/^[A-D][).:]/.test(l.trim())).join('\n');
+
+  const formatted = textLines
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br>');
+
+  let optionsHTML = '';
+  if (optionLines.length > 0) {
+    optionsHTML = `<div class="quiz-options">
+      ${optionLines.map((opt, i) => `
+        <button class="quiz-opt" onclick="handleQuizAnswer(this, '${opt.trim().charAt(0)}')">
+          ${opt.trim()}
+        </button>
+      `).join('')}
+    </div>`;
+  }
+
+  div.innerHTML = `
+    <div class="msg-avatar tim">${avatar}</div>
+    <div class="msg-bubble">${formatted}${optionsHTML}</div>
+  `;
+
+  chatArea.appendChild(div);
+  chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+// ── Handle quiz answer ──
+async function handleQuizAnswer(btn, letter) {
+  // Disable all options
+  btn.closest('.quiz-options').querySelectorAll('.quiz-opt').forEach(b => {
+    b.disabled = true;
+    b.onclick = null;
+  });
+  btn.classList.add('selected');
+
+  // Send answer as user message
+  const answerText = `Mijn antwoord: ${letter}`;
+  addMessage('user', answerText);
+  messages.push({ role: 'user', content: answerText });
+
+  showTyping();
+
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    const token = session?.access_token;
+
+    const res = await fetch('https://analyze.aminaddarrazi2004.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({
+        is_studieplan: false,
+        messages: [
+          {
+            role: 'system',
+            content: `Je bent Meneer Tim. De leerling heeft zojuist een antwoord gegeven op een oefenvraag. Reageer motiverend. Bij goed: geef compliment + korte uitleg. Bij fout: leg opnieuw uit op andere manier. Gebruik gewone taal. De leerling heet ${userName}.`
+          },
+          ...messages
+        ]
+      })
+    });
+
+    hideTyping();
+    const data = await res.json();
+    const reply = data.choices?.[0]?.message?.content || '';
+    messages.push({ role: 'assistant', content: reply });
+    addMessage('tim', reply);
+
+  } catch (err) {
+    hideTyping();
+    addMessage('tim', 'Oeps! Probeer opnieuw 😅');
+  }
+}
+
+// ── Typing indicator ──
+function showTyping() {
+  isTyping = true;
+  document.getElementById('sendBtn').disabled = true;
+  const chatArea = document.getElementById('chatArea');
+  const div = document.createElement('div');
+  div.className = 'msg tim';
+  div.id = 'typingIndicator';
+  div.innerHTML = `
+    <div class="msg-avatar tim"><img src="tim-avatar.png" alt="Tim" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
+    <div class="typing-dots"><span></span><span></span><span></span></div>
+  `;
+  chatArea.appendChild(div);
+  chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+function hideTyping() {
+  isTyping = false;
+  document.getElementById('sendBtn').disabled = false;
+  document.getElementById('typingIndicator')?.remove();
+}
+
+// ── Clear chat ──
+function clearChat() {
+  messages = [];
+  const chatArea = document.getElementById('chatArea');
+  chatArea.innerHTML = `
+    <div class="welcome" id="welcomeScreen">
+      <div class="tim-avatar-lg"><img src="tim-avatar.png" alt="Meneer Tim" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"><div class="tim-status-lg"></div></div>
+      <h2>Nieuw gesprek gestart 👋</h2>
+      <p>Wat wil je uitleggen of oefenen? Ik sta klaar!</p>
+      <div class="starter-grid">
+        <button class="starter-btn" onclick="startWith('Ik snap dit niet en wil dat je het uitlegt')">
+          <span class="starter-icon">🤔</span>
+          <span class="starter-title">Ik snap iets niet</span>
+          <span class="starter-sub">Leg me een onderwerp uit in simpele taal</span>
+        </button>
+        <button class="starter-btn" onclick="startWith('Controleer mijn huiswerk en geef feedback')">
+          <span class="starter-icon">📝</span>
+          <span class="starter-title">Controleer mijn huiswerk</span>
+          <span class="starter-sub">Stuur je antwoorden en krijg feedback</span>
+        </button>
+        <button class="starter-btn" onclick="startWith('Ik heb straks een toets en wil oefenvragen')">
+          <span class="starter-icon">🎯</span>
+          <span class="starter-title">Oefen met vragen</span>
+          <span class="starter-sub">Test of je de stof echt snapt</span>
+        </button>
+        <button class="starter-btn" onclick="startWith('Kun je me stap voor stap door dit probleem leiden?')">
+          <span class="starter-icon">🪜</span>
+          <span class="starter-title">Stap voor stap</span>
+          <span class="starter-sub">Loop samen door een moeilijke opdracht</span>
+        </button>
+      </div>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
