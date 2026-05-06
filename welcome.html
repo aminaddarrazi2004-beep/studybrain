@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welkom — StudyBrain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; }
+body {
+  background: #05050f;
+  color: #f0f0f8;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+  overflow: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,77,109,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,77,109,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+.orb { position:fixed; border-radius:50%; filter:blur(120px); pointer-events:none; }
+.orb-1 { width:500px; height:500px; background:radial-gradient(circle,rgba(255,77,109,0.08),transparent 65%); top:-150px; left:-100px; }
+.orb-2 { width:500px; height:500px; background:radial-gradient(circle,rgba(92,124,250,0.08),transparent 65%); bottom:-150px; right:-100px; }
+
+.logo {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  z-index: 10;
+}
+.logo span { color: #ff4d6d; }
+
+.greeting {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  text-align: center;
+  animation: fadeUp 0.5s ease both;
+}
+
+h1 {
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-align: center;
+  margin-bottom: 10px;
+  line-height: 1.1;
+  animation: fadeUp 0.5s 0.05s ease both;
+}
+
+.sub {
+  font-size: 15px;
+  color: rgba(255,255,255,0.45);
+  text-align: center;
+  margin-bottom: 48px;
+  animation: fadeUp 0.5s 0.1s ease both;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  width: 100%;
+  max-width: 680px;
+  animation: fadeUp 0.5s 0.15s ease both;
+}
+
+.card {
+  background: #0c0c1a;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 20px;
+  padding: 32px 28px;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.25s;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.card.red::before { background: radial-gradient(circle at 20% 20%, rgba(255,77,109,0.08), transparent 60%); }
+.card.blue::before { background: radial-gradient(circle at 80% 20%, rgba(92,124,250,0.08), transparent 60%); }
+.card:hover { transform: translateY(-4px); }
+.card.red:hover { border-color: rgba(255,77,109,0.3); box-shadow: 0 8px 40px rgba(255,77,109,0.1); }
+.card.blue:hover { border-color: rgba(92,124,250,0.3); box-shadow: 0 8px 40px rgba(92,124,250,0.1); }
+.card:hover::before { opacity: 1; }
+
+.card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+}
+.card.red .card-icon { background: rgba(255,77,109,0.12); border: 1px solid rgba(255,77,109,0.2); }
+.card.blue .card-icon { background: rgba(92,124,250,0.12); border: 1px solid rgba(92,124,250,0.2); }
+.card-icon svg { width: 22px; height: 22px; }
+.card.red .card-icon svg { stroke: #ff4d6d; }
+.card.blue .card-icon svg { stroke: #5c7cfa; }
+
+.card-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+}
+.card.red .card-tag { color: #ff4d6d; }
+.card.blue .card-tag { color: #5c7cfa; }
+
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 10px;
+  line-height: 1.2;
+  position: relative;
+  z-index: 1;
+}
+
+.card-body {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.65;
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+}
+
+.card-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+.card.red .card-cta { color: #ff4d6d; }
+.card.blue .card-cta { color: #5c7cfa; }
+.cta-arrow {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.2s;
+}
+.card.red .cta-arrow { background: rgba(255,77,109,0.12); }
+.card.blue .cta-arrow { background: rgba(92,124,250,0.12); }
+.card:hover .cta-arrow { transform: translateX(3px); }
+.cta-arrow svg { width: 14px; height: 14px; }
+.card.red .cta-arrow svg { stroke: #ff4d6d; }
+.card.blue .cta-arrow svg { stroke: #5c7cfa; }
+
+/* Tim avatar in blue card */
+.tim-av {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  border: 1px solid rgba(92,124,250,0.2);
+  position: relative; z-index: 1;
+}
+.tim-av img { width:100%; height:100%; object-fit:cover; }
+
+.skip-link {
+  margin-top: 28px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.25);
+  text-decoration: none;
+  transition: color 0.2s;
+  animation: fadeUp 0.5s 0.2s ease both;
+}
+.skip-link:hover { color: rgba(255,255,255,0.5); }
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(16px); }
+  to { opacity:1; transform:none; }
+}
+
+@media(max-width: 560px) {
+  .cards { grid-template-columns: 1fr; max-width: 360px; }
+}
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<div class="logo">Study<span>Brain</span></div>
+
+<div class="greeting" id="greeting">Welkom terug</div>
+<h1>Wat wil je vandaag doen?</h1>
+<p class="sub">Kies wat je nodig hebt — je kunt altijd wisselen.</p>
+
+<div class="cards">
+  <!-- StudyBrain analyse -->
+  <a href="app.html" class="card red">
+    <div class="card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+        <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
+      </svg>
+    </div>
+    <div class="card-tag">Toets voorbereiding</div>
+    <div class="card-title">Analyseer je lesstof</div>
+    <div class="card-body">Upload je PDF en ontdek in 30 seconden wat sowieso in de toets komt — en wat je veilig kunt skippen.</div>
+    <div class="card-cta">
+      Analyseer nu
+      <div class="cta-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+  </a>
+
+  <!-- Meneer Tim -->
+  <a href="tutor.html" class="card blue">
+    <div class="tim-av">
+      <img src="tim-avatar.png" alt="Meneer Tim">
+    </div>
+    <div class="card-tag">Bijles & uitleg</div>
+    <div class="card-title">Chat met Meneer Tim</div>
+    <div class="card-body">Snap je iets niet? Stuur je huiswerk of stel een vraag. Tim legt het uit in gewone taal — met voorbeelden en oefenvragen.</div>
+    <div class="card-cta">
+      Chat met Tim
+      <div class="cta-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </div>
+  </a>
+</div>
+
+<a href="dashboard.html" class="skip-link">Of ga naar mijn dashboard →</a>
+
+<script>
+const sb = supabase.createClient(
+  'https://wtfzqpaectqrbprmxjqp.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0ZnpxcGFlY3RxcmJwcm14anFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMxNzYxNzMsImV4cCI6MjA1ODc1MjE3M30.IvHOcP5Z3TbITbFAiDGdGPMpJGQCPRqKUkQQ78ViRuM'
+);
+
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { window.location.href = 'login.html'; return; }
+
+  const email = session.user.email;
+  const name = email.split('@')[0];
+  const hour = new Date().getHours();
+  const dag = hour < 12 ? 'Goedemorgen' : hour < 18 ? 'Goedemiddag' : 'Goedenavond';
+  document.getElementById('greeting').textContent = `${dag}, ${name}`;
+})();
+</script>
+</body>
+</html>
