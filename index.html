@@ -279,6 +279,32 @@
     .centered{text-align:center;}
     .centered .section-sub{margin:0 auto;}
 
+    /* ── MENEER TIM ── */
+    .tim-section{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+    .tim-features{display:flex;flex-direction:column;gap:14px;margin-bottom:28px;}
+    .tim-feat{display:flex;align-items:flex-start;gap:12px;}
+    .tim-feat-icon{font-size:20px;flex-shrink:0;margin-top:2px;}
+    .tim-feat strong{display:block;font-size:14px;font-weight:700;margin-bottom:2px;}
+    .tim-feat span{font-size:13px;color:var(--muted);line-height:1.5;}
+    .tim-cta{display:inline-flex;align-items:center;padding:13px 28px;border-radius:100px;background:linear-gradient(135deg,#5c7cfa,#818cf8);color:white;font-size:14px;font-weight:700;text-decoration:none;transition:all 0.25s;box-shadow:0 0 24px rgba(92,124,250,0.3);}
+    .tim-cta:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(92,124,250,0.4);}
+
+    /* Chat preview */
+    .tim-chat-preview{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.4);}
+    .tcp-header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);}
+    .tcp-messages{padding:16px;display:flex;flex-direction:column;gap:12px;}
+    .tcp-msg{display:flex;align-items:flex-end;gap:8px;}
+    .tcp-msg.user{flex-direction:row-reverse;}
+    .tcp-bubble{padding:10px 14px;border-radius:14px;font-size:12px;line-height:1.6;max-width:260px;}
+    .tim-bubble{background:var(--card);border:1px solid var(--border);border-bottom-left-radius:4px;color:var(--text);}
+    .user-bubble{background:var(--accent-dim);border:1px solid rgba(255,77,109,0.2);border-bottom-right-radius:4px;color:var(--text);}
+    .tcp-typing{display:flex;align-items:flex-end;gap:8px;}
+    .tcp-dots{display:flex;gap:4px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:14px;border-bottom-left-radius:4px;}
+    .tcp-dots span{width:5px;height:5px;border-radius:50%;background:var(--muted);animation:dot 1.4s ease-in-out infinite;}
+    .tcp-dots span:nth-child(2){animation-delay:0.2s;}
+    .tcp-dots span:nth-child(3){animation-delay:0.4s;}
+    @keyframes dot{0%,60%,100%{transform:translateY(0);opacity:0.4}30%{transform:translateY(-4px);opacity:1}}
+
     /* ── RESPONSIVE ── */
     @media(max-width:900px){
       .hero-inner{grid-template-columns:1fr;gap:48px;text-align:center;}
@@ -287,6 +313,7 @@
       .how-grid,.test-grid,.pricing-grid{grid-template-columns:1fr;max-width:440px;margin-left:auto;margin-right:auto;}
       .compare-grid{grid-template-columns:1fr;}
       .showcase{grid-template-columns:1fr;}
+      .tim-section{grid-template-columns:1fr;gap:40px;}
       .nav-links{display:none;}
       .btn-ghost.hide-mob{display:none;}
       .mob-btn{display:block;}
@@ -312,6 +339,7 @@
     <div class="nav-links">
       <a href="#hoe">Hoe het werkt</a>
       <a href="#resultaten">Resultaten</a>
+      <a href="#meneer-tim" style="display:flex;align-items:center;gap:5px;"><img src="tim-avatar.png" style="width:16px;height:16px;border-radius:50%;object-fit:cover;">Meneer Tim</a>
       <a href="#prijzen">Prijzen</a>
       <a href="#faq">FAQ</a>
       <a href="mailto:info@studybrain.nl">Contact</a>
@@ -627,7 +655,107 @@
   </div>
 </div></section>
 
-<!-- PRICING -->
+<!-- MENEER TIM -->
+<section id="meneer-tim"><div class="wrap">
+  <div class="tim-section reveal">
+    <div class="tim-section-left">
+      <div class="section-tag">Nieuw</div>
+      <h2 class="section-title">Huiswerk niet begrepen?<br><em style="font-style:normal;background:linear-gradient(135deg,#5c7cfa,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Vraag het Meneer Tim.</em></h2>
+      <p style="font-size:15px;color:var(--muted);line-height:1.75;margin-bottom:28px;">Snap je iets niet? Meneer Tim legt het uit in gewone taal — met voorbeelden, tekeningen en oefenvragen. Altijd beschikbaar, nooit ongeduldig.</p>
+      <div class="tim-features">
+        <div class="tim-feat">
+          <div class="tim-feat-icon">💬</div>
+          <div>
+            <strong>Leg het simpel uit</strong>
+            <span>Geen schoolboekentaal. Gewoon zoals een vriend het zou uitleggen.</span>
+          </div>
+        </div>
+        <div class="tim-feat">
+          <div class="tim-feat-icon">📝</div>
+          <div>
+            <strong>Stuur je huiswerk mee</strong>
+            <span>Upload een PDF of foto en Tim kijkt het voor je na.</span>
+          </div>
+        </div>
+        <div class="tim-feat">
+          <div class="tim-feat-icon">🎯</div>
+          <div>
+            <strong>Oefenvragen op maat</strong>
+            <span>Na de uitleg test hij of je het echt snapt.</span>
+          </div>
+        </div>
+      </div>
+      <a href="login.html#signup" class="tim-cta">Chat met Meneer Tim →</a>
+    </div>
+    <div class="tim-section-right">
+      <div class="tim-chat-preview">
+        <div class="tcp-header">
+          <img src="tim-avatar.png" alt="Meneer Tim" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid rgba(92,124,250,0.3);">
+          <div>
+            <div style="font-size:13px;font-weight:700;">Meneer Tim</div>
+            <div style="font-size:11px;color:var(--green);display:flex;align-items:center;gap:4px;"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;"></span>Online</div>
+          </div>
+        </div>
+        <div class="tcp-messages">
+
+          <!-- Leerling stuurt PDF -->
+          <div class="tcp-msg user">
+            <div class="tcp-bubble user-bubble">
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,0.05);border-radius:8px;margin-bottom:6px;">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#ff8fa3" stroke-width="1.5" stroke-linejoin="round"><path d="M9 1.5H4a1 1 0 00-1 1v11a1 1 0 001 1h8a1 1 0 001-1v-8L9 1.5z"/><path d="M9 1.5V5h3.5"/></svg>
+                <span style="font-size:11px;color:#ff8fa3;font-weight:600;">huiswerk_economie.pdf</span>
+              </div>
+              Ik snap vraag 3 niet over vraag en aanbod
+            </div>
+          </div>
+
+          <!-- Tim reageert met uitleg -->
+          <div class="tcp-msg tim">
+            <img src="tim-avatar.png" alt="Tim" style="width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;align-self:flex-end;">
+            <div class="tcp-bubble tim-bubble">
+              Oké, luister — vraag en aanbod is eigenlijk supermakkelijk! Kijk even naar dit plaatje 👇
+              <!-- Simpele illustratie vraag & aanbod -->
+              <div style="margin-top:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px;">
+                <svg viewBox="0 0 240 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+                  <!-- Assen -->
+                  <line x1="30" y1="130" x2="220" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
+                  <line x1="30" y1="20" x2="30" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
+                  <!-- As labels -->
+                  <text x="120" y="148" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="9" font-family="sans-serif">Hoeveelheid</text>
+                  <text x="12" y="80" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="9" font-family="sans-serif" transform="rotate(-90,12,80)">Prijs</text>
+                  <!-- Vraagcurve (daalt) -->
+                  <line x1="50" y1="30" x2="200" y2="120" stroke="#5c7cfa" stroke-width="2.5" stroke-linecap="round"/>
+                  <text x="205" y="118" fill="#5c7cfa" font-size="9" font-weight="bold" font-family="sans-serif">Vraag</text>
+                  <!-- Aanbodcurve (stijgt) -->
+                  <line x1="50" y1="120" x2="200" y2="30" stroke="#00e676" stroke-width="2.5" stroke-linecap="round"/>
+                  <text x="205" y="32" fill="#00e676" font-size="9" font-weight="bold" font-family="sans-serif">Aanbod</text>
+                  <!-- Snijpunt -->
+                  <circle cx="125" cy="75" r="5" fill="#ffd600"/>
+                  <line x1="125" y1="75" x2="125" y2="130" stroke="#ffd600" stroke-width="1" stroke-dasharray="3,3"/>
+                  <line x1="30" y1="75" x2="125" y2="75" stroke="#ffd600" stroke-width="1" stroke-dasharray="3,3"/>
+                  <text x="128" y="127" fill="#ffd600" font-size="8" font-family="sans-serif">Evenwicht</text>
+                  <!-- Pijl labels -->
+                  <text x="42" y="26" fill="#5c7cfa" font-size="8" font-family="sans-serif">Hoge prijs →</text>
+                  <text x="42" y="26" fill="#5c7cfa" font-size="8" font-family="sans-serif">Hoge prijs →</text>
+                  <text x="42" y="118" fill="#5c7cfa" font-size="8" font-family="sans-serif">weinig vraag</text>
+                </svg>
+                <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:6px;text-align:center;">Als de prijs stijgt → minder mensen kopen → vraag daalt</div>
+              </div>
+              <div style="margin-top:8px;font-size:12px;line-height:1.6;">Het snijpunt (geel) = evenwichtsprijs. Dat is waar vraag en aanbod gelijk zijn. Dát is wat vraag 3 bedoelt! 🎯</div>
+            </div>
+          </div>
+
+          <!-- Typing -->
+          <div class="tcp-typing">
+            <img src="tim-avatar.png" alt="Tim" style="width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+            <div class="tcp-dots"><span></span><span></span><span></span></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div></section>
 <section id="prijzen"><div class="wrap">
   <div class="centered">
     <div class="section-tag">Abonnementen</div>
