@@ -896,16 +896,20 @@ document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
   );
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
-    // Vervang inloggen/gratis proberen knoppen met dashboard knop
-    document.querySelectorAll('.nav-actions, .mob-actions').forEach(el => {
-      el.innerHTML = `<a href="dashboard.html" class="btn-primary" style="background:var(--tim);box-shadow:0 0 20px rgba(92,124,250,0.3);">Naar dashboard →</a>`;
+    // Vervang nav-actions met dashboard knop
+    const navActions = document.querySelector('.nav-actions');
+    if (navActions) {
+      navActions.innerHTML = `<a href="welcome.html" class="btn-primary" style="text-decoration:none;">Naar mijn StudyBrain →</a>`;
+    }
+    // Vervang hero CTA knop
+    document.querySelectorAll('a[href="login.html#signup"]').forEach(btn => {
+      btn.href = 'welcome.html';
+      btn.textContent = 'Naar mijn StudyBrain →';
     });
-    // Vervang ook hero CTA knoppen
-    document.querySelectorAll('.btn-hero').forEach(btn => {
-      if (btn.href && btn.href.includes('signup')) {
-        btn.href = 'dashboard.html';
-        btn.textContent = 'Naar dashboard →';
-      }
+    // Vervang inloggen link
+    document.querySelectorAll('a[href="login.html"]').forEach(btn => {
+      btn.href = 'welcome.html';
+      btn.textContent = 'Naar mijn StudyBrain →';
     });
   }
 })();
