@@ -89,8 +89,7 @@ async function doLogin() {
     } else {
       localStorage.removeItem('studybrain-remember-email');
     }
-    // ✅ Terug naar homepage met success melding
-    window.location.href = 'dashboard.html';
+    window.location.href = 'welcome.html';
   }
 }
 
@@ -105,7 +104,6 @@ async function doForgot() {
   const btn = document.getElementById('forgotBtn');
   btn.disabled = true; btn.textContent = 'Bezig...';
 
-  // Altijd hetzelfde bericht tonen — voorkomt dat hackers kunnen checken of email bestaat
   await sb.auth.resetPasswordForEmail(email, {
     redirectTo: 'https://studybrain.nl/login.html'
   });
