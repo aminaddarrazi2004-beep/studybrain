@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --bg: #05050f;
@@ -381,8 +382,8 @@
         <span class="urgency-dot"></span>
         <span class="urgency-text">Morgen toets? Dit werkt.</span>
       </div>
-      <h1>Upload je lesstof.<br><em>Weet in 30 seconden<br>wat erin komt.</em></h1>
-      <p class="hero-sub">StudyBrain analyseert je PDF en vertelt je precies wat je móét kennen, wat handig is, en wat je veilig kunt skippen. Gemaakt door studenten, getest door leraren.</p>
+      <h1>Weet in 30 seconden<br><em>wat in je toets komt.</em></h1>
+      <p class="hero-sub">Upload je lesstof. Wij vertellen je wat je moet kennen, wat je kunt skippen — en wat zeker gevraagd wordt.</p>
       <div class="hero-actions">
         <a href="login.html#signup" class="btn-hero">Probeer gratis — geen creditcard</a>
         <a href="#hoe" class="btn-hero-out">Hoe werkt het?</a>
@@ -885,6 +886,29 @@ const obs = new IntersectionObserver(e => {
   e.forEach(x => { if (x.isIntersecting) x.target.classList.add('vis'); });
 }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Check of gebruiker al ingelogd is → pas nav aan
+(async () => {
+  const { createClient } = supabase;
+  const sb = createClient(
+    'https://wtfzqpaectqrbprmxjqp.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0ZnpxcGFlY3RxcmJwcm14anFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMxNzYxNzMsImV4cCI6MjA1ODc1MjE3M30.IvHOcP5Z3TbITbFAiDGdGPMpJGQCPRqKUkQQ78ViRuM'
+  );
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    // Vervang inloggen/gratis proberen knoppen met dashboard knop
+    document.querySelectorAll('.nav-actions, .mob-actions').forEach(el => {
+      el.innerHTML = `<a href="dashboard.html" class="btn-primary" style="background:var(--tim);box-shadow:0 0 20px rgba(92,124,250,0.3);">Naar dashboard →</a>`;
+    });
+    // Vervang ook hero CTA knoppen
+    document.querySelectorAll('.btn-hero').forEach(btn => {
+      if (btn.href && btn.href.includes('signup')) {
+        btn.href = 'dashboard.html';
+        btn.textContent = 'Naar dashboard →';
+      }
+    });
+  }
+})();
 </script>
 </body>
 </html>
