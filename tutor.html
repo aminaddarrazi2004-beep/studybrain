@@ -385,6 +385,38 @@ let userName = '';
   if (plan === 'pro') { planEl.textContent = 'Pro plan'; badgeEl.textContent = 'Pro'; }
   else if (plan === 'elite') { planEl.textContent = 'Elite plan'; badgeEl.textContent = 'Elite'; badgeEl.style.cssText += 'background:rgba(255,214,0,0.1);color:#ffd600;border-color:rgba(255,214,0,0.25)'; }
   else if (plan === 'starter') { planEl.textContent = 'Starter plan'; badgeEl.textContent = 'Starter'; }
+
+  // Blokkeer gratis gebruikers
+  if (plan === 'gratis') {
+    document.getElementById('chatArea').innerHTML = `
+      <div class="welcome" id="welcomeScreen">
+        <div class="tim-avatar-lg">
+          <img src="tim-avatar.png" alt="Meneer Tim" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+          <div class="tim-status-lg"></div>
+        </div>
+        <h2>Meneer Tim is exclusief voor leden 🔒</h2>
+        <p>Upgrade naar Starter of hoger om dagelijks met Meneer Tim te chatten. Hij legt alles uit in gewone taal — met voorbeelden en oefenvragen.</p>
+        <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px;margin-top:8px;">
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px 18px;font-size:13px;color:rgba(255,255,255,0.6);">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-weight:600;color:var(--text);">Starter</span><span style="color:var(--accent);font-weight:700;">€12,99/mnd</span></div>
+            Meneer Tim — 20 vragen per dag
+          </div>
+          <div style="background:rgba(255,77,109,0.06);border:1px solid rgba(255,77,109,0.2);border-radius:12px;padding:14px 18px;font-size:13px;color:rgba(255,255,255,0.6);">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-weight:600;color:var(--text);">Pro</span><span style="color:var(--accent);font-weight:700;">€14,99/mnd</span></div>
+            Meneer Tim — 60 vragen per dag
+          </div>
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px 18px;font-size:13px;color:rgba(255,255,255,0.6);">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-weight:600;color:var(--text);">Elite</span><span style="color:var(--accent);font-weight:700;">€22,99/mnd</span></div>
+            Meneer Tim — onbeperkt
+          </div>
+          <a href="index.html#prijzen" style="display:flex;align-items:center;justify-content:center;padding:13px;background:var(--accent);border-radius:10px;font-size:14px;font-weight:700;color:white;text-decoration:none;margin-top:4px;">Bekijk abonnementen →</a>
+        </div>
+      </div>`;
+    document.getElementById('userInput').disabled = true;
+    document.getElementById('sendBtn').disabled = true;
+    document.getElementById('userInput').placeholder = 'Upgrade om Meneer Tim te gebruiken...';
+    return;
+  }
 })();
 
 // ── File upload ──
