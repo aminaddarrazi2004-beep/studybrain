@@ -896,21 +896,9 @@ document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
   );
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
-    // Vervang nav-actions met dashboard knop
-    const navActions = document.querySelector('.nav-actions');
-    if (navActions) {
-      navActions.innerHTML = `<a href="welcome.html" class="btn-primary" style="text-decoration:none;">Naar mijn StudyBrain →</a>`;
-    }
-    // Vervang hero CTA knop
-    document.querySelectorAll('a[href="login.html#signup"]').forEach(btn => {
-      btn.href = 'welcome.html';
-      btn.textContent = 'Naar mijn StudyBrain →';
-    });
-    // Vervang inloggen link
-    document.querySelectorAll('a[href="login.html"]').forEach(btn => {
-      btn.href = 'welcome.html';
-      btn.textContent = 'Naar mijn StudyBrain →';
-    });
+    // Ingelogde gebruiker → stuur direct naar welcome pagina
+    window.location.href = 'welcome.html';
+    return;
   }
 })();
 </script>
