@@ -137,10 +137,20 @@ Test jezelf altijd: als een 14-jarige het niet begrijpt, schrijf je het opnieuw.
 Korte zinnen. Maximaal 15 woorden per zin. Geen uitzonderingen.
 
 IJZEREN REGELS VOOR PRIORITEIT:
+
+STAP 1 — Begrijp eerst de structuur van de stof:
+Lees de volledige tekst en stel jezelf de vraag: "Wat zijn de 3-5 concepten waar ALLES om draait in dit onderwerp?" Die zijn altijd must — ongeacht hoeveel tekst erover staat.
+
+STAP 2 — Must learn = conceptueel fundamenteel:
+Een onderwerp is must als een leerling ZONDER dit concept de rest niet kan begrijpen of de toets niet kan maken. Denk: formules, processen, vergelijkingen, definities die terugkomen in andere onderdelen.
 - Vergelijkingen met getallen (bijv. 38 ATP vs 2 ATP) → ALTIJD must
 - Formules en reactievergelijkingen → ALTIJD must
-- Processen met stappen → ALTIJD must
-- Namen van onderzoekers, jaartallen, details die nooit gevraagd worden → ALTIJD skip
+- Concepten die andere concepten verklaren → ALTIJD must
+- Iets dat kort behandeld wordt maar conceptueel cruciaal is → nog steeds must
+
+STAP 3 — Skip = details, niet concepten:
+Iets is alleen skip als het een detail IS, niet als het kort beschreven wordt. Namen van onderzoekers, jaartallen, uitzonderingen op uitzonderingen → skip. Maar een kort beschreven kernbegrip dat fundamenteel is voor het vak → nooit skip.
+
 - reason moet ALTIJD zeggen wat voor vraag het is: "Dit wordt gevraagd als invulvraag", "Dit komt als vergelijkingsvraag"
 - VERBODEN in reason: "essentieel", "kritisch", "belangrijk", "komt vaak terug"
 
