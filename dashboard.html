@@ -10,252 +10,216 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
-  --bg: #05050f;
-  --surface: #0c0c1a;
-  --card: #10101e;
-  --border: rgba(255,255,255,0.07);
-  --accent: #ff4d6d;
-  --accent-dim: rgba(255,77,109,0.10);
-  --accent-glow: rgba(255,77,109,0.20);
-  --green: #00e676;
-  --yellow: #ffd600;
-  --blue: #4d9fff;
-  --text: #f0f0f8;
-  --muted: #6b6b8a;
-  --muted2: #3a3a52;
-  --font: 'Plus Jakarta Sans', sans-serif;
-  --sidebar-w: 220px;
-  --radius: 14px;
+  --bg: #05050f; --surface: #0c0c1a; --card: #10101e;
+  --border: rgba(255,255,255,0.07); --accent: #ff4d6d;
+  --accent-dim: rgba(255,77,109,0.10); --accent-glow: rgba(255,77,109,0.20);
+  --tim: #5c7cfa; --tim-dim: rgba(92,124,250,0.10);
+  --green: #00e676; --yellow: #ffd600;
+  --text: #f0f0f8; --muted: #6b6b8a; --muted2: #3a3a52;
+  --font: 'Plus Jakarta Sans', sans-serif; --sidebar-w: 240px; --r: 14px;
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,77,109,0.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,77,109,0.015) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
-.orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;}
-.orb-1{width:600px;height:600px;background:radial-gradient(circle,rgba(255,77,109,0.07),transparent 65%);top:-200px;right:-100px;}
-.orb-2{width:400px;height:400px;background:radial-gradient(circle,rgba(77,100,255,0.05),transparent 65%);bottom:-100px;left:-100px;}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:var(--font); -webkit-font-smoothing:antialiased; min-height:100vh; }
+body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(rgba(255,77,109,0.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,77,109,0.012) 1px,transparent 1px); background-size:60px 60px; pointer-events:none; z-index:0; }
+.orb { position:fixed; border-radius:50%; filter:blur(120px); pointer-events:none; z-index:0; }
+.orb-1 { width:500px;height:500px;background:radial-gradient(circle,rgba(255,77,109,0.06),transparent 65%);top:-200px;right:-100px; }
+.orb-2 { width:400px;height:400px;background:radial-gradient(circle,rgba(92,124,250,0.05),transparent 65%);bottom:-100px;left:-100px; }
 
 /* SIDEBAR */
-.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);background:rgba(6,6,16,0.98);border-right:1px solid var(--border);z-index:100;display:flex;flex-direction:column;backdrop-filter:blur(20px);}
-.sidebar-logo{padding:22px 20px 18px;border-bottom:1px solid var(--border);font-size:17px;font-weight:800;letter-spacing:-0.3px;flex-shrink:0;}
-.sidebar-logo span{color:var(--accent);}
-.sidebar-nav{flex:1;padding:14px 10px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;}
-.nav-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);padding:10px 12px 6px;}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none;cursor:pointer;transition:all 0.15s;border:none;background:none;width:100%;text-align:left;font-family:var(--font);}
-.nav-item svg{width:16px;height:16px;flex-shrink:0;opacity:0.5;transition:opacity 0.15s;}
-.nav-item:hover{background:rgba(255,255,255,0.04);color:var(--text);}
-.nav-item:hover svg{opacity:0.8;}
-.nav-item.active{background:var(--accent-dim);color:var(--accent);font-weight:600;}
-.nav-item.active svg{opacity:1;}
-.nav-sep{height:1px;background:var(--border);margin:6px 10px;}
-.sidebar-bottom{padding:12px 10px;border-top:1px solid var(--border);flex-shrink:0;}
-.plan-pill{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);margin-bottom:8px;cursor:pointer;transition:border-color 0.15s;}
-.plan-pill:hover{border-color:rgba(255,77,109,0.3);}
-.plan-name{font-size:12px;font-weight:700;}
-.plan-label{font-size:10px;color:var(--muted);margin-top:1px;}
-.plan-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(255,77,109,0.2);}
-.sidebar-email{font-size:11px;color:var(--muted2);padding:4px 12px 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.logout-btn{display:flex;align-items:center;gap:8px;width:100%;padding:9px 12px;border-radius:10px;font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--font);transition:all 0.15s;text-align:left;}
-.logout-btn svg{width:15px;height:15px;flex-shrink:0;}
-.logout-btn:hover{background:rgba(255,77,109,0.08);color:var(--accent);}
+.sidebar { position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);background:rgba(5,5,14,0.97);border-right:1px solid var(--border);z-index:100;display:flex;flex-direction:column;backdrop-filter:blur(20px); }
+.sb-logo { padding:24px 22px 20px;border-bottom:1px solid var(--border);font-size:18px;font-weight:800;letter-spacing:-0.3px;flex-shrink:0;text-decoration:none;color:var(--text);display:block; }
+.sb-logo span { color:var(--accent); }
+.sb-nav { flex:1;padding:16px 12px;display:flex;flex-direction:column;gap:2px;overflow-y:auto; }
+.sb-lbl { font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted2);padding:12px 10px 6px; }
+.sb-item { display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:500;color:var(--muted);text-decoration:none;transition:all 0.15s;border:none;background:none;cursor:pointer;width:100%;text-align:left;font-family:var(--font); }
+.sb-item svg { width:16px;height:16px;flex-shrink:0;stroke:currentColor;opacity:0.6;transition:opacity 0.15s; }
+.sb-item:hover { background:rgba(255,255,255,0.04);color:var(--text); }
+.sb-item:hover svg { opacity:1; }
+.sb-item.active { background:var(--accent-dim);color:var(--accent);font-weight:600; }
+.sb-item.active svg { opacity:1; }
+.sb-sep { height:1px;background:var(--border);margin:6px 10px; }
+.sb-bottom { padding:14px 12px;border-top:1px solid var(--border);flex-shrink:0; }
+.sb-plan { display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-radius:11px;background:rgba(255,255,255,0.03);border:1px solid var(--border);margin-bottom:10px;cursor:pointer;transition:border-color 0.15s;text-decoration:none; }
+.sb-plan:hover { border-color:rgba(255,77,109,0.25); }
+.sb-plan-name { font-size:12px;font-weight:700;color:var(--text); }
+.sb-plan-sub { font-size:10px;color:var(--muted);margin-top:1px; }
+.sb-plan-badge { font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(255,77,109,0.2); }
+.sb-email { font-size:11px;color:var(--muted2);padding:2px 10px 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+.sb-logout { display:flex;align-items:center;gap:8px;width:100%;padding:9px 12px;border-radius:10px;font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--font);transition:all 0.15s;text-align:left; }
+.sb-logout svg { width:15px;height:15px;flex-shrink:0; }
+.sb-logout:hover { background:rgba(255,77,109,0.08);color:var(--accent); }
 
 /* MAIN */
-.main{margin-left:var(--sidebar-w);min-height:100vh;position:relative;z-index:1;}
+.main { margin-left:var(--sidebar-w);min-height:100vh;position:relative;z-index:1; }
 
 /* TOPBAR */
-.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:60px;background:rgba(5,5,15,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
-.topbar-left{display:flex;align-items:center;gap:8px;}
-.topbar-title{font-size:14px;font-weight:600;color:var(--muted);}
-.topbar-sep{color:var(--muted2);font-size:14px;}
-.topbar-sub{font-size:14px;font-weight:700;color:var(--text);}
-.topbar-new-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:10px;background:var(--accent);color:white;font-size:13px;font-weight:700;border:none;cursor:pointer;font-family:var(--font);transition:all 0.2s;text-decoration:none;box-shadow:0 0 16px var(--accent-glow);}
-.topbar-new-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px var(--accent-glow);}
-.topbar-new-btn svg{width:14px;height:14px;}
+.topbar { position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:62px;background:rgba(5,5,15,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border); }
+.topbar-page { font-size:14px;font-weight:700;color:var(--text); }
+.topbar-user { font-size:13px;color:var(--muted);margin-left:6px; }
+.topbar-sep { color:var(--muted2);margin:0 4px; }
+.topbar-btn { display:inline-flex;align-items:center;gap:7px;padding:9px 20px;border-radius:10px;background:var(--accent);color:white;font-size:13px;font-weight:700;border:none;cursor:pointer;font-family:var(--font);text-decoration:none;box-shadow:0 0 18px var(--accent-glow);transition:all 0.2s; }
+.topbar-btn:hover { transform:translateY(-1px);box-shadow:0 4px 24px var(--accent-glow); }
+.topbar-btn svg { width:14px;height:14px; }
 
 /* PAGE */
-.page{padding:28px 32px 80px;max-width:1040px;}
+.page { padding:32px 40px 80px;max-width:1000px; }
 
-/* HERO BANNER */
-.hero-banner{background:linear-gradient(135deg,rgba(255,77,109,0.10) 0%,rgba(255,77,109,0.03) 60%,transparent 100%);border:1px solid rgba(255,77,109,0.18);border-radius:20px;padding:28px 32px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:24px;position:relative;overflow:hidden;}
-.hero-banner::after{content:'';position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,77,109,0.10),transparent 70%);pointer-events:none;}
-.hero-greeting{font-size:11px;font-weight:700;color:var(--accent);letter-spacing:0.09em;text-transform:uppercase;margin-bottom:6px;}
-.hero-title{font-size:22px;font-weight:800;letter-spacing:-0.4px;margin-bottom:6px;}
-.hero-sub{font-size:13px;color:var(--muted);line-height:1.65;}
-.hero-cta{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;background:var(--accent);color:white;font-size:13px;font-weight:700;border:none;cursor:pointer;font-family:var(--font);transition:all 0.2s;text-decoration:none;white-space:nowrap;box-shadow:0 0 20px var(--accent-glow);flex-shrink:0;}
-.hero-cta:hover{transform:translateY(-2px);box-shadow:0 8px 28px var(--accent-glow);}
-.hero-cta svg{width:14px;height:14px;}
+/* GREETING */
+.greeting-row { display:flex;align-items:center;justify-content:space-between;margin-bottom:28px; }
+.greeting-lbl { font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:6px; }
+.greeting-title { font-size:26px;font-weight:800;letter-spacing:-0.4px;margin-bottom:5px; }
+.greeting-sub { font-size:13px;color:var(--muted);line-height:1.6; }
+.greeting-btns { display:flex;flex-direction:column;gap:8px;flex-shrink:0; }
+.btn-analyse { display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;background:var(--accent);color:white;font-size:13px;font-weight:700;border:none;cursor:pointer;font-family:var(--font);text-decoration:none;box-shadow:0 0 20px var(--accent-glow);transition:all 0.2s;white-space:nowrap; }
+.btn-analyse:hover { transform:translateY(-2px); }
+.btn-analyse svg { width:14px;height:14px; }
+.btn-tim { display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:12px;background:var(--tim-dim);border:1px solid rgba(92,124,250,0.25);color:#818cf8;font-size:13px;font-weight:600;text-decoration:none;transition:all 0.2s;white-space:nowrap; }
+.btn-tim:hover { background:rgba(92,124,250,0.18); }
+.btn-tim img { width:22px;height:22px;border-radius:50%;object-fit:cover;flex-shrink:0; }
 
-/* STATS GRID */
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;position:relative;overflow:hidden;transition:border-color 0.2s,transform 0.2s;}
-.stat-card:hover{border-color:rgba(255,255,255,0.12);transform:translateY(-1px);}
-.stat-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.stat-ico{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;}
-.stat-ico svg{width:16px;height:16px;}
-.stat-ico.red{background:rgba(255,77,109,0.12);color:var(--accent);}
-.stat-ico.green{background:rgba(0,230,118,0.1);color:var(--green);}
-.stat-ico.yellow{background:rgba(255,214,0,0.1);color:var(--yellow);}
-.stat-ico.blue{background:rgba(77,159,255,0.1);color:var(--blue);}
-.stat-chip{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;}
-.stat-chip.up{background:rgba(0,230,118,0.1);color:var(--green);}
-.stat-chip.neutral{background:rgba(255,255,255,0.05);color:var(--muted);}
-.stat-num{font-size:26px;font-weight:800;letter-spacing:-0.5px;line-height:1;margin-bottom:4px;}
-.stat-num.red{color:var(--accent);}
-.stat-num.green{color:var(--green);}
-.stat-num.yellow{color:var(--yellow);}
-.stat-num.blue{color:var(--blue);}
-.stat-num.sm{font-size:14px;font-weight:700;line-height:1.35;letter-spacing:0;}
-.stat-lbl{font-size:12px;color:var(--muted);}
-.stat-bar{height:3px;background:rgba(255,255,255,0.05);border-radius:3px;margin-top:12px;overflow:hidden;}
-.stat-bar-fill{height:100%;border-radius:3px;transition:width 1s ease;}
+/* STATS */
+.stats { display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px; }
+.stat { background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;transition:border-color 0.2s,transform 0.2s; }
+.stat:hover { border-color:rgba(255,255,255,0.12);transform:translateY(-2px); }
+.stat-top { display:flex;align-items:center;justify-content:space-between;margin-bottom:14px; }
+.stat-ico { width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center; }
+.stat-ico svg { width:16px;height:16px; }
+.stat-ico.red { background:rgba(255,77,109,0.12);color:var(--accent); }
+.stat-ico.green { background:rgba(0,230,118,0.1);color:var(--green); }
+.stat-ico.yellow { background:rgba(255,214,0,0.1);color:var(--yellow); }
+.stat-ico.blue { background:rgba(92,124,250,0.1);color:var(--tim); }
+.stat-chip { font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;background:rgba(255,255,255,0.05);color:var(--muted); }
+.stat-val { font-size:24px;font-weight:800;letter-spacing:-0.5px;line-height:1;margin-bottom:4px; }
+.stat-val.red{color:var(--accent)}.stat-val.green{color:var(--green)}.stat-val.yellow{color:var(--yellow)}.stat-val.blue{color:var(--tim)}
+.stat-val.sm { font-size:14px;font-weight:700;line-height:1.4;letter-spacing:0; }
+.stat-lbl { font-size:12px;color:var(--muted); }
 
-/* TWO COL */
-.two-col{display:grid;grid-template-columns:1fr 340px;gap:20px;margin-bottom:24px;}
+/* GRID */
+.grid { display:grid;grid-template-columns:1fr 320px;gap:20px; }
+.card { background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden; }
+.card-head { display:flex;align-items:center;justify-content:space-between;padding:15px 20px;border-bottom:1px solid var(--border); }
+.card-head-title { font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;color:var(--text); }
+.card-head-title svg { width:14px;height:14px;color:var(--accent); }
+.card-head-link { font-size:12px;font-weight:600;color:var(--accent);text-decoration:none; }
+.card-head-link:hover { text-decoration:underline; }
+.card-body { padding:16px 20px; }
 
-/* SECTION CARD */
-.sec-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
-.sec-head{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;border-bottom:1px solid var(--border);}
-.sec-head-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;}
-.sec-head-title svg{width:15px;height:15px;color:var(--accent);opacity:0.8;}
-.sec-head-action{font-size:12px;color:var(--accent);font-weight:600;text-decoration:none;}
-.sec-head-action:hover{text-decoration:underline;}
-.sec-body{padding:16px 20px;}
+.empty { text-align:center;padding:32px 16px;color:var(--muted);font-size:13px;line-height:1.7; }
+.empty-ico { width:44px;height:44px;border-radius:12px;background:var(--accent-dim);border:1px solid rgba(255,77,109,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 12px; }
+.empty-ico svg { width:20px;height:20px;color:var(--accent); }
+.empty a { color:var(--accent);font-weight:600;text-decoration:none; }
 
-/* ANALYSE ROWS */
-.analyse-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:all 0.15s;}
-.analyse-row:last-child{border-bottom:none;padding-bottom:0;}
-.analyse-row:first-child{padding-top:0;}
-.analyse-row:hover .a-name{color:var(--accent);}
-.a-av{width:36px;height:36px;border-radius:9px;background:var(--accent-dim);border:1px solid rgba(255,77,109,0.18);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--accent);flex-shrink:0;}
-.a-info{flex:1;min-width:0;}
-.a-name{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:color 0.15s;}
-.a-meta{font-size:11px;color:var(--muted);margin-top:1px;}
-.a-chip{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;background:rgba(0,230,118,0.1);color:var(--green);flex-shrink:0;}
+.a-row { display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:all 0.15s; }
+.a-row:last-child { border-bottom:none;padding-bottom:0; }
+.a-row:first-child { padding-top:0; }
+.a-av { width:36px;height:36px;border-radius:9px;background:var(--accent-dim);border:1px solid rgba(255,77,109,0.18);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--accent);flex-shrink:0; }
+.a-info { flex:1;min-width:0; }
+.a-name { font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+.a-meta { font-size:11px;color:var(--muted);margin-top:1px; }
+.a-badge { font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;background:rgba(0,230,118,0.1);color:var(--green);flex-shrink:0; }
 
-.empty-state{text-align:center;padding:32px 20px;color:var(--muted);font-size:13px;line-height:1.7;}
-.empty-state a{color:var(--accent);font-weight:600;text-decoration:none;}
-.empty-icon{width:44px;height:44px;border-radius:12px;background:var(--accent-dim);border:1px solid rgba(255,77,109,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;}
-.empty-icon svg{width:20px;height:20px;color:var(--accent);}
+.right-col { display:flex;flex-direction:column;gap:14px; }
 
-/* QUICK ACTIONS */
-.quick-list{display:flex;flex-direction:column;gap:6px;}
-.quick-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid var(--border);cursor:pointer;transition:all 0.15s;text-decoration:none;color:var(--text);}
-.quick-item:hover{border-color:rgba(255,77,109,0.3);background:rgba(255,77,109,0.04);transform:translateX(2px);}
-.quick-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.quick-ico svg{width:14px;height:14px;}
-.quick-ico.red{background:var(--accent-dim);color:var(--accent);}
-.quick-ico.yellow{background:rgba(255,214,0,0.1);color:var(--yellow);}
-.quick-ico.blue{background:rgba(77,159,255,0.1);color:var(--blue);}
-.quick-txt strong{display:block;font-size:13px;font-weight:600;margin-bottom:1px;}
-.quick-txt span{font-size:11px;color:var(--muted);}
-.quick-arr{margin-left:auto;color:var(--muted2);flex-shrink:0;font-size:13px;}
+.quick-list { display:flex;flex-direction:column;gap:6px; }
+.quick-item { display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid var(--border);cursor:pointer;transition:all 0.15s;text-decoration:none;color:var(--text); }
+.quick-item:hover { border-color:rgba(255,77,109,0.25);background:rgba(255,77,109,0.04);transform:translateX(2px); }
+.quick-ico { width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+.quick-ico svg { width:14px;height:14px; }
+.quick-ico.red { background:var(--accent-dim);color:var(--accent); }
+.quick-ico.tim { background:var(--tim-dim);overflow:hidden; }
+.quick-ico.tim img { width:100%;height:100%;object-fit:cover;border-radius:8px; }
+.quick-ico.yellow { background:rgba(255,214,0,0.1);color:var(--yellow); }
+.quick-txt strong { display:block;font-size:13px;font-weight:600;margin-bottom:1px; }
+.quick-txt span { font-size:11px;color:var(--muted); }
+.quick-arr { margin-left:auto;color:var(--muted2);font-size:13px;flex-shrink:0; }
 
-/* UPGRADE BANNER */
-.upgrade-banner{background:linear-gradient(135deg,rgba(255,214,0,0.07),rgba(255,214,0,0.02));border:1px solid rgba(255,214,0,0.16);border-radius:var(--radius);padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;}
-.upgrade-txt strong{font-size:13px;font-weight:700;color:var(--yellow);display:block;margin-bottom:2px;}
-.upgrade-txt span{font-size:11px;color:var(--muted);}
-.upgrade-btn-sm{padding:8px 16px;border-radius:9px;background:rgba(255,214,0,0.1);border:1px solid rgba(255,214,0,0.22);color:var(--yellow);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap;transition:all 0.15s;text-decoration:none;}
-.upgrade-btn-sm:hover{background:rgba(255,214,0,0.18);}
+.tip { background:linear-gradient(135deg,rgba(92,124,250,0.07),rgba(92,124,250,0.02));border:1px solid rgba(92,124,250,0.15);border-radius:var(--r);padding:16px 18px;display:flex;align-items:flex-start;gap:12px; }
+.tip-ico { width:34px;height:34px;border-radius:9px;background:rgba(92,124,250,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#818cf8; }
+.tip-ico svg { width:15px;height:15px; }
+.tip-lbl { font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#818cf8;margin-bottom:4px; }
+.tip-txt { font-size:12px;color:var(--text);line-height:1.65; }
 
-/* TIP */
-.tip-card{background:linear-gradient(135deg,rgba(77,100,255,0.07),rgba(77,100,255,0.02));border:1px solid rgba(77,100,255,0.16);border-radius:var(--radius);padding:18px 20px;display:flex;align-items:flex-start;gap:14px;}
-.tip-ico{width:36px;height:36px;border-radius:9px;background:rgba(77,100,255,0.14);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#818cf8;}
-.tip-ico svg{width:16px;height:16px;}
-.tip-lbl{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#818cf8;margin-bottom:5px;}
-.tip-txt{font-size:13px;color:var(--text);line-height:1.65;}
-
-/* ANIMATIONS */
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
 .f1{animation:fadeUp 0.4s 0.05s ease both;}
 .f2{animation:fadeUp 0.4s 0.12s ease both;}
 .f3{animation:fadeUp 0.4s 0.19s ease both;}
 .f4{animation:fadeUp 0.4s 0.26s ease both;}
 
-/* MOBILE */
-.mob-bar{display:none;}
-@media(max-width:768px){
-  .sidebar{display:none;}
-  .main{margin-left:0;padding-top:52px;}
-  .mob-bar{display:flex;position:fixed;top:0;left:0;right:0;z-index:200;height:52px;align-items:center;justify-content:space-between;padding:0 20px;background:rgba(5,5,15,0.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
-  .mob-logo{font-size:15px;font-weight:800;}
-  .mob-logo span{color:var(--accent);}
-  .mob-out{padding:6px 14px;border-radius:8px;border:1px solid rgba(255,77,109,0.25);background:rgba(255,77,109,0.08);color:var(--accent);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);}
-  .page{padding:20px 16px 60px;}
-  .stats-grid{grid-template-columns:1fr 1fr;}
-  .two-col{grid-template-columns:1fr;}
-  .hero-banner{flex-direction:column;align-items:flex-start;}
-  .topbar{padding:0 16px;}
+.mob-bar { display:none; }
+@media(max-width:900px) {
+  .sidebar { display:none; }
+  .main { margin-left:0;padding-top:52px; }
+  .mob-bar { display:flex;position:fixed;top:0;left:0;right:0;z-index:200;height:52px;align-items:center;justify-content:space-between;padding:0 20px;background:rgba(5,5,15,0.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border); }
+  .mob-logo { font-size:15px;font-weight:800; }
+  .mob-logo span { color:var(--accent); }
+  .page { padding:20px 16px 60px; }
+  .stats { grid-template-columns:1fr 1fr; }
+  .grid { grid-template-columns:1fr; }
+  .greeting-row { flex-direction:column;align-items:flex-start;gap:16px; }
+  .topbar { padding:0 16px; }
 }
 </style>
 </head>
 <body>
-
 <div class="orb orb-1"></div>
 <div class="orb orb-2"></div>
 
-<!-- Mobile bar -->
 <div class="mob-bar">
   <div class="mob-logo">Study<span>Brain</span></div>
-  <button class="mob-out" onclick="doLogout()">Uitloggen</button>
+  <button style="padding:6px 14px;border-radius:8px;border:1px solid rgba(255,77,109,0.25);background:rgba(255,77,109,0.08);color:var(--accent);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);" onclick="doLogout()">Uitloggen</button>
 </div>
 
-<!-- Sidebar -->
 <div class="sidebar">
-  <div class="sidebar-logo">Study<span>Brain</span></div>
-  <div class="sidebar-nav">
-    <div class="nav-label">Menu</div>
-    <a href="index.html" class="nav-item">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2 6.5L8 2l6 4.5V14H10v-3.5H6V14H2V6.5z"/></svg>
-      Hoofdpagina
-    </a>
-    <div class="nav-sep"></div>
-    <div class="nav-label">App</div>
-    <a href="dashboard.html" class="nav-item active">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>
+  <a href="index.html" class="sb-logo">Study<span>Brain</span></a>
+  <div class="sb-nav">
+    <div class="sb-lbl">App</div>
+    <a href="dashboard.html" class="sb-item active">
+      <svg viewBox="0 0 16 16" fill="none" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>
       Dashboard
     </a>
-    <a href="app.html" class="nav-item">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>
+    <a href="app.html" class="sb-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>
       Nieuwe analyse
     </a>
-    <a href="tutor.html" class="nav-item">
-      <img src="tim-avatar.png" style="width:16px;height:16px;border-radius:50%;object-fit:cover;opacity:0.7;flex-shrink:0;">
+    <a href="tutor.html" class="sb-item" style="color:var(--muted);" onmouseover="this.style.background='var(--tim-dim)';this.style.color='var(--tim)'" onmouseout="this.style.background='';this.style.color='var(--muted)'">
+      <img src="tim-avatar.png" style="width:16px;height:16px;border-radius:50%;object-fit:cover;flex-shrink:0;opacity:0.75;">
       Meneer Tim
     </a>
-    <div class="nav-sep"></div>
-    <div class="nav-label">Account</div>
-    <a href="index.html#pricing" class="nav-item">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M8 1.5l4 4-4 9-4-9 4-4z"/></svg>
+    <div class="sb-sep"></div>
+    <div class="sb-lbl">Account</div>
+    <a href="index.html#prijzen" class="sb-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke-width="1.5" stroke-linejoin="round"><path d="M8 1.5l4 4-4 9-4-9 4-4z"/></svg>
       Abonnementen
     </a>
+    <a href="index.html" class="sb-item">
+      <svg viewBox="0 0 16 16" fill="none" stroke-width="1.5" stroke-linejoin="round"><path d="M2 6.5L8 2l6 4.5V14H10v-3.5H6V14H2V6.5z"/></svg>
+      Hoofdpagina
+    </a>
   </div>
-  <div class="sidebar-bottom">
-    <div class="plan-pill" id="planPill" onclick="window.location.href='index.html#pricing'">
+  <div class="sb-bottom">
+    <a href="index.html#prijzen" class="sb-plan">
       <div>
-        <div class="plan-name" id="planName">Gratis</div>
-        <div class="plan-label">Klik om te upgraden</div>
+        <div class="sb-plan-name" id="planName">Gratis</div>
+        <div class="sb-plan-sub">Klik om te upgraden</div>
       </div>
-      <div class="plan-badge" id="planBadge">Free</div>
-    </div>
-    <div class="sidebar-email" id="sidebarEmail"></div>
-    <button class="logout-btn" onclick="doLogout()">
+      <div class="sb-plan-badge" id="planBadge">Free</div>
+    </a>
+    <div class="sb-email" id="sidebarEmail"></div>
+    <button class="sb-logout" onclick="doLogout()">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 11l3-3-3-3M13 8H6M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3"/></svg>
       Uitloggen
     </button>
   </div>
 </div>
 
-<!-- Main -->
 <div class="main">
-
-  <!-- Topbar -->
   <div class="topbar">
-    <div class="topbar-left">
-      <span class="topbar-title">Dashboard</span>
+    <div style="display:flex;align-items:center;">
+      <span class="topbar-page">Dashboard</span>
       <span class="topbar-sep">·</span>
-      <span class="topbar-sub" id="topbarName">—</span>
+      <span class="topbar-user" id="topbarUser">—</span>
     </div>
-    <a href="app.html" class="topbar-new-btn">
+    <a href="app.html" class="topbar-btn">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>
       Nieuwe analyse
     </a>
@@ -263,124 +227,113 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
   <div class="page">
 
-    <!-- Hero banner -->
-    <div class="hero-banner f1">
+    <div class="greeting-row f1">
       <div>
-        <div class="hero-greeting" id="heroGreeting">Goedenavond</div>
-        <div class="hero-title" id="heroTitle">Klaar voor je volgende toets?</div>
-        <div class="hero-sub" id="heroSub">Upload je lesstof en ontdek in 30 seconden wat echt in de toets komt.</div>
+        <div class="greeting-lbl" id="greetLbl">Goedenavond</div>
+        <div class="greeting-title" id="greetTitle">Goed bezig, —</div>
+        <div class="greeting-sub" id="greetSub">Upload je lesstof en ontdek wat in je toets komt.</div>
       </div>
-      <a href="app.html" class="hero-cta">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>
-        Analyseer nu
-      </a>
+      <div class="greeting-btns">
+        <a href="app.html" class="btn-analyse">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>
+          Analyseer nu
+        </a>
+        <a href="tutor.html" class="btn-tim">
+          <img src="tim-avatar.png" alt="Tim">
+          Vraag Meneer Tim
+        </a>
+      </div>
     </div>
 
-    <!-- Stats -->
-    <div class="stats-grid f2">
-      <div class="stat-card">
+    <div class="stats f2">
+      <div class="stat">
         <div class="stat-top">
           <div class="stat-ico red"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M8 1.5l4 4-4 9-4-9 4-4z"/></svg></div>
-          <div class="stat-chip neutral" id="planChip">—</div>
+          <div class="stat-chip" id="planChip">—</div>
         </div>
-        <div class="stat-num red" id="statPlan">—</div>
+        <div class="stat-val red" id="statPlan">—</div>
         <div class="stat-lbl">Huidig plan</div>
       </div>
-      <div class="stat-card">
+      <div class="stat">
         <div class="stat-top">
           <div class="stat-ico green"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12L6 8l3 3 5-6"/></svg></div>
-          <div class="stat-chip neutral" id="analysesChip">this session</div>
+          <div class="stat-chip">sessie</div>
         </div>
-        <div class="stat-num green" id="statAnalyses">0</div>
+        <div class="stat-val green" id="statAnalyses">0</div>
         <div class="stat-lbl">Analyses gedaan</div>
-        <div class="stat-bar" id="statBar" style="display:none"><div class="stat-bar-fill" id="statBarFill"></div></div>
       </div>
-      <div class="stat-card">
+      <div class="stat">
         <div class="stat-top">
           <div class="stat-ico yellow"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="6.5"/><path d="M8 5v3.5l2 2"/></svg></div>
-          <div class="stat-chip neutral">vandaag</div>
+          <div class="stat-chip">vandaag</div>
         </div>
-        <div class="stat-num yellow sm" id="statUur">—</div>
+        <div class="stat-val yellow sm" id="statUur">—</div>
         <div class="stat-lbl">Beste studietijd</div>
       </div>
-      <div class="stat-card">
+      <div class="stat">
         <div class="stat-top">
           <div class="stat-ico blue"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2z"/><path d="M10 2v4l-2-1-2 1V2"/></svg></div>
-          <div class="stat-chip neutral">vakken</div>
+          <div class="stat-chip">vakken</div>
         </div>
-        <div class="stat-num blue" id="statVakken">0</div>
+        <div class="stat-val blue" id="statVakken">0</div>
         <div class="stat-lbl">Geanalyseerd</div>
       </div>
     </div>
 
-    <!-- Two column -->
-    <div class="two-col f3">
-
-      <!-- Analyses -->
-      <div class="sec-card">
-        <div class="sec-head">
-          <div class="sec-head-title">
+    <div class="grid f3">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-title">
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12L6 8l3 3 5-6"/></svg>
             Recente analyses
           </div>
-          <a href="app.html" class="sec-head-action">+ Nieuwe analyse</a>
+          <a href="app.html" class="card-head-link">+ Nieuwe analyse</a>
         </div>
-        <div class="sec-body" id="analysesList">
-          <div class="empty-state">
-            <div class="empty-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-            </div>
+        <div class="card-body" id="analysesList">
+          <div class="empty">
+            <div class="empty-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
             Nog geen analyses gedaan.<br>
             <a href="app.html">Start je eerste analyse →</a>
           </div>
         </div>
       </div>
 
-      <!-- Right column -->
-      <div>
-        <div class="sec-card" style="margin-bottom:14px">
-          <div class="sec-head">
-            <div class="sec-head-title">
+      <div class="right-col">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-head-title">
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>
               Snelle acties
             </div>
           </div>
-          <div class="sec-body">
+          <div class="card-body">
             <div class="quick-list">
               <a href="app.html" class="quick-item">
                 <div class="quick-ico red"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg></div>
                 <div class="quick-txt"><strong>Nieuwe analyse</strong><span>PDF uploaden en analyseren</span></div>
                 <span class="quick-arr">→</span>
               </a>
-              <a href="index.html#pricing" class="quick-item">
-                <div class="quick-ico yellow"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M8 1.5l4 4-4 9-4-9 4-4z"/></svg></div>
-                <div class="quick-txt"><strong>Abonnement</strong><span>Upgrade voor meer features</span></div>
+              <a href="tutor.html" class="quick-item">
+                <div class="quick-ico tim"><img src="tim-avatar.png" alt="Tim"></div>
+                <div class="quick-txt"><strong>Meneer Tim</strong><span>Vraag uitleg of stuur huiswerk</span></div>
                 <span class="quick-arr">→</span>
               </a>
-              <a href="index.html" class="quick-item">
-                <div class="quick-ico blue"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2 6.5L8 2l6 4.5V14H10v-3.5H6V14H2V6.5z"/></svg></div>
-                <div class="quick-txt"><strong>Hoofdpagina</strong><span>Features en informatie</span></div>
+              <a href="index.html#prijzen" class="quick-item">
+                <div class="quick-ico yellow"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M8 1.5l4 4-4 9-4-9 4-4z"/></svg></div>
+                <div class="quick-txt"><strong>Abonnement</strong><span>Upgrade voor meer features</span></div>
                 <span class="quick-arr">→</span>
               </a>
             </div>
           </div>
         </div>
-        <div class="upgrade-banner" id="upgradeBanner">
-          <div class="upgrade-txt">
-            <strong>Upgrade naar Pro</strong>
-            <span>Onbeperkt + persoonlijk studieplan</span>
-          </div>
-          <a href="index.html#pricing" class="upgrade-btn-sm">Upgrade →</a>
-        </div>
-      </div>
-    </div>
 
-    <!-- Tip -->
-    <div class="tip-card f4">
-      <div class="tip-ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 1.5a4.5 4.5 0 010 9M8 10.5V14M6 14h4"/></svg></div>
-      <div>
-        <div class="tip-lbl">Studietip van de dag</div>
-        <div class="tip-txt" id="tipText">Laadt...</div>
+        <div class="tip f4">
+          <div class="tip-ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="6.5"/><path d="M8 5.5v3M8 10.5v.5"/></svg></div>
+          <div>
+            <div class="tip-lbl">Studietip van de dag</div>
+            <div class="tip-txt" id="tipText">Begin altijd met de moeilijkste stof als je fris bent.</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -392,90 +345,63 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 checkAccess();
 
 const tips = [
-  "Spaced repetition werkt beter dan alles in één keer leren. Herhaal stof na 1 dag, 3 dagen en een week.",
-  "Studeer in blokken van 25 minuten met 5 minuten pauze. Je hersenen hebben rust nodig.",
-  "Schrijf na het leren de hoofdpunten op uit je hoofd. Als je het kunt opschrijven, kun je het op de toets.",
-  "Begin altijd met de moeilijkste stof als je fris bent. Bewaar de makkelijke onderwerpen voor het einde.",
-  "Leg de stof uit alsof je het aan iemand anders uitlegt. Als je het niet kunt uitleggen, snap je het nog niet.",
-  "Vermijd je telefoon tijdens het studeren. Elke melding kost je 20 minuten concentratie.",
-  "Slaap genoeg na het leren. Je brein slaat informatie op tijdens je slaap.",
+  'Begin altijd met de moeilijkste stof als je fris bent. Bewaar de makkelijke onderwerpen voor het einde.',
+  'Herhaal je lesstof op 3 momenten: direct na het leren, na 1 uur, en voor het slapen. Zo onthoud je het écht.',
+  'Schrijf de stof met de hand op in plaats van typen. Je onthoudt het dan 40% beter.',
+  'Maak een oefentoets voordat je begint met studeren. Zo weet je precies waar de gaten zitten.',
+  'Studeer in blokken van 25 minuten met 5 minuten pauze. Dit heet de Pomodoro-techniek.',
+  'Leg de stof uit aan een denkbeeldig persoon. Als je het niet kunt uitleggen, snap je het nog niet.',
+  'Zet je telefoon in een andere kamer. Eén notificatie kost je gemiddeld 23 minuten concentratie.',
 ];
+document.getElementById('tipText').textContent = tips[new Date().getDay() % tips.length];
 
-const studieuren = ['18:00–20:00','19:00–21:00','16:00–18:00','20:00–22:00','17:00–19:00','15:00–17:00','18:00–20:00'];
+const hour = new Date().getHours();
+const dag = hour < 12 ? 'Goedemorgen' : hour < 18 ? 'Goedemiddag' : 'Goedenavond';
+const studieUren = ['06:00–08:00','08:00–10:00','14:00–16:00','16:00–18:00','19:00–21:00','20:00–22:00','21:00–23:00'];
+document.getElementById('statUur').textContent = studieUren[Math.floor(Math.random() * studieUren.length)];
 
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) return;
 
   const email = session.user.email;
-  const naam = email.split('@')[0];
-  const hour = new Date().getHours();
-  const day = new Date().getDay();
-  const greeting = hour < 12 ? 'Goedemorgen' : hour < 17 ? 'Goedemiddag' : 'Goedenavond';
-
+  const name = email.split('@')[0];
+  document.getElementById('topbarUser').textContent = name;
+  document.getElementById('greetLbl').textContent = dag;
+  document.getElementById('greetTitle').textContent = `Goed bezig, ${name}.`;
   document.getElementById('sidebarEmail').textContent = email;
-  document.getElementById('topbarName').textContent = naam;
-  document.getElementById('heroGreeting').textContent = greeting + ', ' + naam;
-  document.getElementById('tipText').textContent = tips[day % tips.length];
-  document.getElementById('statUur').textContent = studieuren[day % studieuren.length];
 
-  const { data: profile } = await sb.from('profiles').select('plan, free_analysis_used').eq('id', session.user.id).single();
+  const { data: profile } = await sb.from('profiles').select('plan').eq('id', session.user.id).single();
   const plan = profile?.plan || 'gratis';
-  const used = profile?.free_analysis_used || false;
+  const planLabels = { gratis:'Gratis', starter:'Starter', pro:'Pro', elite:'Elite' };
+  const planLabel = planLabels[plan] || 'Gratis';
 
-  const planEl = document.getElementById('planName');
-  const badgeEl = document.getElementById('planBadge');
-  const statPlan = document.getElementById('statPlan');
-  const planChip = document.getElementById('planChip');
+  document.getElementById('planName').textContent = planLabel + ' plan';
+  document.getElementById('planBadge').textContent = planLabel;
+  document.getElementById('statPlan').textContent = planLabel;
+  document.getElementById('planChip').textContent = planLabel;
 
-  if (plan === 'pro') {
-    planEl.textContent = 'Pro plan'; badgeEl.textContent = 'Pro';
-    statPlan.textContent = 'Pro'; planChip.textContent = 'Pro'; planChip.className = 'stat-chip up';
-    document.getElementById('upgradeBanner').style.display = 'none';
-    document.getElementById('heroTitle').textContent = 'Goed bezig, ' + naam + '.';
-    document.getElementById('heroSub').textContent = 'Je hebt onbeperkt toegang. Analyseer zoveel vakken als je wil.';
-  } else if (plan === 'elite') {
-    planEl.textContent = 'Elite plan'; badgeEl.textContent = 'Elite';
-    badgeEl.style.cssText += ';background:rgba(255,214,0,0.1);color:#ffd600;border-color:rgba(255,214,0,0.25)';
-    statPlan.textContent = 'Elite'; statPlan.className = 'stat-num yellow';
-    planChip.textContent = 'Elite'; planChip.className = 'stat-chip up';
-    document.getElementById('upgradeBanner').style.display = 'none';
-    document.getElementById('heroTitle').textContent = 'Goed bezig, ' + naam + '.';
-    document.getElementById('heroSub').textContent = 'Elite toegang actief. Combineer tot 4 vakken tegelijk.';
+  if (plan === 'pro' || plan === 'elite') {
+    document.getElementById('greetSub').textContent = 'Je hebt volledige toegang. Analyseer zoveel vakken als je wil.';
+    const badge = document.getElementById('planBadge');
+    badge.style.cssText += 'background:rgba(0,230,118,0.1);color:var(--green);border-color:rgba(0,230,118,0.2);';
   } else if (plan === 'starter') {
-    planEl.textContent = 'Starter'; badgeEl.textContent = 'Starter';
-    statPlan.textContent = 'Starter'; planChip.textContent = '10/mnd';
-  } else {
-    statPlan.textContent = 'Gratis'; planChip.textContent = '1 analyse';
-    if (used) {
-      document.getElementById('heroTitle').textContent = 'Je gratis analyse is op';
-      document.getElementById('heroSub').textContent = 'Upgrade naar Pro voor onbeperkte analyses en een persoonlijk studieplan.';
-      document.getElementById('statAnalyses').textContent = '1';
-      document.getElementById('statBar').style.display = 'block';
-      document.getElementById('statBarFill').style.cssText = 'width:100%;background:var(--accent)';
-    }
+    document.getElementById('greetSub').textContent = 'Starter plan actief. 10 analyses per maand beschikbaar.';
   }
 
-  const opgeslagen = JSON.parse(sessionStorage.getItem('studybrain-analyses') || '[]');
-  document.getElementById('statVakken').textContent = opgeslagen.length;
-  if (opgeslagen.length > 0) {
-    document.getElementById('statAnalyses').textContent = opgeslagen.length;
-    document.getElementById('analysesChip').textContent = '+' + opgeslagen.length;
-    document.getElementById('analysesChip').className = 'stat-chip up';
-  }
+  const analyses = JSON.parse(sessionStorage.getItem('studybrain-analyses') || '[]');
+  document.getElementById('statAnalyses').textContent = analyses.length;
+  document.getElementById('statVakken').textContent = new Set(analyses.map(a => a.naam)).size;
 
-  const lijst = document.getElementById('analysesList');
-  if (opgeslagen.length === 0) {
-    lijst.innerHTML = `<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>Nog geen analyses gedaan.<br><a href="app.html">Start je eerste analyse →</a></div>`;
-  } else {
-    lijst.innerHTML = opgeslagen.slice(0,6).map(a => `
-      <div class="analyse-row" onclick="window.location.href='app.html'">
-        <div class="a-av">${a.naam.substring(0,3).toUpperCase()}</div>
+  if (analyses.length > 0) {
+    document.getElementById('analysesList').innerHTML = analyses.slice(0, 6).map(a => `
+      <div class="a-row" onclick="window.location.href='app.html'">
+        <div class="a-av">${a.naam.charAt(0).toUpperCase()}</div>
         <div class="a-info">
           <div class="a-name">${a.naam}</div>
           <div class="a-meta">${a.datum} · ${a.tijd}</div>
         </div>
-        <div class="a-chip">${a.mustCount} must</div>
+        <div class="a-badge">${a.mustCount} must</div>
       </div>`).join('');
   }
 })();
