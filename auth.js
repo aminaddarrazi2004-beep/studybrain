@@ -59,7 +59,7 @@ async function doSignup() {
   const { error } = await sb.auth.signUp({
     email,
     password: pw1,
-    options: { emailRedirectTo: 'https://studybrain.nl/login.html' }
+    options: { emailRedirectTo: 'https://studybrain.nl/welcome.html' }
   });
 
   if (error) {
