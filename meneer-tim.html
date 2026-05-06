@@ -187,7 +187,7 @@ footer a:hover { color:var(--text); }
   .steps { grid-template-columns:1fr; }
   .feature { grid-template-columns:1fr; }
   .feature.flip { direction:ltr; }
-  .pricing-grid { grid-template-columns:1fr; max-width:360px; margin:0 auto; }
+  .pricing-grid { grid-template-columns:1fr !important; max-width:360px; margin:0 auto; }
   .hero-stats { gap:20px; }
   footer { flex-direction:column;gap:12px;text-align:center; }
 }
@@ -420,51 +420,65 @@ footer a:hover { color:var(--text); }
     <h2 class="section-title reveal">Kies jouw plan</h2>
     <p class="section-sub reveal">Meneer Tim is inbegrepen vanaf Starter. Gratis gebruikers hebben geen toegang.</p>
   </div>
-  <div class="pricing-grid">
+  <div class="pricing-grid" style="grid-template-columns:repeat(4,1fr);">
     <div class="p-card reveal rd1">
       <div class="p-name">Gratis</div>
       <div class="p-amt">€0<span>/mnd</span></div>
-      <div class="p-desc">1 gratis analyse om te proberen.</div>
-      <div style="background:rgba(255,77,109,0.06);border:1px solid rgba(255,77,109,0.15);border-radius:8px;padding:8px 12px;font-size:11px;color:var(--accent);font-weight:600;margin-bottom:16px;">✕ Meneer Tim niet inbegrepen</div>
+      <div class="p-desc">1 gratis analyse + 1 volledig proefgesprek.</div>
+      <div style="background:rgba(255,214,0,0.06);border:1px solid rgba(255,214,0,0.15);border-radius:8px;padding:8px 12px;font-size:11px;color:var(--yellow);font-weight:600;margin-bottom:16px;">⭐ Meneer Tim — 1x volledig uitproberen</div>
       <ul class="p-list">
         <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>1 gratis analyse</li>
         <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Must / Nice to Know / Skip</li>
         <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>3 oefenvragen</li>
+        <li class="p-li off"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg></span>Dagelijkse toegang Meneer Tim</li>
+        <li class="p-li off"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg></span>Persoonlijk studieplan</li>
       </ul>
       <div class="p-btn-wrap"><a href="login.html#signup" class="p-btn-ghost">Begin gratis</a></div>
     </div>
-    <div class="p-card pop reveal rd2">
-      <div class="p-card-tag">Meest gekozen</div>
+    <div class="p-card reveal rd2">
       <div class="p-name">Starter</div>
       <div class="p-amt">€12,99<span>/mnd</span></div>
-      <div class="p-desc">Voor dagelijks gebruik en bijles.</div>
-      <div class="tim-highlight">
-        <img src="tim-avatar.png" style="width:18px;height:18px;border-radius:50%;object-fit:cover;">
-        Meneer Tim — 20 vragen per dag
-      </div>
+      <div class="p-desc">Toets morgen? Weet in 30 seconden wat je moet leren.</div>
+      <div class="tim-highlight"><img src="tim-avatar.png" style="width:18px;height:18px;border-radius:50%;object-fit:cover;">Meneer Tim — 20 vragen per dag</div>
       <ul class="p-list">
         <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>10 analyses per maand</li>
         <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Must / Nice to Know / Skip</li>
-        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>5 oefenvragen per analyse</li>
-        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Cheatsheet overzicht</li>
+        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Cheatsheet + 5 oefenvragen</li>
+        <li class="p-li off"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg></span>Volledige uitleg + ezelsbruggetjes</li>
+        <li class="p-li off"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg></span>Persoonlijk studieplan</li>
       </ul>
-      <div class="p-btn-wrap"><a href="https://buy.stripe.com/bJe5kv1RudhP9b36SA8IU02" class="p-btn-blue">Begin met Starter</a></div>
+      <div class="p-btn-wrap"><a href="https://buy.stripe.com/bJe5kv1RudhP9b36SA8IU02" class="p-btn-ghost">Begin met Starter</a></div>
     </div>
-    <div class="p-card reveal rd3">
+    <div class="p-card pop reveal rd3">
+      <div class="p-card-tag">Meest gekozen</div>
       <div class="p-name">Pro</div>
       <div class="p-amt">€14,99<span>/mnd</span></div>
       <div class="p-desc">Volledige toegang voor serieuze studenten.</div>
-      <div class="tim-highlight">
-        <img src="tim-avatar.png" style="width:18px;height:18px;border-radius:50%;object-fit:cover;">
-        Meneer Tim — 60 vragen per dag
-      </div>
+      <div class="tim-highlight"><img src="tim-avatar.png" style="width:18px;height:18px;border-radius:50%;object-fit:cover;">Meneer Tim — 60 vragen per dag</div>
       <ul class="p-list">
         <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span><strong>Onbeperkt</strong> analyses</li>
         <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Volledige uitleg + ezelsbruggetjes</li>
+        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>10 oefenvragen per analyse</li>
         <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Persoonlijk studieplan</li>
         <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Tot 3 PDFs tegelijk</li>
+        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Meerdere vakken combineren</li>
       </ul>
-      <div class="p-btn-wrap"><a href="https://buy.stripe.com/6oUdR1cw891zfzrfp68IU01" class="p-btn-ghost">Begin met Pro</a></div>
+      <div class="p-btn-wrap"><a href="https://buy.stripe.com/6oUdR1cw891zfzrfp68IU01" class="p-btn-blue">Begin met Pro</a></div>
+    </div>
+    <div class="p-card reveal rd3">
+      <div class="p-name">Elite</div>
+      <div class="p-amt">€22,99<span>/mnd</span></div>
+      <div class="p-desc">Voor wie meerdere vakken tegelijk wil aanpakken.</div>
+      <div class="tim-highlight"><img src="tim-avatar.png" style="width:18px;height:18px;border-radius:50%;object-fit:cover;">Meneer Tim — <strong>onbeperkt</strong></div>
+      <ul class="p-list">
+        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span><strong>Onbeperkt</strong> analyses</li>
+        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Volledige uitleg + ezelsbruggetjes</li>
+        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>20 oefenvragen per analyse</li>
+        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Tot 4 vakken combineren</li>
+        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Studieplan per vak + weekoverzicht</li>
+        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Prioriteit support</li>
+      </ul>
+      <div class="p-btn-wrap"><a href="https://buy.stripe.com/eVq6ozcw82Db1IBgta8IU00" class="p-btn-ghost">Begin met Elite</a></div>
     </div>
   </div>
   <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:24px;">Veilig betalen met iDEAL · Maandelijks opzegbaar · Geen verborgen kosten</p>
