@@ -369,6 +369,7 @@ let uploadedFile = null;
 let uploadedFileName = '';
 let isTyping = false;
 let userName = '';
+let userPlan = 'gratis';
 
 // ── Init ──
 (async () => {
@@ -380,6 +381,7 @@ let userName = '';
 
   const { data: profile } = await sb.from('profiles').select('plan').eq('id', session.user.id).single();
   const plan = profile?.plan || 'gratis';
+  userPlan = plan; // sla op in globale variabele
   const planEl = document.getElementById('planName');
   const badgeEl = document.getElementById('planBadge');
   if (plan === 'pro') { planEl.textContent = 'Pro plan'; badgeEl.textContent = 'Pro'; }
