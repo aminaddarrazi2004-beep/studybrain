@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meneer Tim — Jouw persoonlijke bijlesleraar | StudyBrain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #05050f;
+  --surface: #0c0c1a;
+  --card: #10101e;
+  --border: rgba(255,255,255,0.07);
+  --accent: #ff4d6d;
+  --tim: #5c7cfa;
+  --tim-dim: rgba(92,124,250,0.10);
+  --tim-glow: rgba(92,124,250,0.25);
+  --green: #00e676;
+  --yellow: #ffd600;
+  --text: #f0f0f8;
+  --muted: #6b6b8a;
+  --font: 'Plus Jakarta Sans', sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body { background:var(--bg); color:var(--text); font-family:var(--font); -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+
+/* Grid bg */
+body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(rgba(92,124,250,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(92,124,250,0.02) 1px,transparent 1px); background-size:60px 60px; pointer-events:none; z-index:0; }
+
+/* Orbs */
+.orb { position:fixed; border-radius:50%; filter:blur(120px); pointer-events:none; z-index:0; }
+.orb-1 { width:600px;height:600px;background:radial-gradient(circle,rgba(92,124,250,0.12),transparent 65%);top:-200px;right:-150px; }
+.orb-2 { width:400px;height:400px;background:radial-gradient(circle,rgba(255,77,109,0.06),transparent 65%);bottom:-100px;left:-100px; }
+
+/* ── NAV ── */
+nav { position:fixed;top:0;left:0;right:0;z-index:100;padding:0 48px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(5,5,15,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border); }
+.nav-logo { font-size:17px;font-weight:800;letter-spacing:-0.3px;text-decoration:none;color:var(--text); }
+.nav-logo span { color:var(--accent); }
+.nav-links { display:flex;align-items:center;gap:28px; }
+.nav-links a { font-size:13px;color:var(--muted);text-decoration:none;transition:color 0.2s; }
+.nav-links a:hover { color:var(--text); }
+.nav-cta { display:flex;align-items:center;gap:10px; }
+.nav-login { font-size:13px;color:var(--muted);text-decoration:none;transition:color 0.2s; }
+.nav-login:hover { color:var(--text); }
+.nav-btn { padding:9px 20px;border-radius:100px;background:var(--tim);color:white;font-size:13px;font-weight:700;text-decoration:none;transition:all 0.2s;box-shadow:0 0 20px var(--tim-glow); }
+.nav-btn:hover { transform:translateY(-1px);box-shadow:0 4px 24px var(--tim-glow); }
+
+/* ── HERO ── */
+.hero { position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:100px 24px 60px; }
+.hero-inner { max-width:700px; }
+
+.tim-badge { display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:100px;background:var(--tim-dim);border:1px solid rgba(92,124,250,0.2);font-size:12px;font-weight:600;color:var(--tim);margin-bottom:28px; }
+.tim-badge-dot { width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+
+.avatar-hero { position:relative;width:100px;height:100px;margin:0 auto 28px;animation:float 4s ease-in-out infinite; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+.avatar-hero img { width:100%;height:100%;border-radius:50%;object-fit:cover;border:3px solid rgba(92,124,250,0.3);box-shadow:0 0 60px var(--tim-glow); }
+.avatar-online { position:absolute;bottom:4px;right:4px;width:18px;height:18px;border-radius:50%;background:var(--green);border:3px solid var(--bg); }
+
+h1 { font-size:clamp(36px,6vw,64px);font-weight:900;letter-spacing:-0.03em;line-height:1.05;margin-bottom:20px; }
+h1 em { font-style:normal;background:linear-gradient(135deg,#5c7cfa,#818cf8,#a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
+.hero-sub { font-size:17px;color:var(--muted);line-height:1.75;margin-bottom:36px;max-width:520px;margin-left:auto;margin-right:auto; }
+
+.hero-btns { display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap; }
+.btn-primary { padding:14px 32px;border-radius:100px;background:var(--tim);color:white;font-size:15px;font-weight:700;text-decoration:none;transition:all 0.25s;box-shadow:0 0 32px var(--tim-glow); }
+.btn-primary:hover { transform:translateY(-2px);box-shadow:0 8px 40px var(--tim-glow); }
+.btn-sec { padding:14px 32px;border-radius:100px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text);font-size:15px;font-weight:600;text-decoration:none;transition:all 0.25s; }
+.btn-sec:hover { border-color:rgba(255,255,255,0.15);background:rgba(255,255,255,0.07); }
+
+.hero-stats { display:flex;align-items:center;justify-content:center;gap:32px;margin-top:48px;padding-top:48px;border-top:1px solid var(--border); }
+.stat { text-align:center; }
+.stat-n { font-size:28px;font-weight:800;letter-spacing:-0.02em;background:linear-gradient(135deg,#5c7cfa,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
+.stat-l { font-size:12px;color:var(--muted);margin-top:3px; }
+
+/* ── HOE WERKT HET ── */
+section { position:relative;z-index:1; }
+.wrap { max-width:1100px;margin:0 auto;padding:80px 48px; }
+.centered { text-align:center;margin-bottom:56px; }
+.section-tag { display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--tim);background:var(--tim-dim);border:1px solid rgba(92,124,250,0.2);padding:4px 14px;border-radius:100px;margin-bottom:16px; }
+.section-title { font-size:clamp(26px,4vw,40px);font-weight:800;letter-spacing:-0.02em;line-height:1.15;margin-bottom:12px; }
+.section-sub { font-size:15px;color:var(--muted);line-height:1.7; }
+
+/* Steps */
+.steps { display:grid;grid-template-columns:repeat(3,1fr);gap:24px; }
+.step { background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px;position:relative;overflow:hidden;transition:transform 0.3s,border-color 0.3s; }
+.step:hover { transform:translateY(-4px);border-color:rgba(92,124,250,0.25); }
+.step::before { content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--tim),#818cf8);opacity:0;transition:opacity 0.3s; }
+.step:hover::before { opacity:1; }
+.step-n { font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--tim);margin-bottom:16px; }
+.step-icon { font-size:32px;margin-bottom:16px; }
+.step-title { font-size:17px;font-weight:700;margin-bottom:10px; }
+.step-body { font-size:13px;color:var(--muted);line-height:1.7; }
+
+/* ── FEATURES ── */
+.features { display:flex;flex-direction:column;gap:80px; }
+.feature { display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center; }
+.feature.flip { direction:rtl; }
+.feature.flip > * { direction:ltr; }
+.feature-tag { font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--tim);margin-bottom:12px; }
+.feature-title { font-size:clamp(22px,3vw,32px);font-weight:800;letter-spacing:-0.02em;line-height:1.2;margin-bottom:14px; }
+.feature-body { font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:24px; }
+.feature-list { display:flex;flex-direction:column;gap:10px; }
+.feature-li { display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--muted);line-height:1.6; }
+.feature-li-dot { width:18px;height:18px;border-radius:50%;background:rgba(92,124,250,0.12);color:var(--tim);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px; }
+.feature-li-dot svg { width:10px;height:10px; }
+
+/* Feature card visuals */
+.feat-card { background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden; }
+.feat-card-header { padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.02); }
+.feat-card-header img { width:28px;height:28px;border-radius:50%;object-fit:cover; }
+.feat-card-body { padding:18px; }
+
+/* Chat bubbles in feature card */
+.chat-msg { display:flex;gap:8px;margin-bottom:12px; }
+.chat-msg.user { flex-direction:row-reverse; }
+.chat-av { width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;align-self:flex-end; }
+.chat-av.tim { overflow:hidden; }
+.chat-av.tim img { width:100%;height:100%;object-fit:cover; }
+.chat-av.user { background:linear-gradient(135deg,var(--accent),#ff8fa3);color:white;font-size:11px; }
+.chat-bub { padding:9px 13px;border-radius:12px;font-size:12px;line-height:1.6;max-width:240px; }
+.chat-bub.tim { background:var(--card);border:1px solid var(--border);border-bottom-left-radius:3px; }
+.chat-bub.user { background:rgba(255,77,109,0.08);border:1px solid rgba(255,77,109,0.15);border-bottom-right-radius:3px; }
+
+/* Quiz visual */
+.quiz-preview { display:flex;flex-direction:column;gap:6px;margin-top:10px; }
+.quiz-opt-prev { padding:8px 12px;border-radius:8px;font-size:11px;border:1px solid var(--border);color:var(--muted);background:rgba(255,255,255,0.02); }
+.quiz-opt-prev.correct { border-color:rgba(0,230,118,0.3);background:rgba(0,230,118,0.06);color:var(--green); }
+.quiz-opt-prev.wrong { border-color:rgba(255,77,109,0.3);background:rgba(255,77,109,0.06);color:var(--accent); }
+
+/* PDF chip */
+.pdf-chip { display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;background:rgba(255,77,109,0.08);border:1px solid rgba(255,77,109,0.15);font-size:11px;color:#ff8fa3;font-weight:600;margin-bottom:10px; }
+
+/* ── PRICING ── */
+.pricing-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:16px; }
+.p-card { background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px 24px;position:relative;transition:all 0.3s; }
+.p-card:hover { transform:translateY(-4px); }
+.p-card.pop { border-color:rgba(92,124,250,0.35);box-shadow:0 0 60px rgba(92,124,250,0.08); }
+.p-card-tag { position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--tim);color:white;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:4px 14px;border-radius:100px;white-space:nowrap; }
+.p-name { font-size:15px;font-weight:700;margin-bottom:6px; }
+.p-amt { font-size:32px;font-weight:800;letter-spacing:-0.02em;margin-bottom:4px; }
+.p-amt span { font-size:13px;font-weight:500;color:var(--muted); }
+.p-desc { font-size:12px;color:var(--muted);margin-bottom:20px;line-height:1.6; }
+.p-list { list-style:none;margin-bottom:24px;display:flex;flex-direction:column;gap:8px; }
+.p-li { display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--muted);line-height:1.5; }
+.p-li.on .p-dot { color:var(--tim); }
+.p-li.off .p-dot { color:rgba(255,255,255,0.15); }
+.p-li.tim-row { color:var(--text);font-weight:600; }
+.p-li.tim-row .p-dot { color:var(--tim); }
+.p-dot { flex-shrink:0;margin-top:2px; }
+.p-btn-wrap a { display:block;width:100%;text-align:center;padding:12px;border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;transition:all 0.2s; }
+.p-btn-blue { background:var(--tim);color:white;box-shadow:0 0 20px var(--tim-glow); }
+.p-btn-blue:hover { opacity:0.9; }
+.p-btn-ghost { background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text); }
+.p-btn-ghost:hover { border-color:var(--tim);color:var(--tim); }
+.tim-highlight { background:var(--tim-dim);border:1px solid rgba(92,124,250,0.2);border-radius:8px;padding:6px 10px;font-size:11px;color:var(--tim);font-weight:600;display:flex;align-items:center;gap:6px;margin-bottom:16px; }
+
+/* ── CTA BOTTOM ── */
+.cta-bottom { text-align:center;padding:100px 48px; }
+.cta-bottom h2 { font-size:clamp(28px,4vw,48px);font-weight:900;letter-spacing:-0.02em;margin-bottom:16px; }
+.cta-bottom p { font-size:16px;color:var(--muted);margin-bottom:36px; }
+
+/* ── FOOTER ── */
+footer { border-top:1px solid var(--border);padding:28px 48px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1; }
+.footer-logo { font-size:15px;font-weight:800; }
+.footer-logo span { color:var(--accent); }
+footer p { font-size:12px;color:var(--muted); }
+footer a { font-size:12px;color:var(--muted);text-decoration:none;transition:color 0.2s; }
+footer a:hover { color:var(--text); }
+
+/* Animations */
+.reveal { opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease; }
+.reveal.visible { opacity:1;transform:none; }
+.rd1 { transition-delay:0.05s; }
+.rd2 { transition-delay:0.15s; }
+.rd3 { transition-delay:0.25s; }
+
+/* Responsive */
+@media(max-width:768px) {
+  nav { padding:0 20px; }
+  .nav-links { display:none; }
+  .wrap { padding:60px 20px; }
+  .steps { grid-template-columns:1fr; }
+  .feature { grid-template-columns:1fr; }
+  .feature.flip { direction:ltr; }
+  .pricing-grid { grid-template-columns:1fr; max-width:360px; margin:0 auto; }
+  .hero-stats { gap:20px; }
+  footer { flex-direction:column;gap:12px;text-align:center; }
+}
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">Study<span>Brain</span></a>
+  <div class="nav-links">
+    <a href="#hoe">Hoe het werkt</a>
+    <a href="#features">Features</a>
+    <a href="#prijzen">Prijzen</a>
+    <a href="index.html">Terug naar home</a>
+  </div>
+  <div class="nav-cta">
+    <a href="login.html" class="nav-login">Inloggen</a>
+    <a href="login.html#signup" class="nav-btn">Probeer gratis →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="tim-badge">
+      <span class="tim-badge-dot"></span>
+      Nieuw — Nu beschikbaar in StudyBrain
+    </div>
+    <div class="avatar-hero">
+      <img src="tim-avatar.png" alt="Meneer Tim">
+      <div class="avatar-online"></div>
+    </div>
+    <h1>Dit is<br><em>Meneer Tim.</em></h1>
+    <p class="hero-sub">Jouw persoonlijke bijlesleraar. Altijd beschikbaar, nooit ongeduldig. Hij legt alles uit in gewone taal — met voorbeelden, ezelsbruggetjes en oefenvragen.</p>
+    <div class="hero-btns">
+      <a href="login.html#signup" class="btn-primary">Start gratis met Meneer Tim →</a>
+      <a href="#hoe" class="btn-sec">Bekijk hoe het werkt</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-n">24/7</div>
+        <div class="stat-l">Altijd beschikbaar</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">B1</div>
+        <div class="stat-l">Gewone taal, altijd</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">Elk vak</div>
+        <div class="stat-l">Wiskunde t/m economie</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">€0</div>
+        <div class="stat-l">Om te beginnen</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOE WERKT HET -->
+<section id="hoe"><div class="wrap">
+  <div class="centered">
+    <div class="section-tag">Hoe het werkt</div>
+    <h2 class="section-title reveal">In 3 stappen snapt het</h2>
+    <p class="section-sub reveal">Geen ingewikkeld gedoe. Gewoon sturen, uitleggen, begrijpen.</p>
+  </div>
+  <div class="steps">
+    <div class="step reveal rd1">
+      <div class="step-n">Stap 1</div>
+      <div class="step-icon">📤</div>
+      <div class="step-title">Stuur je vraag of huiswerk</div>
+      <div class="step-body">Typ wat je niet snapt of upload direct je huiswerk als PDF. Meneer Tim leest het en begrijpt meteen wat je bedoelt.</div>
+    </div>
+    <div class="step reveal rd2">
+      <div class="step-n">Stap 2</div>
+      <div class="step-icon">💬</div>
+      <div class="step-title">Tim legt het uit in jouw taal</div>
+      <div class="step-body">Geen schoolboekentaal. Geen moeilijke woorden. Hij gebruikt voorbeelden uit het dagelijks leven zodat het echt blijft hangen.</div>
+    </div>
+    <div class="step reveal rd3">
+      <div class="step-n">Stap 3</div>
+      <div class="step-icon">🎯</div>
+      <div class="step-title">Test of je het echt snapt</div>
+      <div class="step-body">Na de uitleg stelt Tim oefenvragen. Goed? Compliment. Fout? Hij legt het opnieuw uit — maar dan anders.</div>
+    </div>
+  </div>
+</div></section>
+
+<!-- FEATURES -->
+<section id="features"><div class="wrap">
+  <div class="centered">
+    <div class="section-tag">Features</div>
+    <h2 class="section-title reveal">Alles wat een goede bijlesleraar doet</h2>
+  </div>
+  <div class="features">
+
+    <!-- Feature 1: Uitleg -->
+    <div class="feature reveal">
+      <div>
+        <div class="feature-tag">Uitleg op maat</div>
+        <h3 class="feature-title">Snap je iets niet? Tim legt het uit zoals een vriend dat zou doen.</h3>
+        <p class="feature-body">Geen droge definities. Geen saaie opsommingen. Tim gebruikt Nike schoenen, voetbal, muziek — wat jij kent — om moeilijke stof makkelijk te maken.</p>
+        <div class="feature-list">
+          <div class="feature-li"><div class="feature-li-dot"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 5l2 2 4-4"/></svg></div>Moeilijke woorden altijd uitgelegd tussen haakjes</div>
+          <div class="feature-li"><div class="feature-li-dot"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 5l2 2 4-4"/></svg></div>Voorbeelden uit het dagelijks leven</div>
+          <div class="feature-li"><div class="feature-li-dot"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 5l2 2 4-4"/></svg></div>Maximaal 15 woorden per zin — altijd duidelijk</div>
+        </div>
+      </div>
+      <div class="feat-card reveal rd2">
+        <div class="feat-card-header">
+          <img src="tim-avatar.png" alt="Tim">
+          <div>
+            <div style="font-size:12px;font-weight:700;">Meneer Tim</div>
+            <div style="font-size:10px;color:var(--green);">● Online</div>
+          </div>
+        </div>
+        <div class="feat-card-body">
+          <div class="chat-msg user">
+            <div class="chat-av user">J</div>
+            <div class="chat-bub user">Ik snap osmose echt niet</div>
+          </div>
+          <div class="chat-msg">
+            <div class="chat-av tim"><img src="tim-avatar.png" alt="Tim"></div>
+            <div class="chat-bub tim">Oké, denk aan een rozijn in water. De rozijn is droog van binnen. Water beweegt vanzelf naar binnen — van veel water naar weinig water. Dat is osmose (water dat door een vliesje beweegt van een plek met veel water naar een plek met weinig water) 💧</div>
+          </div>
+          <div class="chat-msg user">
+            <div class="chat-av user">J</div>
+            <div class="chat-bub user">Oh zo simpel! En wat als er meer zout in het water zit?</div>
+          </div>
+          <div class="chat-msg">
+            <div class="chat-av tim"><img src="tim-avatar.png" alt="Tim"></div>
+            <div class="chat-bub tim">Goed dat je dat vraagt! Dan gaat het water juist de andere kant op — uit de cel naar buiten. De cel krimpt dan. Denk aan een augurk in pekel 🥒</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 2: Huiswerk -->
+    <div class="feature flip reveal">
+      <div>
+        <div class="feature-tag">Huiswerk controleren</div>
+        <h3 class="feature-title">Upload je huiswerk. Tim kijkt het na en legt uit waar je fout zat.</h3>
+        <p class="feature-body">Stuur je antwoorden als PDF of typ ze in. Tim geeft directe feedback — vriendelijk, maar eerlijk. En hij legt uit waarom iets fout is, niet alleen dát het fout is.</p>
+        <div class="feature-list">
+          <div class="feature-li"><div class="feature-li-dot"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 5l2 2 4-4"/></svg></div>PDF of foto uploaden</div>
+          <div class="feature-li"><div class="feature-li-dot"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 5l2 2 4-4"/></svg></div>Directe feedback per antwoord</div>
+          <div class="feature-li"><div class="feature-li-dot"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 5l2 2 4-4"/></svg></div>Tim legt uit waarom — je leert écht van je fouten</div>
+        </div>
+      </div>
+      <div class="feat-card reveal rd1">
+        <div class="feat-card-header">
+          <img src="tim-avatar.png" alt="Tim">
+          <div>
+            <div style="font-size:12px;font-weight:700;">Meneer Tim</div>
+            <div style="font-size:10px;color:var(--green);">● Online</div>
+          </div>
+        </div>
+        <div class="feat-card-body">
+          <div class="chat-msg user">
+            <div class="chat-av user">J</div>
+            <div class="chat-bub user">
+              <div class="pdf-chip">
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M9 1.5H4a1 1 0 00-1 1v11a1 1 0 001 1h8a1 1 0 001-1v-8L9 1.5z"/></svg>
+                huiswerk_scheikunde.pdf
+              </div>
+              Kun je kijken of mijn antwoorden kloppen?
+            </div>
+          </div>
+          <div class="chat-msg">
+            <div class="chat-av tim"><img src="tim-avatar.png" alt="Tim"></div>
+            <div class="chat-bub tim">Ik heb je huiswerk bekeken! Vraag 1 en 2 zijn perfect ✅<br><br>Vraag 3 is bijna goed — maar je vergeet dat bij een exotherme reactie (waarbij warmte vrijkomt) de temperatuur van de omgeving stijgt, niet daalt. Kleine fout, maar leraren kijken daar scherp op 👀</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature 3: Oefenvragen -->
+    <div class="feature reveal">
+      <div>
+        <div class="feature-tag">Oefenvragen</div>
+        <h3 class="feature-title">Na de uitleg test Tim of je het echt snapt — niet alleen denkt dat je het snapt.</h3>
+        <p class="feature-body">Tim stelt gerichte vragen na elke uitleg. Bij een goed antwoord krijg je een compliment. Bij een fout antwoord legt hij het opnieuw uit — maar dan op een andere manier.</p>
+        <div class="feature-list">
+          <div class="feature-li"><div class="feature-li-dot"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 5l2 2 4-4"/></svg></div>Meerkeuzevragen na elke uitleg</div>
+          <div class="feature-li"><div class="feature-li-dot"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 5l2 2 4-4"/></svg></div>Bij fout: andere uitleg, niet herhaling</div>
+          <div class="feature-li"><div class="feature-li-dot"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 5l2 2 4-4"/></svg></div>Motiverende feedback, nooit ontmoedigend</div>
+        </div>
+      </div>
+      <div class="feat-card reveal rd2">
+        <div class="feat-card-header">
+          <img src="tim-avatar.png" alt="Tim">
+          <div>
+            <div style="font-size:12px;font-weight:700;">Meneer Tim</div>
+            <div style="font-size:10px;color:var(--green);">● Online</div>
+          </div>
+        </div>
+        <div class="feat-card-body">
+          <div class="chat-msg">
+            <div class="chat-av tim"><img src="tim-avatar.png" alt="Tim"></div>
+            <div class="chat-bub tim">
+              Oké, snap je het? Test jezelf even! 🎯<br><br>
+              <strong>Wat gebeurt er met een cel als het water buiten de cel zouter is dan binnen?</strong>
+              <div class="quiz-preview">
+                <div class="quiz-opt-prev wrong">A. De cel zwelt op</div>
+                <div class="quiz-opt-prev correct">B. De cel krimpt ✓</div>
+                <div class="quiz-opt-prev">C. Er gebeurt niks</div>
+                <div class="quiz-opt-prev">D. De cel deelt zich</div>
+              </div>
+            </div>
+          </div>
+          <div class="chat-msg">
+            <div class="chat-av tim"><img src="tim-avatar.png" alt="Tim"></div>
+            <div class="chat-bub tim">Yes! B is correct 🎉 Water stroomt van weinig zout naar veel zout — dus uit de cel. De cel krimpt. Je snapt het!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div></section>
+
+<!-- PRICING -->
+<section id="prijzen"><div class="wrap">
+  <div class="centered">
+    <div class="section-tag">Prijzen</div>
+    <h2 class="section-title reveal">Kies jouw plan</h2>
+    <p class="section-sub reveal">Meneer Tim is inbegrepen vanaf Starter. Gratis gebruikers hebben geen toegang.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="p-card reveal rd1">
+      <div class="p-name">Gratis</div>
+      <div class="p-amt">€0<span>/mnd</span></div>
+      <div class="p-desc">1 gratis analyse om te proberen.</div>
+      <div style="background:rgba(255,77,109,0.06);border:1px solid rgba(255,77,109,0.15);border-radius:8px;padding:8px 12px;font-size:11px;color:var(--accent);font-weight:600;margin-bottom:16px;">✕ Meneer Tim niet inbegrepen</div>
+      <ul class="p-list">
+        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>1 gratis analyse</li>
+        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Must / Nice to Know / Skip</li>
+        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>3 oefenvragen</li>
+      </ul>
+      <div class="p-btn-wrap"><a href="login.html#signup" class="p-btn-ghost">Begin gratis</a></div>
+    </div>
+    <div class="p-card pop reveal rd2">
+      <div class="p-card-tag">Meest gekozen</div>
+      <div class="p-name">Starter</div>
+      <div class="p-amt">€12,99<span>/mnd</span></div>
+      <div class="p-desc">Voor dagelijks gebruik en bijles.</div>
+      <div class="tim-highlight">
+        <img src="tim-avatar.png" style="width:18px;height:18px;border-radius:50%;object-fit:cover;">
+        Meneer Tim — 20 vragen per dag
+      </div>
+      <ul class="p-list">
+        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>10 analyses per maand</li>
+        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Must / Nice to Know / Skip</li>
+        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>5 oefenvragen per analyse</li>
+        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Cheatsheet overzicht</li>
+      </ul>
+      <div class="p-btn-wrap"><a href="https://buy.stripe.com/bJe5kv1RudhP9b36SA8IU02" class="p-btn-blue">Begin met Starter</a></div>
+    </div>
+    <div class="p-card reveal rd3">
+      <div class="p-name">Pro</div>
+      <div class="p-amt">€14,99<span>/mnd</span></div>
+      <div class="p-desc">Volledige toegang voor serieuze studenten.</div>
+      <div class="tim-highlight">
+        <img src="tim-avatar.png" style="width:18px;height:18px;border-radius:50%;object-fit:cover;">
+        Meneer Tim — 60 vragen per dag
+      </div>
+      <ul class="p-list">
+        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span><strong>Onbeperkt</strong> analyses</li>
+        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Volledige uitleg + ezelsbruggetjes</li>
+        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Persoonlijk studieplan</li>
+        <li class="p-li on"><span class="p-dot"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Tot 3 PDFs tegelijk</li>
+      </ul>
+      <div class="p-btn-wrap"><a href="https://buy.stripe.com/6oUdR1cw891zfzrfp68IU01" class="p-btn-ghost">Begin met Pro</a></div>
+    </div>
+  </div>
+  <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:24px;">Veilig betalen met iDEAL · Maandelijks opzegbaar · Geen verborgen kosten</p>
+</div></section>
+
+<!-- CTA BOTTOM -->
+<div class="cta-bottom">
+  <div class="avatar-hero" style="margin:0 auto 24px;">
+    <img src="tim-avatar.png" alt="Meneer Tim">
+    <div class="avatar-online"></div>
+  </div>
+  <h2>Meneer Tim staat klaar.<br>Ben jij dat ook?</h2>
+  <p>Geen ongeduld. Geen saai. Gewoon uitleggen tot je het snapt.</p>
+  <a href="login.html#signup" class="btn-primary">Start gratis — geen creditcard nodig</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Study<span>Brain</span></div>
+  <p>© 2025 StudyBrain · studybrain.nl</p>
+  <div style="display:flex;gap:20px;">
+    <a href="index.html">Home</a>
+    <a href="index.html#prijzen">Prijzen</a>
+    <a href="mailto:info@studybrain.nl">Contact</a>
+  </div>
+</footer>
+
+<script>
+// Reveal on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
