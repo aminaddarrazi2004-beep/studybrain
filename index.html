@@ -709,39 +709,48 @@
             </div>
           </div>
 
-          <!-- Tim reageert met uitleg -->
+          <!-- Tim reageert met simpele uitleg -->
           <div class="tcp-msg tim">
             <img src="tim-avatar.png" alt="Tim" style="width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;align-self:flex-end;">
             <div class="tcp-bubble tim-bubble">
-              Oké, luister — vraag en aanbod is eigenlijk supermakkelijk! Kijk even naar dit plaatje 👇
-              <!-- Simpele illustratie vraag & aanbod -->
-              <div style="margin-top:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px;">
-                <svg viewBox="0 0 240 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
-                  <!-- Assen -->
-                  <line x1="30" y1="130" x2="220" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
-                  <line x1="30" y1="20" x2="30" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
-                  <!-- As labels -->
-                  <text x="120" y="148" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="9" font-family="sans-serif">Hoeveelheid</text>
-                  <text x="12" y="80" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="9" font-family="sans-serif" transform="rotate(-90,12,80)">Prijs</text>
-                  <!-- Vraagcurve (daalt) -->
-                  <line x1="50" y1="30" x2="200" y2="120" stroke="#5c7cfa" stroke-width="2.5" stroke-linecap="round"/>
-                  <text x="205" y="118" fill="#5c7cfa" font-size="9" font-weight="bold" font-family="sans-serif">Vraag</text>
-                  <!-- Aanbodcurve (stijgt) -->
-                  <line x1="50" y1="120" x2="200" y2="30" stroke="#00e676" stroke-width="2.5" stroke-linecap="round"/>
-                  <text x="205" y="32" fill="#00e676" font-size="9" font-weight="bold" font-family="sans-serif">Aanbod</text>
-                  <!-- Snijpunt -->
-                  <circle cx="125" cy="75" r="5" fill="#ffd600"/>
-                  <line x1="125" y1="75" x2="125" y2="130" stroke="#ffd600" stroke-width="1" stroke-dasharray="3,3"/>
-                  <line x1="30" y1="75" x2="125" y2="75" stroke="#ffd600" stroke-width="1" stroke-dasharray="3,3"/>
-                  <text x="128" y="127" fill="#ffd600" font-size="8" font-family="sans-serif">Evenwicht</text>
-                  <!-- Pijl labels -->
-                  <text x="42" y="26" fill="#5c7cfa" font-size="8" font-family="sans-serif">Hoge prijs →</text>
-                  <text x="42" y="26" fill="#5c7cfa" font-size="8" font-family="sans-serif">Hoge prijs →</text>
-                  <text x="42" y="118" fill="#5c7cfa" font-size="8" font-family="sans-serif">weinig vraag</text>
-                </svg>
-                <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:6px;text-align:center;">Als de prijs stijgt → minder mensen kopen → vraag daalt</div>
+              Oké, luister — denk gewoon aan Nike schoenen! 👟
+              <div style="margin-top:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px;font-size:11px;">
+
+                <div style="font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:10px;">Vraag — wat kopers doen</div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;">
+                  <div style="font-size:10px;color:rgba(255,255,255,0.5);width:70px;flex-shrink:0;">Prijs hoog 💸</div>
+                  <div style="height:20px;width:50px;background:#F09595;border-radius:4px;display:flex;align-items:center;padding:0 7px;font-size:10px;color:#501313;font-weight:600;">Weinig</div>
+                  <div style="font-size:10px;color:rgba(255,255,255,0.45);">te duur → vraag ↓</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+                  <div style="font-size:10px;color:rgba(255,255,255,0.5);width:70px;flex-shrink:0;">Prijs laag 🎉</div>
+                  <div style="height:20px;width:110px;background:#9FE1CB;border-radius:4px;display:flex;align-items:center;padding:0 7px;font-size:10px;color:#04342C;font-weight:600;">Veel kopers</div>
+                  <div style="font-size:10px;color:rgba(255,255,255,0.45);">koopje! → vraag ↑</div>
+                </div>
+
+                <div style="height:0.5px;background:rgba(255,255,255,0.08);margin-bottom:12px;"></div>
+
+                <div style="font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:10px;">Aanbod — wat Nike doet (verkoopprijs)</div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;">
+                  <div style="font-size:10px;color:rgba(255,255,255,0.5);width:70px;flex-shrink:0;">Prijs hoog 💸</div>
+                  <div style="height:20px;width:110px;background:#9FE1CB;border-radius:4px;display:flex;align-items:center;padding:0 7px;font-size:10px;color:#04342C;font-weight:600;">Maakt meer aan</div>
+                  <div style="font-size:10px;color:rgba(255,255,255,0.45);">veel winst → aanbod ↑</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                  <div style="font-size:10px;color:rgba(255,255,255,0.5);width:70px;flex-shrink:0;">Prijs laag 🎉</div>
+                  <div style="height:20px;width:55px;background:#F09595;border-radius:4px;display:flex;align-items:center;padding:0 7px;font-size:10px;color:#501313;font-weight:600;">Minder</div>
+                  <div style="font-size:10px;color:rgba(255,255,255,0.45);">weinig winst → aanbod ↓</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:7px;padding:8px 10px;font-size:10px;color:rgba(255,255,255,0.55);line-height:1.7;">
+                  <span style="color:rgba(255,255,255,0.35);">Productiekosten = €50 per schoen (altijd vast)</span><br>
+                  <span style="color:#9FE1CB;">✅ Verkoopprijs €150 → winst €100 → veel maken</span><br>
+                  <span style="color:#F09595;">❌ Verkoopprijs €60 → winst €10 → nauwelijks de moeite</span>
+                </div>
+
+                <div style="height:0.5px;background:rgba(255,255,255,0.08);margin-bottom:10px;"></div>
+                <div style="background:rgba(255,214,0,0.1);border:1px solid rgba(255,214,0,0.2);border-radius:7px;padding:7px 10px;font-size:10px;color:#ffd600;font-weight:600;">⚖️ Evenwicht = het punt waar vraag en aanbod gelijk zijn → dát is de marktprijs</div>
               </div>
-              <div style="margin-top:8px;font-size:12px;line-height:1.6;">Het snijpunt (geel) = evenwichtsprijs. Dat is waar vraag en aanbod gelijk zijn. Dát is wat vraag 3 bedoelt! 🎯</div>
+              <div style="margin-top:8px;font-size:11px;color:rgba(255,255,255,0.6);line-height:1.6;">Snap je het? Dat is alles wat vraag 3 vraagt 🎯</div>
             </div>
           </div>
 
