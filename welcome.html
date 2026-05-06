@@ -275,15 +275,39 @@ h1 {
 
 <a href="dashboard.html" class="skip-link">Of ga naar mijn dashboard →</a>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const sb = supabase.createClient(
   'https://wtfzqpaectqrbprmxjqp.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0ZnpxcGFlY3RxcmJwcm14anFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMxNzYxNzMsImV4cCI6MjA1ODc1MjE3M30.IvHOcP5Z3TbITbFAiDGdGPMpJGQCPRqKUkQQ78ViRuM'
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0ZnpxcGFlY3RxcmJwcm14anFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NzE4NDYsImV4cCI6MjA4ODE0Nzg0Nn0.LeJqnukvUpVJZyG_2pjwS0xnl24ATdV6Mi6qqZeVbJ4',
+  {
+    auth: {
+      persistSession: true,
+      storageKey: 'studybrain-auth',
+      storage: window.localStorage,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+    }
+  }
 );
 
 (async () => {
+  // Wacht even zodat Supabase de sessie kan opslaan na redirect
+  await new Promise(resolve => setTimeout(resolve, 300));
+
   const { data: { session } } = await sb.auth.getSession();
-  if (!session) { window.location.href = 'login.html'; return; }
+  if (!session) {
+    // Probeer nog een keer na iets langer wachten
+    await new Promise(resolve => setTimeout(resolve, 700));
+    const { data: { session: session2 } } = await sb.auth.getSession();
+    if (!session2) { window.location.href = 'login.html'; return; }
+    const email = session2.user.email;
+    const name = email.split('@')[0];
+    const hour = new Date().getHours();
+    const dag = hour < 12 ? 'Goedemorgen' : hour < 18 ? 'Goedemiddag' : 'Goedenavond';
+    document.getElementById('greeting').textContent = `${dag}, ${name}`;
+    return;
+  }
 
   const email = session.user.email;
   const name = email.split('@')[0];
