@@ -869,18 +869,25 @@ const obs = new IntersectionObserver(e => {
 }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-// Check of gebruiker al ingelogd is → pas nav aan
+// Check of gebruiker al ingelogd is → stuur naar welcome
 (async () => {
   const { createClient } = supabase;
   const sb = createClient(
     'https://wtfzqpaectqrbprmxjqp.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0ZnpxcGFlY3RxcmJwcm14anFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMxNzYxNzMsImV4cCI6MjA1ODc1MjE3M30.IvHOcP5Z3TbITbFAiDGdGPMpJGQCPRqKUkQQ78ViRuM'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0ZnpxcGFlY3RxcmJwcm14anFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NzE4NDYsImV4cCI6MjA4ODE0Nzg0Nn0.LeJqnukvUpVJZyG_2pjwS0xnl24ATdV6Mi6qqZeVbJ4',
+    {
+      auth: {
+        persistSession: true,
+        storageKey: 'studybrain-auth',
+        storage: window.localStorage,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+      }
+    }
   );
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
-    // Ingelogde gebruiker → stuur direct naar welcome pagina
     window.location.href = 'welcome.html';
-    return;
   }
 })();
 </script>
