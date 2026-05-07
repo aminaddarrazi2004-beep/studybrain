@@ -179,6 +179,9 @@ body { background:var(--bg); color:var(--text); font-family:var(--font); -webkit
   .dash-grid { grid-template-columns:1fr; }
 }
 
+/* ── MAIN ── */
+.main { margin-left:var(--sw); min-height:100vh; }
+
 /* ── TOPBAR ── */
 .topbar {
   position:sticky; top:0; z-index:50;
@@ -504,9 +507,6 @@ checkAccess();
 
   document.getElementById('planName').textContent = label + ' plan';
   document.getElementById('planBadge').textContent = label;
-  document.getElementById('statPlan').textContent = label;
-
-  document.getElementById('statPlan').textContent = label;
 
   const limietPerPlan = { gratis:'1 gratis analyse', starter:'10 analyses per maand', pro:'Onbeperkt analyses', elite:'Onbeperkt analyses' };
   const limietEl = document.getElementById('analysesLimit');
