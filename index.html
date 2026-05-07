@@ -869,7 +869,7 @@ const obs = new IntersectionObserver(e => {
 }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-// Check of gebruiker al ingelogd is → stuur naar welcome
+// Check sessie voor nav knoppen
 (async () => {
   const { createClient } = supabase;
   const sb = createClient(
@@ -887,7 +887,15 @@ document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
   );
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
-    window.location.href = 'welcome.html';
+    // Vervang inloggen knop door dashboard knop
+    const navActions = document.querySelector('.nav-actions, .sb-nav-actions');
+    if (navActions) {
+      navActions.innerHTML = `<a href="welcome.html" style="padding:9px 20px;border-radius:100px;background:var(--accent);color:white;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 0 16px rgba(255,77,109,0.3);">Naar dashboard →</a>`;
+    }
+    document.querySelectorAll('a[href="login.html#signup"]').forEach(btn => {
+      btn.href = 'welcome.html';
+      btn.textContent = 'Naar dashboard →';
+    });
   }
 })();
 </script>
