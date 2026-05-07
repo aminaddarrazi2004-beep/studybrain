@@ -228,9 +228,8 @@ body::before { content:''; position:fixed; inset:0; background-image:linear-grad
 
 <!-- Sidebar -->
 <div class="sidebar">
-  <div class="sidebar-logo">Study<span>Brain</span></div>
+  <a href="index.html" class="sidebar-logo">Study<span>Brain</span></a>
   <div class="sidebar-nav">
-    <div class="nav-label">Menu</div>
     <a href="index.html" class="nav-item">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2 6.5L8 2l6 4.5V14H10v-3.5H6V14H2V6.5z"/></svg>
       Hoofdpagina
@@ -245,13 +244,18 @@ body::before { content:''; position:fixed; inset:0; background-image:linear-grad
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>
       Nieuwe analyse
     </a>
-    <a href="tutor.html" class="nav-item active">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3 2.5-5 6-5s6 2 6 5"/></svg>
-      Meneer Tim
+    <div class="nav-sep"></div>
+    <div class="nav-label">Bijles</div>
+    <a href="tutor.html" class="nav-item active" style="align-items:center;gap:10px;padding:10px 12px;">
+      <img src="tim-avatar.png" style="width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid rgba(92,124,250,0.3);">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:#818cf8;line-height:1.2;">Meneer Tim</div>
+        <div style="font-size:10px;color:var(--muted);font-weight:400;margin-top:1px;">Jouw online bijlesleraar</div>
+      </div>
     </a>
     <div class="nav-sep"></div>
     <div class="nav-label">Account</div>
-    <a href="index.html#pricing" class="nav-item">
+    <a href="index.html#prijzen" class="nav-item">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M8 1.5l4 4-4 9-4-9 4-4z"/></svg>
       Abonnementen
     </a>
