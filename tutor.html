@@ -41,7 +41,7 @@ body::before { content:''; position:fixed; inset:0; background-image:linear-grad
 
 /* ── SIDEBAR ── */
 .sidebar { position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);background:rgba(6,6,16,0.98);border-right:1px solid var(--border);z-index:100;display:flex;flex-direction:column;backdrop-filter:blur(20px); }
-.sidebar-logo { padding:22px 20px 18px;border-bottom:1px solid var(--border);font-size:17px;font-weight:800;letter-spacing:-0.3px;flex-shrink:0; }
+.sidebar-logo { padding:22px 20px 18px;border-bottom:1px solid var(--border);font-size:17px;font-weight:800;letter-spacing:-0.3px;flex-shrink:0;text-decoration:none;color:var(--text);display:block; }
 .sidebar-logo span { color:var(--accent); }
 .sidebar-nav { flex:1;padding:14px 10px;display:flex;flex-direction:column;gap:2px;overflow-y:auto; }
 .nav-label { font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);padding:10px 12px 6px; }
@@ -107,7 +107,8 @@ body::before { content:''; position:fixed; inset:0; background-image:linear-grad
   font-family:var(--font);
 }
 .starter-btn:hover { border-color:rgba(92,124,250,0.4);background:var(--tim-dim);transform:translateY(-2px); }
-.starter-icon { font-size:20px;margin-bottom:8px;display:block; }
+.starter-icon { width:32px;height:32px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.04);border-radius:8px;border:1px solid rgba(255,255,255,0.07); }
+.starter-icon svg { width:16px;height:16px; }
 .starter-title { font-size:13px;font-weight:600;color:var(--text);display:block;margin-bottom:3px; }
 .starter-sub { font-size:11px;color:var(--muted);line-height:1.4; }
 
@@ -309,22 +310,22 @@ body::before { content:''; position:fixed; inset:0; background-image:linear-grad
       <p>Stuur me je huiswerk of een vraag die je niet snapt. Ik leg het uit in gewone taal — met voorbeelden en oefenvragen zodat je het echt begrijpt.</p>
       <div class="starter-grid">
         <button class="starter-btn" onclick="startWith('Ik snap dit niet en wil dat je het uitlegt')">
-          <span class="starter-icon">🤔</span>
+          <span class="starter-icon"><svg viewBox="0 0 20 20" fill="none" stroke="#6b6b8a" stroke-width="1.5" stroke-linecap="round"><circle cx="10" cy="10" r="8"/><path d="M10 6v4M10 14v.5"/></svg></span>
           <span class="starter-title">Ik snap iets niet</span>
           <span class="starter-sub">Leg me een onderwerp uit in simpele taal</span>
         </button>
         <button class="starter-btn" onclick="startWith('Controleer mijn huiswerk en geef feedback')">
-          <span class="starter-icon">📝</span>
+          <span class="starter-icon"><svg viewBox="0 0 20 20" fill="none" stroke="#6b6b8a" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2z"/><path d="M9 11l2 2 4-4"/></svg></span>
           <span class="starter-title">Controleer mijn huiswerk</span>
           <span class="starter-sub">Stuur je antwoorden en krijg feedback</span>
         </button>
         <button class="starter-btn" onclick="startWith('Ik heb straks een toets en wil oefenvragen')">
-          <span class="starter-icon">🎯</span>
+          <span class="starter-icon"><svg viewBox="0 0 20 20" fill="none" stroke="#6b6b8a" stroke-width="1.5" stroke-linecap="round"><circle cx="10" cy="10" r="8"/><path d="M10 6v4l3 3"/></svg></span>
           <span class="starter-title">Oefen met vragen</span>
           <span class="starter-sub">Test of je de stof echt snapt</span>
         </button>
         <button class="starter-btn" onclick="startWith('Kun je me stap voor stap door dit probleem leiden?')">
-          <span class="starter-icon">🪜</span>
+          <span class="starter-icon"><svg viewBox="0 0 20 20" fill="none" stroke="#6b6b8a" stroke-width="1.5" stroke-linecap="round"><path d="M4 6h12M4 10h8M4 14h10"/></svg></span>
           <span class="starter-title">Stap voor stap</span>
           <span class="starter-sub">Loop samen door een moeilijke opdracht</span>
         </button>
@@ -882,22 +883,22 @@ function clearChat() {
       <p>Wat wil je uitleggen of oefenen? Ik sta klaar!</p>
       <div class="starter-grid">
         <button class="starter-btn" onclick="startWith('Ik snap dit niet en wil dat je het uitlegt')">
-          <span class="starter-icon">🤔</span>
+          <span class="starter-icon"><svg viewBox="0 0 20 20" fill="none" stroke="#6b6b8a" stroke-width="1.5" stroke-linecap="round"><circle cx="10" cy="10" r="8"/><path d="M10 6v4M10 14v.5"/></svg></span>
           <span class="starter-title">Ik snap iets niet</span>
           <span class="starter-sub">Leg me een onderwerp uit in simpele taal</span>
         </button>
         <button class="starter-btn" onclick="startWith('Controleer mijn huiswerk en geef feedback')">
-          <span class="starter-icon">📝</span>
+          <span class="starter-icon"><svg viewBox="0 0 20 20" fill="none" stroke="#6b6b8a" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2z"/><path d="M9 11l2 2 4-4"/></svg></span>
           <span class="starter-title">Controleer mijn huiswerk</span>
           <span class="starter-sub">Stuur je antwoorden en krijg feedback</span>
         </button>
         <button class="starter-btn" onclick="startWith('Ik heb straks een toets en wil oefenvragen')">
-          <span class="starter-icon">🎯</span>
+          <span class="starter-icon"><svg viewBox="0 0 20 20" fill="none" stroke="#6b6b8a" stroke-width="1.5" stroke-linecap="round"><circle cx="10" cy="10" r="8"/><path d="M10 6v4l3 3"/></svg></span>
           <span class="starter-title">Oefen met vragen</span>
           <span class="starter-sub">Test of je de stof echt snapt</span>
         </button>
         <button class="starter-btn" onclick="startWith('Kun je me stap voor stap door dit probleem leiden?')">
-          <span class="starter-icon">🪜</span>
+          <span class="starter-icon"><svg viewBox="0 0 20 20" fill="none" stroke="#6b6b8a" stroke-width="1.5" stroke-linecap="round"><path d="M4 6h12M4 10h8M4 14h10"/></svg></span>
           <span class="starter-title">Stap voor stap</span>
           <span class="starter-sub">Loop samen door een moeilijke opdracht</span>
         </button>
