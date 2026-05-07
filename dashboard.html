@@ -1,1 +1,552 @@
-dsdsdsds
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — StudyBrain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg: #05050f;
+  --surface: #0c0c1a;
+  --border: rgba(255,255,255,0.07);
+  --accent: #ff4d6d;
+  --accent-dim: rgba(255,77,109,0.10);
+  --accent-glow: rgba(255,77,109,0.20);
+  --tim: #5c7cfa;
+  --tim-dim: rgba(92,124,250,0.10);
+  --green: #00e676;
+  --yellow: #ffd600;
+  --text: #f0f0f8;
+  --muted: #6b6b8a;
+  --muted2: #3a3a52;
+  --font: 'Plus Jakarta Sans', sans-serif;
+  --sw: 220px;
+  --r: 14px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:var(--font); -webkit-font-smoothing:antialiased; min-height:100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position:fixed; left:0; top:0; bottom:0; width:var(--sw);
+  background:rgba(5,5,14,0.98);
+  border-right:1px solid var(--border);
+  z-index:100; display:flex; flex-direction:column;
+}
+.sb-logo {
+  padding:22px 20px 18px; border-bottom:1px solid var(--border);
+  font-size:17px; font-weight:800; letter-spacing:-0.3px;
+  text-decoration:none; color:var(--text); display:block; flex-shrink:0;
+}
+.sb-logo span { color:var(--accent); }
+
+.sb-nav { flex:1; padding:14px 10px; display:flex; flex-direction:column; overflow-y:auto; }
+.sb-lbl {
+  font-size:10px; font-weight:700; letter-spacing:0.12em;
+  text-transform:uppercase; color:var(--muted2);
+  padding:10px 10px 5px; margin-top:4px;
+}
+.sb-lbl:first-child { margin-top:0; }
+
+.sb-link {
+  display:flex; align-items:center; gap:10px;
+  padding:9px 10px; border-radius:9px;
+  font-size:13px; font-weight:500; color:var(--muted);
+  text-decoration:none; transition:all 0.15s; margin-bottom:1px;
+}
+.sb-link svg { width:15px; height:15px; flex-shrink:0; opacity:0.55; }
+.sb-link:hover { background:rgba(255,255,255,0.04); color:var(--text); }
+.sb-link:hover svg { opacity:0.9; }
+.sb-link.active { background:var(--accent-dim); color:var(--accent); font-weight:600; }
+.sb-link.active svg { opacity:1; }
+.sb-sep { height:1px; background:var(--border); margin:8px 0; }
+
+.sb-bottom { padding:12px 10px; border-top:1px solid var(--border); flex-shrink:0; }
+.sb-plan {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 12px; border-radius:10px;
+  background:rgba(255,255,255,0.03); border:1px solid var(--border);
+  margin-bottom:8px; text-decoration:none; transition:border-color 0.15s;
+}
+.sb-plan:hover { border-color:rgba(255,77,109,0.2); }
+.sb-plan-name { font-size:12px; font-weight:700; color:var(--text); }
+.sb-plan-sub { font-size:10px; color:var(--muted); margin-top:1px; }
+.sb-badge {
+  font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px;
+  background:var(--accent-dim); color:var(--accent); border:1px solid rgba(255,77,109,0.2);
+}
+.sb-email { font-size:11px; color:var(--muted2); padding:2px 10px 8px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.sb-out {
+  display:flex; align-items:center; gap:8px; width:100%;
+  padding:8px 10px; border-radius:9px; font-size:13px; color:var(--muted);
+  background:none; border:none; cursor:pointer; font-family:var(--font); transition:all 0.15s;
+}
+.sb-out svg { width:14px; height:14px; flex-shrink:0; }
+.sb-out:hover { background:rgba(255,77,109,0.07); color:var(--accent); }
+
+/* ── HERO BANNER ── */
+.hero-banner { display:flex; align-items:center; justify-content:space-between; gap:24px; background:linear-gradient(135deg,rgba(255,77,109,0.08),rgba(255,77,109,0.02)); border:1px solid rgba(255,77,109,0.15); border-radius:20px; padding:32px 36px; margin-bottom:24px; }
+.hero-tag { font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-bottom:8px; }
+.hero-title { font-size:30px; font-weight:800; letter-spacing:-0.5px; margin-bottom:6px; }
+.hero-sub { font-size:13px; color:var(--muted); line-height:1.6; }
+.hero-btns { display:flex; flex-direction:column; gap:10px; flex-shrink:0; }
+
+/* ── STATS ROW ── */
+.stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:24px; }
+.stat-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:20px; display:flex; align-items:center; gap:14px; transition:all 0.2s; }
+.stat-card:hover { border-color:rgba(255,255,255,0.12); transform:translateY(-2px); }
+.stat-icon-wrap { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.stat-icon-wrap svg { width:18px; height:18px; }
+.stat-icon-wrap.g { background:rgba(0,230,118,0.1); color:var(--green); }
+.stat-icon-wrap.b { background:rgba(92,124,250,0.1); color:var(--tim); }
+.stat-icon-wrap.r { background:rgba(255,77,109,0.1); color:var(--accent); }
+.stat-num { font-size:26px; font-weight:800; letter-spacing:-0.5px; line-height:1; }
+.stat-num.g{color:var(--green)} .stat-num.b{color:var(--tim)} .stat-num.r{color:var(--accent)}
+.stat-desc { font-size:12px; color:var(--muted); margin-top:3px; }
+.stat-chip-small { margin-left:auto; font-size:10px; color:var(--muted); background:rgba(255,255,255,0.04); padding:3px 8px; border-radius:20px; flex-shrink:0; }
+
+/* ── DASH GRID ── */
+.dash-grid { display:grid; grid-template-columns:1fr 280px; gap:16px; }
+.dash-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r); overflow:hidden; }
+.dash-card-head { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--border); }
+.dash-card-title { font-size:14px; font-weight:700; display:flex; align-items:center; gap:8px; }
+.dash-card-title svg { width:14px; height:14px; color:var(--accent); }
+.dash-card-link { font-size:12px; font-weight:600; color:var(--accent); text-decoration:none; }
+.dash-card-body { padding:16px 20px; }
+
+.empty-state { text-align:center; padding:36px 16px; }
+.empty-icon { width:44px; height:44px; border-radius:12px; background:var(--accent-dim); display:flex; align-items:center; justify-content:center; margin:0 auto 12px; }
+.empty-icon svg { width:20px; height:20px; color:var(--accent); }
+.empty-state p { font-size:13px; color:var(--muted); margin-bottom:8px; }
+.empty-state a { color:var(--accent); font-size:13px; font-weight:600; text-decoration:none; }
+
+.a-row { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); cursor:pointer; transition:all 0.15s; }
+.a-row:last-child { border-bottom:none; }
+.a-row:first-child { padding-top:0; }
+.a-row:hover { opacity:0.8; }
+.a-av { width:36px; height:36px; border-radius:9px; background:var(--accent-dim); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:var(--accent); flex-shrink:0; }
+.a-info { flex:1; min-width:0; }
+.a-name { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.a-meta { font-size:11px; color:var(--muted); margin-top:2px; }
+.a-badge { font-size:10px; font-weight:700; padding:3px 9px; border-radius:20px; background:rgba(0,230,118,0.1); color:var(--green); flex-shrink:0; }
+
+/* ── COUNTER ── */
+.analyses-counter { text-align:center; padding:20px 0 10px; }
+.counter-num { font-size:48px; font-weight:900; letter-spacing:-2px; color:var(--green); line-height:1; }
+.counter-desc { font-size:13px; color:var(--muted); margin-top:6px; }
+.analyses-limit { text-align:center; font-size:12px; color:var(--muted); padding:8px 16px; background:rgba(255,255,255,0.02); border-radius:8px; margin-top:8px; }
+
+/* ── PITCH ── */
+.tim-card-pitch { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:14px; margin-bottom:14px; }
+.pitch-row { display:flex; align-items:center; gap:10px; }
+.pitch-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.pitch-icon svg { width:14px; height:14px; }
+.pitch-title { font-size:12px; font-weight:700; color:var(--text); }
+.pitch-sub { font-size:11px; color:var(--muted); }
+.pitch-sub strong { color:var(--text); }
+.pitch-arrow { text-align:center; font-size:16px; color:var(--muted2); margin:6px 0; }
+
+/* ── STATS ROW (remove old) ── */
+.stats-row { display:none; }
+.tim-card { background:linear-gradient(135deg,rgba(92,124,250,0.08),rgba(92,124,250,0.02)); border:1px solid rgba(92,124,250,0.2); border-radius:var(--r); padding:24px; display:flex; flex-direction:column; }
+.tim-card-top { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+.tim-card-avatar { width:48px; height:48px; border-radius:50%; object-fit:cover; border:2px solid rgba(92,124,250,0.3); flex-shrink:0; }
+.tim-card-name { font-size:15px; font-weight:700; }
+.tim-card-status { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--green); margin-top:2px; }
+.tim-dot { width:6px; height:6px; border-radius:50%; background:var(--green); animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.tim-card-desc { font-size:13px; color:var(--muted); line-height:1.65; flex:1; margin-bottom:16px; }
+.tim-card-btn { display:flex; align-items:center; justify-content:center; padding:12px; background:var(--tim); color:white; border-radius:10px; font-size:13px; font-weight:700; text-decoration:none; transition:all 0.2s; box-shadow:0 0 20px rgba(92,124,250,0.25); }
+.tim-card-btn:hover { transform:translateY(-1px); box-shadow:0 4px 24px rgba(92,124,250,0.35); }
+
+/* ── ANIMATIONS ── */
+@keyframes up { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+.a1{animation:up 0.35s 0.05s ease both}
+.a2{animation:up 0.35s 0.12s ease both}
+.a3{animation:up 0.35s 0.19s ease both}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px) {
+  .sidebar { display:none; }
+  .main { margin-left:0; }
+  .page { padding:20px 16px 60px; }
+  .hero-banner { flex-direction:column; align-items:flex-start; }
+  .stats-row { grid-template-columns:1fr 1fr; }
+  .dash-grid { grid-template-columns:1fr; }
+}
+
+/* ── MAIN ── */
+.main { margin-left:var(--sw); min-height:100vh; }
+
+/* ── TOPBAR ── */
+.topbar {
+  position:sticky; top:0; z-index:50;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 48px; height:60px;
+  background:rgba(5,5,15,0.9); backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.topbar-left { display:flex; align-items:center; gap:6px; }
+.topbar-page { font-size:14px; font-weight:700; }
+.topbar-sep { color:var(--muted2); }
+.topbar-name { font-size:13px; color:var(--muted); }
+.topbar-btn {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:9px 20px; border-radius:10px; background:var(--accent);
+  color:white; font-size:13px; font-weight:700;
+  text-decoration:none; border:none; cursor:pointer; font-family:var(--font);
+  box-shadow:0 0 16px var(--accent-glow); transition:all 0.2s;
+}
+.topbar-btn:hover { transform:translateY(-1px); }
+.topbar-btn svg { width:13px; height:13px; }
+
+/* ── PAGE ── */
+.page {
+  max-width:860px;
+  margin:0 auto;
+  padding:36px 48px 80px;
+}
+
+/* ── GREETING ── */
+.greeting {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:24px; margin-bottom:32px;
+}
+.g-lbl { font-size:11px; font-weight:700; letter-spacing:0.09em; text-transform:uppercase; color:var(--accent); margin-bottom:6px; }
+.g-title { font-size:28px; font-weight:800; letter-spacing:-0.5px; margin-bottom:6px; }
+.g-sub { font-size:13px; color:var(--muted); line-height:1.6; }
+.g-btns { display:flex; flex-direction:column; gap:8px; flex-shrink:0; }
+.btn-a {
+  display:inline-flex; align-items:center; gap:7px;
+  padding:12px 24px; border-radius:12px; background:var(--accent);
+  color:white; font-size:13px; font-weight:700; text-decoration:none;
+  box-shadow:0 0 20px var(--accent-glow); transition:all 0.2s; white-space:nowrap;
+}
+.btn-a:hover { transform:translateY(-2px); }
+.btn-a svg { width:13px; height:13px; }
+.btn-t {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:10px 18px; border-radius:12px;
+  background:var(--tim-dim); border:1px solid rgba(92,124,250,0.2);
+  color:#818cf8; font-size:13px; font-weight:600; text-decoration:none;
+  transition:all 0.2s; white-space:nowrap;
+}
+.btn-t:hover { background:rgba(92,124,250,0.18); }
+.btn-t img { width:22px; height:22px; border-radius:50%; object-fit:cover; }
+
+/* ── STATS ── */
+.stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:28px; }
+.stat {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r); padding:18px;
+  transition:transform 0.2s, border-color 0.2s;
+}
+.stat:hover { transform:translateY(-2px); border-color:rgba(255,255,255,0.12); }
+.stat-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.stat-ico { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; }
+.stat-ico svg { width:15px; height:15px; }
+.stat-ico.r { background:rgba(255,77,109,0.12); color:var(--accent); }
+.stat-ico.g { background:rgba(0,230,118,0.1); color:var(--green); }
+.stat-ico.y { background:rgba(255,214,0,0.1); color:var(--yellow); }
+.stat-ico.b { background:rgba(92,124,250,0.1); color:var(--tim); }
+.stat-chip { font-size:10px; color:var(--muted); background:rgba(255,255,255,0.04); padding:2px 7px; border-radius:20px; }
+.stat-val { font-size:22px; font-weight:800; letter-spacing:-0.5px; margin-bottom:3px; }
+.stat-val.r{color:var(--accent)} .stat-val.g{color:var(--green)} .stat-val.y{color:var(--yellow)} .stat-val.b{color:var(--tim)}
+.stat-val.sm { font-size:13px; font-weight:700; letter-spacing:0; line-height:1.45; }
+.stat-lbl { font-size:12px; color:var(--muted); }
+
+/* ── GRID ── */
+.grid { display:grid; grid-template-columns:1fr 280px; gap:16px; }
+.card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r); overflow:hidden; }
+.card-head {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 18px; border-bottom:1px solid var(--border);
+}
+.card-head-t { font-size:13px; font-weight:700; display:flex; align-items:center; gap:7px; }
+.card-head-t svg { width:13px; height:13px; color:var(--accent); }
+.card-head-a { font-size:12px; font-weight:600; color:var(--accent); text-decoration:none; }
+.card-body { padding:16px 18px; }
+
+.empty { text-align:center; padding:28px 16px; color:var(--muted); font-size:13px; line-height:1.7; }
+.empty-ico { width:40px; height:40px; border-radius:10px; background:var(--accent-dim); display:flex; align-items:center; justify-content:center; margin:0 auto 10px; }
+.empty-ico svg { width:18px; height:18px; color:var(--accent); }
+.empty a { color:var(--accent); font-weight:600; text-decoration:none; }
+
+.a-row { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); cursor:pointer; transition:all 0.15s; }
+.a-row:last-child { border-bottom:none; padding-bottom:0; }
+.a-row:first-child { padding-top:0; }
+.a-av { width:34px; height:34px; border-radius:8px; background:var(--accent-dim); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:800; color:var(--accent); flex-shrink:0; }
+.a-info { flex:1; min-width:0; }
+.a-name { font-size:13px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.a-meta { font-size:11px; color:var(--muted); margin-top:1px; }
+.a-badge { font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; background:rgba(0,230,118,0.1); color:var(--green); flex-shrink:0; }
+
+.right { display:flex; flex-direction:column; gap:12px; }
+.quick { display:flex; flex-direction:column; gap:5px; }
+.qi {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 12px; border-radius:9px;
+  background:rgba(255,255,255,0.02); border:1px solid var(--border);
+  text-decoration:none; color:var(--text); transition:all 0.15s;
+}
+.qi:hover { border-color:rgba(255,77,109,0.2); background:rgba(255,77,109,0.03); transform:translateX(2px); }
+.qi-ico { width:30px; height:30px; border-radius:7px; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; }
+.qi-ico svg { width:13px; height:13px; }
+.qi-ico.r { background:var(--accent-dim); color:var(--accent); }
+.qi-ico.t { background:var(--tim-dim); }
+.qi-ico.t img { width:100%; height:100%; object-fit:cover; }
+.qi-ico.y { background:rgba(255,214,0,0.1); color:var(--yellow); }
+.qi-t strong { display:block; font-size:12px; font-weight:600; }
+.qi-t span { font-size:11px; color:var(--muted); }
+.qi-arr { margin-left:auto; color:var(--muted2); font-size:12px; }
+
+/* ── ANIMATIONS ── */
+@keyframes up { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+.a1{animation:up 0.35s 0.05s ease both}
+.a2{animation:up 0.35s 0.12s ease both}
+.a3{animation:up 0.35s 0.19s ease both}
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <a href="welcome.html" class="sb-logo">Study<span>Brain</span></a>
+  <div class="sb-nav">
+    <a href="welcome.html" class="sb-link">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2 6.5L8 2l6 4.5V14H10v-3.5H6V14H2V6.5z"/></svg>
+      Hoofdpagina
+    </a>
+    <div class="sb-sep"></div>
+    <div class="sb-lbl">App</div>
+    <a href="dashboard.html" class="sb-link active">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>
+      Dashboard
+    </a>
+    <a href="app.html" class="sb-link">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>
+      Nieuwe analyse
+    </a>
+    <div class="sb-sep"></div>
+    <div class="sb-lbl">Bijles</div>
+    <a href="tutor.html" class="sb-link" style="align-items:center;gap:10px;padding:10px 12px;" onmouseover="this.style.background='rgba(92,124,250,0.1)'" onmouseout="this.style.background=''">
+      <img src="tim-avatar.png" style="width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid rgba(92,124,250,0.2);">
+      <div>
+        <div style="font-size:13px;font-weight:600;line-height:1.2;">Meneer Tim</div>
+        <div style="font-size:10px;color:var(--muted);font-weight:400;margin-top:1px;">Jouw online bijlesleraar</div>
+      </div>
+    </a>
+    <div class="sb-sep"></div>
+    <div class="sb-lbl">Account</div>
+    <a href="index.html#prijzen" class="sb-link">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M8 1.5l4 4-4 9-4-9 4-4z"/></svg>
+      Abonnementen
+    </a>
+  </div>
+  <div class="sb-bottom">
+    <a href="index.html#prijzen" class="sb-plan">
+      <div>
+        <div class="sb-plan-name" id="planName">—</div>
+        <div class="sb-plan-sub">Klik om te upgraden</div>
+      </div>
+      <div class="sb-badge" id="planBadge">—</div>
+    </a>
+    <div class="sb-email" id="sbEmail"></div>
+    <button class="sb-out" onclick="doLogout()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 11l3-3-3-3M13 8H6M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3"/></svg>
+      Uitloggen
+    </button>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-page">Dashboard</span>
+      <span class="topbar-sep"> · </span>
+      <span class="topbar-name" id="topName">—</span>
+    </div>
+    <a href="app.html" class="topbar-btn">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>
+      Nieuwe analyse
+    </a>
+  </div>
+
+  <div class="page">
+
+    <!-- Hero banner -->
+    <div class="hero-banner a1">
+      <div class="hero-left">
+        <div class="hero-tag" id="gLbl">Goedenavond</div>
+        <h1 class="hero-title" id="gTitle">Goed bezig, —</h1>
+        <p class="hero-sub" id="gSub">Upload je lesstof en ontdek wat in je toets komt.</p>
+      </div>
+      <div class="hero-btns">
+        <a href="app.html" class="btn-a">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>
+          Analyseer nu
+        </a>
+        <a href="tutor.html" class="btn-t">
+          <img src="tim-avatar.png" alt="Tim">
+          Vraag Meneer Tim
+        </a>
+      </div>
+    </div>
+
+    <!-- Two column layout -->
+    <div class="dash-grid a2">
+
+      <!-- Links: analyses teller -->
+      <div class="dash-card">
+        <div class="dash-card-head">
+          <div class="dash-card-title">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12L6 8l3 3 5-6"/></svg>
+            Jouw analyses
+          </div>
+          <a href="app.html" class="dash-card-link">+ Nieuwe analyse</a>
+        </div>
+        <div class="dash-card-body">
+          <div class="analyses-counter">
+            <div class="counter-num" id="statAnalyses">0</div>
+            <div class="counter-desc" id="counterDesc">analyses gedaan deze sessie</div>
+          </div>
+          <div class="analyses-limit" id="analysesLimit"></div>
+          <div id="analysesList" style="margin-top:16px;">
+            <div class="empty-state">
+              <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+              <p>Nog geen analyses gedaan.</p>
+              <a href="app.html">Start je eerste analyse →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rechts: Meneer Tim -->
+      <div class="tim-card">
+        <div class="tim-card-top">
+          <img src="tim-avatar.png" alt="Meneer Tim" class="tim-card-avatar">
+          <div>
+            <div class="tim-card-name">Meneer Tim</div>
+            <div class="tim-card-status"><span class="tim-dot"></span>Online</div>
+          </div>
+        </div>
+        <div class="tim-card-pitch">
+          <div class="pitch-row">
+            <div class="pitch-icon" style="background:rgba(255,77,109,0.1);">
+              <svg viewBox="0 0 16 16" fill="none" stroke="#ff4d6d" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg>
+            </div>
+            <div>
+              <div class="pitch-title">StudyBrain</div>
+              <div class="pitch-sub">Vertelt je <strong>WAT</strong> je moet leren</div>
+            </div>
+          </div>
+          <div class="pitch-arrow">↓</div>
+          <div class="pitch-row">
+            <div class="pitch-icon" style="background:rgba(92,124,250,0.1);">
+              <svg viewBox="0 0 16 16" fill="none" stroke="#5c7cfa" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="6" r="3"/><path d="M2 14c0-3 2.5-4.5 6-4.5s6 1.5 6 4.5"/></svg>
+            </div>
+            <div>
+              <div class="pitch-title">Meneer Tim</div>
+              <div class="pitch-sub">Legt uit <strong>HOE</strong> het werkt</div>
+            </div>
+          </div>
+        </div>
+        <p class="tim-card-desc">Snap je iets niet uit je analyse? Tim legt het uit in gewone taal — met voorbeelden en oefenvragen.</p>
+        <a href="tutor.html" class="tim-card-btn">Chat met Meneer Tim →</a>
+      </div>
+
+    </div>
+
+    <!-- Recente analyses -->
+    <div class="dash-card a3" style="margin-top:16px;">
+      <div class="dash-card-head">
+        <div class="dash-card-title">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12L6 8l3 3 5-6"/></svg>
+          Recente analyses
+        </div>
+        <a href="app.html" class="dash-card-link">+ Nieuwe</a>
+      </div>
+      <div class="dash-card-body" id="recentList">
+        <div class="empty-state">
+          <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <p>Nog geen analyses gedaan.</p>
+          <a href="app.html">Start je eerste analyse →</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+checkAccess();
+
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) return;
+
+  const email = session.user.email;
+  const name = email.split('@')[0];
+  const hour = new Date().getHours();
+  const dag = hour < 12 ? 'Goedemorgen' : hour < 18 ? 'Goedemiddag' : 'Goedenavond';
+
+  document.getElementById('topName').textContent = name;
+  document.getElementById('gLbl').textContent = dag;
+  document.getElementById('gTitle').textContent = `Goed bezig, ${name}.`;
+  document.getElementById('sbEmail').textContent = email;
+
+  const { data: profile } = await sb.from('profiles').select('plan').eq('id', session.user.id).single();
+  const plan = profile?.plan || 'gratis';
+  const label = { gratis:'Gratis', starter:'Starter', pro:'Pro', elite:'Elite' }[plan] || 'Gratis';
+
+  document.getElementById('planName').textContent = label + ' plan';
+  document.getElementById('planBadge').textContent = label;
+
+  const limietPerPlan = { gratis:'1 gratis analyse', starter:'10 analyses per maand', pro:'Onbeperkt analyses', elite:'Onbeperkt analyses' };
+  const limietEl = document.getElementById('analysesLimit');
+  if (limietEl) limietEl.textContent = `Jouw plan: ${limietPerPlan[plan] || '1 gratis analyse'}`;
+
+  if (plan === 'pro' || plan === 'elite') {
+    document.getElementById('gSub').textContent = 'Je hebt volledige toegang. Analyseer zoveel vakken als je wil.';
+    const b = document.getElementById('planBadge');
+    b.style.cssText = 'background:rgba(0,230,118,0.1);color:#00e676;border:1px solid rgba(0,230,118,0.2);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;';
+    document.getElementById('statPlan').style.color = 'var(--green)';
+  } else if (plan === 'starter') {
+    document.getElementById('gSub').textContent = '10 analyses per maand beschikbaar.';
+  }
+
+  const analyses = JSON.parse(sessionStorage.getItem('studybrain-analyses') || '[]');
+  document.getElementById('statAnalyses').textContent = analyses.length;
+
+  if (analyses.length > 0) {
+    const recentEl = document.getElementById('recentList');
+    if (recentEl) recentEl.innerHTML = analyses.slice(0, 6).map(a => `
+      <div class="a-row" onclick="window.location.href='app.html'">
+        <div class="a-av">${a.naam.charAt(0).toUpperCase()}</div>
+        <div class="a-info">
+          <div class="a-name">${a.naam}</div>
+          <div class="a-meta">${a.datum} · ${a.tijd}</div>
+        </div>
+        <div class="a-badge">${a.mustCount} must</div>
+      </div>`).join('');
+    const analysesEl = document.getElementById('analysesList');
+    if (analysesEl) analysesEl.innerHTML = analyses.slice(0, 3).map(a => `
+      <div class="a-row" onclick="window.location.href='app.html'">
+        <div class="a-av">${a.naam.charAt(0).toUpperCase()}</div>
+        <div class="a-info">
+          <div class="a-name">${a.naam}</div>
+          <div class="a-meta">${a.datum} · ${a.tijd}</div>
+        </div>
+        <div class="a-badge">${a.mustCount} must</div>
+      </div>`).join('');
+  }
+})();
+</script>
+</body>
+</html>
