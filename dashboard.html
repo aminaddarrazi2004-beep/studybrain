@@ -88,8 +88,96 @@ body { background:var(--bg); color:var(--text); font-family:var(--font); -webkit
 .sb-out svg { width:14px; height:14px; flex-shrink:0; }
 .sb-out:hover { background:rgba(255,77,109,0.07); color:var(--accent); }
 
-/* ── MAIN ── */
-.main { margin-left:var(--sw); min-height:100vh; }
+/* ── HERO BANNER ── */
+.hero-banner { display:flex; align-items:center; justify-content:space-between; gap:24px; background:linear-gradient(135deg,rgba(255,77,109,0.08),rgba(255,77,109,0.02)); border:1px solid rgba(255,77,109,0.15); border-radius:20px; padding:32px 36px; margin-bottom:24px; }
+.hero-tag { font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-bottom:8px; }
+.hero-title { font-size:30px; font-weight:800; letter-spacing:-0.5px; margin-bottom:6px; }
+.hero-sub { font-size:13px; color:var(--muted); line-height:1.6; }
+.hero-btns { display:flex; flex-direction:column; gap:10px; flex-shrink:0; }
+
+/* ── STATS ROW ── */
+.stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:24px; }
+.stat-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r); padding:20px; display:flex; align-items:center; gap:14px; transition:all 0.2s; }
+.stat-card:hover { border-color:rgba(255,255,255,0.12); transform:translateY(-2px); }
+.stat-icon-wrap { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.stat-icon-wrap svg { width:18px; height:18px; }
+.stat-icon-wrap.g { background:rgba(0,230,118,0.1); color:var(--green); }
+.stat-icon-wrap.b { background:rgba(92,124,250,0.1); color:var(--tim); }
+.stat-icon-wrap.r { background:rgba(255,77,109,0.1); color:var(--accent); }
+.stat-num { font-size:26px; font-weight:800; letter-spacing:-0.5px; line-height:1; }
+.stat-num.g{color:var(--green)} .stat-num.b{color:var(--tim)} .stat-num.r{color:var(--accent)}
+.stat-desc { font-size:12px; color:var(--muted); margin-top:3px; }
+.stat-chip-small { margin-left:auto; font-size:10px; color:var(--muted); background:rgba(255,255,255,0.04); padding:3px 8px; border-radius:20px; flex-shrink:0; }
+
+/* ── DASH GRID ── */
+.dash-grid { display:grid; grid-template-columns:1fr 280px; gap:16px; }
+.dash-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--r); overflow:hidden; }
+.dash-card-head { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--border); }
+.dash-card-title { font-size:14px; font-weight:700; display:flex; align-items:center; gap:8px; }
+.dash-card-title svg { width:14px; height:14px; color:var(--accent); }
+.dash-card-link { font-size:12px; font-weight:600; color:var(--accent); text-decoration:none; }
+.dash-card-body { padding:16px 20px; }
+
+.empty-state { text-align:center; padding:36px 16px; }
+.empty-icon { width:44px; height:44px; border-radius:12px; background:var(--accent-dim); display:flex; align-items:center; justify-content:center; margin:0 auto 12px; }
+.empty-icon svg { width:20px; height:20px; color:var(--accent); }
+.empty-state p { font-size:13px; color:var(--muted); margin-bottom:8px; }
+.empty-state a { color:var(--accent); font-size:13px; font-weight:600; text-decoration:none; }
+
+.a-row { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); cursor:pointer; transition:all 0.15s; }
+.a-row:last-child { border-bottom:none; }
+.a-row:first-child { padding-top:0; }
+.a-row:hover { opacity:0.8; }
+.a-av { width:36px; height:36px; border-radius:9px; background:var(--accent-dim); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:var(--accent); flex-shrink:0; }
+.a-info { flex:1; min-width:0; }
+.a-name { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.a-meta { font-size:11px; color:var(--muted); margin-top:2px; }
+.a-badge { font-size:10px; font-weight:700; padding:3px 9px; border-radius:20px; background:rgba(0,230,118,0.1); color:var(--green); flex-shrink:0; }
+
+/* ── COUNTER ── */
+.analyses-counter { text-align:center; padding:20px 0 10px; }
+.counter-num { font-size:48px; font-weight:900; letter-spacing:-2px; color:var(--green); line-height:1; }
+.counter-desc { font-size:13px; color:var(--muted); margin-top:6px; }
+.analyses-limit { text-align:center; font-size:12px; color:var(--muted); padding:8px 16px; background:rgba(255,255,255,0.02); border-radius:8px; margin-top:8px; }
+
+/* ── PITCH ── */
+.tim-card-pitch { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:14px; margin-bottom:14px; }
+.pitch-row { display:flex; align-items:center; gap:10px; }
+.pitch-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.pitch-icon svg { width:14px; height:14px; }
+.pitch-title { font-size:12px; font-weight:700; color:var(--text); }
+.pitch-sub { font-size:11px; color:var(--muted); }
+.pitch-sub strong { color:var(--text); }
+.pitch-arrow { text-align:center; font-size:16px; color:var(--muted2); margin:6px 0; }
+
+/* ── STATS ROW (remove old) ── */
+.stats-row { display:none; }
+.tim-card { background:linear-gradient(135deg,rgba(92,124,250,0.08),rgba(92,124,250,0.02)); border:1px solid rgba(92,124,250,0.2); border-radius:var(--r); padding:24px; display:flex; flex-direction:column; }
+.tim-card-top { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+.tim-card-avatar { width:48px; height:48px; border-radius:50%; object-fit:cover; border:2px solid rgba(92,124,250,0.3); flex-shrink:0; }
+.tim-card-name { font-size:15px; font-weight:700; }
+.tim-card-status { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--green); margin-top:2px; }
+.tim-dot { width:6px; height:6px; border-radius:50%; background:var(--green); animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.tim-card-desc { font-size:13px; color:var(--muted); line-height:1.65; flex:1; margin-bottom:16px; }
+.tim-card-btn { display:flex; align-items:center; justify-content:center; padding:12px; background:var(--tim); color:white; border-radius:10px; font-size:13px; font-weight:700; text-decoration:none; transition:all 0.2s; box-shadow:0 0 20px rgba(92,124,250,0.25); }
+.tim-card-btn:hover { transform:translateY(-1px); box-shadow:0 4px 24px rgba(92,124,250,0.35); }
+
+/* ── ANIMATIONS ── */
+@keyframes up { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+.a1{animation:up 0.35s 0.05s ease both}
+.a2{animation:up 0.35s 0.12s ease both}
+.a3{animation:up 0.35s 0.19s ease both}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px) {
+  .sidebar { display:none; }
+  .main { margin-left:0; }
+  .page { padding:20px 16px 60px; }
+  .hero-banner { flex-direction:column; align-items:flex-start; }
+  .stats-row { grid-template-columns:1fr 1fr; }
+  .dash-grid { grid-template-columns:1fr; }
+}
 
 /* ── TOPBAR ── */
 .topbar {
@@ -242,11 +330,11 @@ body { background:var(--bg); color:var(--text); font-family:var(--font); -webkit
     </a>
     <div class="sb-sep"></div>
     <div class="sb-lbl">Bijles</div>
-    <a href="tutor.html" class="sb-link" style="color:var(--muted);" onmouseover="this.style.background='var(--tim-dim)';this.style.color='#818cf8'" onmouseout="this.style.background='';this.style.color='var(--muted)'">
-      <img src="tim-avatar.png" style="width:22px;height:22px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+    <a href="tutor.html" class="sb-link" style="align-items:center;gap:10px;padding:10px 12px;" onmouseover="this.style.background='rgba(92,124,250,0.1)'" onmouseout="this.style.background=''">
+      <img src="tim-avatar.png" style="width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid rgba(92,124,250,0.2);">
       <div>
         <div style="font-size:13px;font-weight:600;line-height:1.2;">Meneer Tim</div>
-        <div style="font-size:10px;color:var(--muted);font-weight:400;">Jouw online bijlesleraar</div>
+        <div style="font-size:10px;color:var(--muted);font-weight:400;margin-top:1px;">Jouw online bijlesleraar</div>
       </div>
     </a>
     <div class="sb-sep"></div>
@@ -288,14 +376,14 @@ body { background:var(--bg); color:var(--text); font-family:var(--font); -webkit
 
   <div class="page">
 
-    <!-- Greeting -->
-    <div class="greeting a1">
-      <div>
-        <div class="g-lbl" id="gLbl">Goedenavond</div>
-        <div class="g-title" id="gTitle">Goed bezig, —</div>
-        <div class="g-sub" id="gSub">Upload je lesstof en ontdek wat in je toets komt.</div>
+    <!-- Hero banner -->
+    <div class="hero-banner a1">
+      <div class="hero-left">
+        <div class="hero-tag" id="gLbl">Goedenavond</div>
+        <h1 class="hero-title" id="gTitle">Goed bezig, —</h1>
+        <p class="hero-sub" id="gSub">Upload je lesstof en ontdek wat in je toets komt.</p>
       </div>
-      <div class="g-btns">
+      <div class="hero-btns">
         <a href="app.html" class="btn-a">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>
           Analyseer nu
@@ -307,42 +395,84 @@ body { background:var(--bg); color:var(--text); font-family:var(--font); -webkit
       </div>
     </div>
 
-    <!-- Stats -->
-    <div class="stats a2" style="grid-template-columns:1fr 1fr;">
-      <div class="stat">
-        <div class="stat-top">
-          <div class="stat-ico g"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12L6 8l3 3 5-6"/></svg></div>
-          <div class="stat-chip">deze sessie</div>
+    <!-- Two column layout -->
+    <div class="dash-grid a2">
+
+      <!-- Links: analyses teller -->
+      <div class="dash-card">
+        <div class="dash-card-head">
+          <div class="dash-card-title">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12L6 8l3 3 5-6"/></svg>
+            Jouw analyses
+          </div>
+          <a href="app.html" class="dash-card-link">+ Nieuwe analyse</a>
         </div>
-        <div class="stat-val g" id="statAnalyses">0</div>
-        <div class="stat-lbl">Analyses gedaan</div>
-      </div>
-      <div class="stat">
-        <div class="stat-top">
-          <div class="stat-ico b"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2z"/><path d="M10 2v4l-2-1-2 1V2"/></svg></div>
-          <div class="stat-chip">totaal</div>
+        <div class="dash-card-body">
+          <div class="analyses-counter">
+            <div class="counter-num" id="statAnalyses">0</div>
+            <div class="counter-desc" id="counterDesc">analyses gedaan deze sessie</div>
+          </div>
+          <div class="analyses-limit" id="analysesLimit"></div>
+          <div id="analysesList" style="margin-top:16px;">
+            <div class="empty-state">
+              <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+              <p>Nog geen analyses gedaan.</p>
+              <a href="app.html">Start je eerste analyse →</a>
+            </div>
+          </div>
         </div>
-        <div class="stat-val b" id="statVakken">0</div>
-        <div class="stat-lbl">Vakken geanalyseerd</div>
       </div>
+
+      <!-- Rechts: Meneer Tim -->
+      <div class="tim-card">
+        <div class="tim-card-top">
+          <img src="tim-avatar.png" alt="Meneer Tim" class="tim-card-avatar">
+          <div>
+            <div class="tim-card-name">Meneer Tim</div>
+            <div class="tim-card-status"><span class="tim-dot"></span>Online</div>
+          </div>
+        </div>
+        <div class="tim-card-pitch">
+          <div class="pitch-row">
+            <div class="pitch-icon" style="background:rgba(255,77,109,0.1);">
+              <svg viewBox="0 0 16 16" fill="none" stroke="#ff4d6d" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg>
+            </div>
+            <div>
+              <div class="pitch-title">StudyBrain</div>
+              <div class="pitch-sub">Vertelt je <strong>WAT</strong> je moet leren</div>
+            </div>
+          </div>
+          <div class="pitch-arrow">↓</div>
+          <div class="pitch-row">
+            <div class="pitch-icon" style="background:rgba(92,124,250,0.1);">
+              <svg viewBox="0 0 16 16" fill="none" stroke="#5c7cfa" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="6" r="3"/><path d="M2 14c0-3 2.5-4.5 6-4.5s6 1.5 6 4.5"/></svg>
+            </div>
+            <div>
+              <div class="pitch-title">Meneer Tim</div>
+              <div class="pitch-sub">Legt uit <strong>HOE</strong> het werkt</div>
+            </div>
+          </div>
+        </div>
+        <p class="tim-card-desc">Snap je iets niet uit je analyse? Tim legt het uit in gewone taal — met voorbeelden en oefenvragen.</p>
+        <a href="tutor.html" class="tim-card-btn">Chat met Meneer Tim →</a>
+      </div>
+
     </div>
 
-    <!-- Grid -->
-    <div class="a3">
-      <div class="card">
-        <div class="card-head">
-          <div class="card-head-t">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12L6 8l3 3 5-6"/></svg>
-            Recente analyses
-          </div>
-          <a href="app.html" class="card-head-a">+ Nieuwe analyse</a>
+    <!-- Recente analyses -->
+    <div class="dash-card a3" style="margin-top:16px;">
+      <div class="dash-card-head">
+        <div class="dash-card-title">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12L6 8l3 3 5-6"/></svg>
+          Recente analyses
         </div>
-        <div class="card-body" id="analysesList">
-          <div class="empty">
-            <div class="empty-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
-            Nog geen analyses.<br>
-            <a href="app.html">Start je eerste analyse →</a>
-          </div>
+        <a href="app.html" class="dash-card-link">+ Nieuwe</a>
+      </div>
+      <div class="dash-card-body" id="recentList">
+        <div class="empty-state">
+          <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <p>Nog geen analyses gedaan.</p>
+          <a href="app.html">Start je eerste analyse →</a>
         </div>
       </div>
     </div>
@@ -374,21 +504,39 @@ checkAccess();
 
   document.getElementById('planName').textContent = label + ' plan';
   document.getElementById('planBadge').textContent = label;
+  document.getElementById('statPlan').textContent = label;
+
+  document.getElementById('statPlan').textContent = label;
+
+  const limietPerPlan = { gratis:'1 gratis analyse', starter:'10 analyses per maand', pro:'Onbeperkt analyses', elite:'Onbeperkt analyses' };
+  const limietEl = document.getElementById('analysesLimit');
+  if (limietEl) limietEl.textContent = `Jouw plan: ${limietPerPlan[plan] || '1 gratis analyse'}`;
 
   if (plan === 'pro' || plan === 'elite') {
     document.getElementById('gSub').textContent = 'Je hebt volledige toegang. Analyseer zoveel vakken als je wil.';
     const b = document.getElementById('planBadge');
     b.style.cssText = 'background:rgba(0,230,118,0.1);color:#00e676;border:1px solid rgba(0,230,118,0.2);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;';
+    document.getElementById('statPlan').style.color = 'var(--green)';
   } else if (plan === 'starter') {
     document.getElementById('gSub').textContent = '10 analyses per maand beschikbaar.';
   }
 
   const analyses = JSON.parse(sessionStorage.getItem('studybrain-analyses') || '[]');
   document.getElementById('statAnalyses').textContent = analyses.length;
-  document.getElementById('statVakken').textContent = new Set(analyses.map(a => a.naam)).size;
 
   if (analyses.length > 0) {
-    document.getElementById('analysesList').innerHTML = analyses.slice(0, 6).map(a => `
+    const recentEl = document.getElementById('recentList');
+    if (recentEl) recentEl.innerHTML = analyses.slice(0, 6).map(a => `
+      <div class="a-row" onclick="window.location.href='app.html'">
+        <div class="a-av">${a.naam.charAt(0).toUpperCase()}</div>
+        <div class="a-info">
+          <div class="a-name">${a.naam}</div>
+          <div class="a-meta">${a.datum} · ${a.tijd}</div>
+        </div>
+        <div class="a-badge">${a.mustCount} must</div>
+      </div>`).join('');
+    const analysesEl = document.getElementById('analysesList');
+    if (analysesEl) analysesEl.innerHTML = analyses.slice(0, 3).map(a => `
       <div class="a-row" onclick="window.location.href='app.html'">
         <div class="a-av">${a.naam.charAt(0).toUpperCase()}</div>
         <div class="a-info">
