@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — StudyBrain</title>
+  <meta name="description" content="Heb je een vraag of probleem? Neem contact op met StudyBrain via info@studybrain.nl — we reageren binnen 24 uur.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #05050f;
+      --surface: #0c0c1a;
+      --card: #10101e;
+      --border: rgba(255,255,255,0.07);
+      --accent: #ff4d6d;
+      --accent-dim: rgba(255,77,109,0.10);
+      --accent-glow: rgba(255,77,109,0.22);
+      --green: #00e676;
+      --yellow: #ffd600;
+      --text: #f0f0f8;
+      --muted: #6b6b8a;
+      --muted2: #3a3a52;
+      --font: 'Plus Jakarta Sans', sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+
+    /* Grid bg */
+    body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(255,77,109,0.016) 1px, transparent 1px), linear-gradient(90deg, rgba(255,77,109,0.016) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; z-index: 0; }
+
+    /* Orbs */
+    .orb { position: fixed; border-radius: 50%; filter: blur(110px); pointer-events: none; z-index: 0; }
+    .orb-1 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(255,77,109,0.08), transparent 65%); top: -200px; right: -100px; }
+    .orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(77,100,255,0.05), transparent 65%); bottom: -100px; left: -100px; }
+
+    /* Nav */
+    .nav { position: fixed; top: 20px; left: 0; right: 0; z-index: 1000; display: flex; justify-content: center; padding: 0 20px; pointer-events: none; }
+    .nav-pill { display: flex; align-items: center; background: rgba(5,5,15,0.82); backdrop-filter: blur(24px) saturate(1.5); border: 1px solid rgba(255,255,255,0.08); border-radius: 100px; padding: 6px 6px 6px 24px; width: 100%; max-width: 940px; box-shadow: 0 8px 40px rgba(0,0,0,0.45); pointer-events: all; gap: 8px; }
+    .nav-logo { font-size: 16px; font-weight: 800; letter-spacing: -0.3px; margin-right: auto; }
+    .nav-logo span { color: var(--accent); }
+    .nav-back { padding: 10px 20px; border-radius: 100px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); font-size: 13px; font-weight: 600; color: var(--muted); transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+    .nav-back:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
+
+    /* Page */
+    .page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 120px 24px 80px; position: relative; z-index: 1; }
+    .container { width: 100%; max-width: 680px; }
+
+    /* Header */
+    .page-tag { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted2); margin-bottom: 12px; }
+    .page-title { font-size: clamp(32px, 5vw, 48px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 14px; }
+    .page-title em { font-style: normal; background: linear-gradient(135deg, var(--accent), #ff8fa3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .page-sub { font-size: 15px; color: var(--muted); line-height: 1.75; margin-bottom: 48px; max-width: 480px; }
+
+    /* Main card */
+    .contact-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+
+    /* Email block */
+    .email-block { padding: 40px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 24px; }
+    .email-icon { width: 56px; height: 56px; border-radius: 16px; background: var(--accent-dim); border: 1px solid rgba(255,77,109,0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .email-icon svg { width: 24px; height: 24px; color: var(--accent); }
+    .email-info { flex: 1; }
+    .email-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .email-address { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .email-note { font-size: 13px; color: var(--muted); }
+    .email-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: var(--accent); border-radius: 12px; font-size: 14px; font-weight: 700; color: white; transition: all 0.2s; flex-shrink: 0; box-shadow: 0 0 20px var(--accent-glow); }
+    .email-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 28px var(--accent-glow); }
+    .email-btn svg { width: 16px; height: 16px; }
+
+    /* FAQ blokken */
+    .faq-block { padding: 32px 40px; border-bottom: 1px solid var(--border); }
+    .faq-block:last-child { border-bottom: none; }
+    .faq-block-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted2); margin-bottom: 16px; }
+    .faq-item { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .faq-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .faq-q { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+    .faq-a { font-size: 13px; color: var(--muted); line-height: 1.65; }
+    .faq-a a { color: var(--accent); }
+
+    /* Response time strip */
+    .response-strip { display: flex; align-items: center; gap: 16px; padding: 20px 40px; background: rgba(0,230,118,0.03); border-top: 1px solid rgba(0,230,118,0.08); }
+    .response-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s ease-in-out infinite; flex-shrink: 0; }
+    @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.4; transform:scale(0.7); } }
+    .response-text { font-size: 13px; color: var(--muted); }
+    .response-text strong { color: var(--green); }
+
+    /* Topics */
+    .topics { padding: 32px 40px; border-top: 1px solid var(--border); }
+    .topics-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted2); margin-bottom: 16px; }
+    .topics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .topic-item { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; font-size: 13px; color: var(--muted); transition: all 0.15s; cursor: default; }
+    .topic-item:hover { border-color: rgba(255,77,109,0.2); color: var(--text); background: rgba(255,77,109,0.03); }
+    .topic-emoji { font-size: 16px; flex-shrink: 0; }
+
+    /* Footer */
+    .page-footer { margin-top: 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .footer-brand { font-size: 14px; font-weight: 800; color: var(--muted2); }
+    .footer-brand span { color: var(--accent); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 12px; color: var(--muted2); transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text); }
+
+    /* Reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .reveal.vis { opacity: 1; transform: none; }
+    .rd1 { transition-delay: 0.05s; } .rd2 { transition-delay: 0.12s; } .rd3 { transition-delay: 0.2s; }
+
+    @media (max-width: 600px) {
+      .email-block { flex-direction: column; align-items: flex-start; gap: 16px; padding: 28px 24px; }
+      .email-btn { width: 100%; justify-content: center; }
+      .faq-block { padding: 24px; }
+      .topics { padding: 24px; }
+      .topics-grid { grid-template-columns: 1fr; }
+      .response-strip { padding: 16px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-pill">
+    <a href="index.html" class="nav-logo">Study<span>Brain</span></a>
+    <a href="index.html" class="nav-back">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 4L6 8l4 4"/></svg>
+      Terug naar home
+    </a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="reveal">
+      <div class="page-tag">Contact</div>
+      <h1 class="page-title">Vraag? Probleem?<br><em>We helpen je graag.</em></h1>
+      <p class="page-sub">Stuur ons een mail en we reageren binnen 24 uur. Geen chatbots, geen wachtrijen — gewoon een echte reactie.</p>
+    </div>
+
+    <!-- Main card -->
+    <div class="contact-card reveal rd1">
+
+      <!-- Email -->
+      <div class="email-block">
+        <div class="email-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </div>
+        <div class="email-info">
+          <div class="email-label">Stuur een mail naar</div>
+          <div class="email-address">info@studybrain.nl</div>
+          <div class="email-note">We reageren binnen 24 uur</div>
+        </div>
+        <a href="mailto:info@studybrain.nl" class="email-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          Mail ons
+        </a>
+      </div>
+
+      <!-- Response strip -->
+      <div class="response-strip">
+        <div class="response-dot"></div>
+        <div class="response-text">Gemiddelde reactietijd: <strong>onder 24 uur</strong> op werkdagen</div>
+      </div>
+
+      <!-- Veelgestelde onderwerpen -->
+      <div class="topics">
+        <div class="topics-title">Waar kunnen we je mee helpen?</div>
+        <div class="topics-grid">
+          <div class="topic-item"><span class="topic-emoji"></span>Inlogproblemen of account</div>
+          <div class="topic-item"><span class="topic-emoji"></span>Betaling of abonnement</div>
+          <div class="topic-item"><span class="topic-emoji"></span>Analyse werkt niet goed</div>
+          <div class="topic-item"><span class="topic-emoji"></span>Vraag over Meneer Tim</div>
+          <div class="topic-item"><span class="topic-emoji"></span>Suggestie of feedback</div>
+          <div class="topic-item"><span class="topic-emoji"></span>Iets anders</div>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="faq-block">
+        <div class="faq-block-title">Veelgestelde vragen</div>
+        <div class="faq-item">
+          <div class="faq-q">Kan ik mijn abonnement opzeggen?</div>
+          <div class="faq-a">Ja, maandelijks opzegbaar. Stuur een mail naar <a href="mailto:info@studybrain.nl">info@studybrain.nl</a> en we regelen het direct.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Mijn analyse geeft een fout — wat nu?</div>
+          <div class="faq-a">Stuur je PDF mee in de mail en beschrijf wat er misgaat. We kijken er dezelfde dag naar.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Ik ben mijn wachtwoord vergeten.</div>
+          <div class="faq-a">Ga naar de <a href="login.html">inlogpagina</a> en klik op "Wachtwoord vergeten" — je krijgt dan een resetlink per mail.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="page-footer reveal rd2">
+      <div class="footer-brand">Study<span>Brain</span></div>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a>
+        <a href="voorwaarden.html">Voorwaarden</a>
+        <a href="index.html">Home</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const obs = new IntersectionObserver(e => {
+  e.forEach(x => { if (x.isIntersecting) x.target.classList.add('vis'); });
+}, { threshold: 0.05 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>
