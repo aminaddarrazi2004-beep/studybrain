@@ -46,16 +46,10 @@
     a{color:inherit;text-decoration:none;}
     .wrap{max-width:var(--max);margin:0 auto;padding:0 24px;}
     section{padding:96px 0;position:relative;z-index:1;}
-
-    /* Grid bg */
     body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,77,109,0.016) 1px,transparent 1px),linear-gradient(90deg,rgba(255,77,109,0.016) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
-
-    /* Orbs */
     .orb{position:fixed;border-radius:50%;filter:blur(110px);pointer-events:none;z-index:0;}
     .orb-1{width:700px;height:700px;background:radial-gradient(circle,rgba(255,77,109,0.07),transparent 65%);top:-250px;right:-100px;}
     .orb-2{width:500px;height:500px;background:radial-gradient(circle,rgba(77,100,255,0.05),transparent 65%);bottom:-150px;left:-150px;}
-
-    /* ── NAV ── */
     .nav{position:fixed;top:20px;left:0;right:0;z-index:1000;display:flex;justify-content:center;padding:0 20px;pointer-events:none;}
     .nav-pill{display:flex;align-items:center;background:rgba(5,5,15,0.82);backdrop-filter:blur(24px) saturate(1.5);border:1px solid rgba(255,255,255,0.08);border-radius:100px;padding:6px 6px 6px 24px;width:100%;max-width:940px;box-shadow:0 8px 40px rgba(0,0,0,0.45);transition:all 0.3s;pointer-events:all;gap:8px;}
     .nav-pill.scrolled{background:rgba(3,3,12,0.96);border-color:rgba(255,77,109,0.12);}
@@ -70,8 +64,6 @@
     .btn-primary{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:100px;background:var(--accent);color:white;font-size:13px;font-weight:700;transition:all 0.25s;font-family:var(--font);border:none;cursor:pointer;box-shadow:0 0 20px var(--accent-glow);white-space:nowrap;letter-spacing:0.01em;}
     .btn-primary:hover{transform:scale(1.04);box-shadow:0 0 32px var(--accent-glow);}
     .mob-btn{display:none;background:none;border:none;color:var(--text);cursor:pointer;padding:8px;}
-
-    /* Mobile drawer */
     .drawer{position:fixed;inset:0;z-index:2000;pointer-events:none;}
     .drawer-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.7);opacity:0;transition:opacity 0.3s;backdrop-filter:blur(4px);}
     .drawer-panel{position:absolute;top:0;right:0;bottom:0;width:280px;background:rgba(5,5,15,0.98);border-left:1px solid var(--border);display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);padding:24px 0;}
@@ -87,17 +79,12 @@
     .drawer-link:hover{background:rgba(255,255,255,0.04);color:var(--text);}
     .drawer-link.cta{background:var(--accent-dim);color:var(--accent);font-weight:700;border:1px solid rgba(255,77,109,0.2);margin-bottom:8px;}
     .drawer-sep{height:1px;background:var(--border);margin:8px 0;}
-
-    /* ── HERO ── */
     .hero{min-height:100vh;display:flex;align-items:center;padding-top:80px;position:relative;z-index:1;}
     .hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;width:100%;max-width:var(--max);margin:0 auto;padding:0 24px;}
-
-    /* Urgency badge */
     .urgency-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,214,0,0.08);border:1px solid rgba(255,214,0,0.2);border-radius:100px;padding:6px 14px 6px 8px;margin-bottom:20px;}
     .urgency-dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.8s ease-in-out infinite;}
     @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
     .urgency-text{font-size:12px;font-weight:700;color:var(--yellow);letter-spacing:0.04em;}
-
     .hero h1{font-size:clamp(36px,5vw,56px);font-weight:800;line-height:1.06;letter-spacing:-0.03em;margin-bottom:18px;}
     .hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),#ff8fa3);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
     .hero-sub{font-size:16px;color:var(--muted);line-height:1.75;margin-bottom:28px;max-width:420px;}
@@ -110,39 +97,6 @@
     .hero-proof span{display:flex;align-items:center;gap:6px;}
     .proof-dot{width:16px;height:16px;border-radius:50%;background:rgba(0,230,118,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
     .proof-dot svg{width:8px;height:8px;color:var(--green);}
-
-    /* ── RESULT PREVIEW (hero right) ── */
-    .result-preview{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.5);transform:rotateY(-2deg) rotateX(1deg);transition:transform 0.6s ease;}
-    .result-preview:hover{transform:rotateY(0) rotateX(0);}
-    .preview-chrome{display:flex;align-items:center;gap:6px;padding:10px 16px;background:rgba(255,255,255,0.015);border-bottom:1px solid var(--border);}
-    .chrome-dots{display:flex;gap:5px;}
-    .chrome-dots span{width:8px;height:8px;border-radius:50%;}
-    .chrome-dots span:nth-child(1){background:#ff5f57;}
-    .chrome-dots span:nth-child(2){background:#febc2e;}
-    .chrome-dots span:nth-child(3){background:#28c840;}
-    .chrome-url{flex:1;margin-left:12px;background:rgba(255,255,255,0.04);border-radius:5px;padding:4px 12px;font-size:10px;font-family:monospace;color:var(--muted2);text-align:center;}
-    .preview-body{padding:18px;}
-    .preview-tabs{display:flex;gap:0;margin-bottom:14px;border-bottom:1px solid var(--border);}
-    .preview-tab{padding:6px 12px;font-size:10px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;cursor:default;}
-    .preview-tab.active{color:var(--green);border-bottom-color:var(--green);}
-    .preview-item{padding:12px 14px;border-radius:8px;margin-bottom:6px;border-left:3px solid;}
-    .preview-item.must{border-color:var(--green);background:rgba(0,230,118,0.05);}
-    .preview-item.nice{border-color:var(--yellow);background:rgba(255,214,0,0.04);}
-    .preview-item.skip{border-color:var(--muted);background:rgba(107,107,138,0.04);}
-    .pi-tag{font-size:8px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:3px;}
-    .must .pi-tag{color:var(--green);}
-    .nice .pi-tag{color:var(--yellow);}
-    .skip .pi-tag{color:var(--muted);}
-    .pi-title{font-size:11px;font-weight:700;margin-bottom:2px;}
-    .pi-desc{font-size:10px;color:var(--muted);line-height:1.45;}
-    .pi-tip{font-size:9px;color:var(--green);margin-top:4px;font-style:italic;}
-    .preview-footer{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:8px;margin-top:8px;}
-    .pf-label{font-size:9px;color:var(--muted2);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;}
-    .pf-bar{flex:1;height:3px;background:rgba(255,255,255,0.06);border-radius:2px;margin:0 10px;overflow:hidden;}
-    .pf-fill{height:100%;width:82%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:2px;}
-    .pf-pct{font-size:10px;font-weight:700;color:var(--green);font-family:monospace;}
-
-    /* ── SOCIAL PROOF STRIP ── */
     .proof-strip{padding:28px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;z-index:1;}
     .proof-strip-inner{display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap;}
     .proof-item{display:flex;align-items:center;gap:10px;}
@@ -150,8 +104,6 @@
     .proof-num span{color:var(--accent);}
     .proof-desc{font-size:12px;color:var(--muted);line-height:1.4;}
     .proof-divider{width:1px;height:32px;background:var(--border);}
-
-    /* ── HOW IT WORKS ── */
     .how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px;}
     .how-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:32px 24px;position:relative;transition:border-color 0.3s,transform 0.3s;}
     .how-card:hover{border-color:var(--border-h);transform:translateY(-3px);}
@@ -163,8 +115,6 @@
     .how-card:nth-child(3) .how-icon{background:rgba(0,230,118,0.08);color:var(--green);}
     .how-card h3{font-size:15px;font-weight:700;margin-bottom:6px;}
     .how-card p{font-size:13px;color:var(--muted);line-height:1.65;}
-
-    /* ── RESULT SHOWCASE ── */
     .showcase{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px;margin-top:56px;display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;}
     .showcase-left h3{font-size:22px;font-weight:800;margin-bottom:12px;letter-spacing:-0.3px;}
     .showcase-left p{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:20px;}
@@ -190,8 +140,6 @@
     .sri-title{font-size:12px;font-weight:700;margin-bottom:3px;}
     .sri-body{font-size:11px;color:var(--muted);line-height:1.5;}
     .sri-tip{font-size:10px;color:var(--green);margin-top:5px;padding:4px 8px;background:rgba(0,230,118,0.06);border-radius:4px;display:inline-block;}
-
-    /* ── COMPARE ── */
     .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:56px;}
     .compare-card{border-radius:var(--r);padding:32px;border:1px solid var(--border);}
     .compare-card.without{background:rgba(255,77,109,0.03);border-color:rgba(255,77,109,0.15);}
@@ -206,20 +154,10 @@
     .compare-card.with .compare-mark{background:rgba(0,230,118,0.1);color:var(--green);}
     .compare-row strong{display:block;margin-bottom:1px;}
     .compare-row span{color:var(--muted);font-size:12px;}
-
-    /* ── TESTIMONIALS ── */
     .test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px;}
     .test-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:24px;transition:border-color 0.2s;}
     .test-card:hover{border-color:rgba(255,255,255,0.12);}
-    .test-stars{color:var(--yellow);font-size:13px;letter-spacing:2px;margin-bottom:12px;}
     .test-quote{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:18px;}
-    .test-author{display:flex;align-items:center;gap:10px;}
-    .test-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#5c7cfa);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;}
-    .test-name{font-size:13px;font-weight:700;}
-    .test-meta{font-size:11px;color:var(--muted2);}
-    .test-result{font-size:11px;color:var(--green);margin-top:2px;font-weight:600;}
-
-    /* ── PRICING ── */
     .pricing-intro{text-align:center;font-size:14px;color:var(--muted);margin-bottom:40px;padding:16px 24px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;max-width:480px;margin-left:auto;margin-right:auto;}
     .pricing-intro strong{color:var(--text);}
     .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start;}
@@ -244,8 +182,6 @@
     .p-btn-a{background:var(--accent);color:#fff;}
     .p-btn-a:hover{opacity:0.9;}
     .pricing-footer{text-align:center;margin-top:16px;font-size:12px;color:var(--muted2);}
-
-    /* ── FAQ ── */
     .faq-list{max-width:680px;margin:40px auto 0;}
     .faq-item{border-bottom:1px solid var(--border);}
     .faq-q{width:100%;background:none;border:none;color:var(--text);padding:18px 0;font-size:14px;font-weight:600;font-family:var(--font);cursor:pointer;text-align:left;display:flex;justify-content:space-between;align-items:center;gap:16px;transition:color 0.2s;}
@@ -255,13 +191,9 @@
     .faq-a{max-height:0;overflow:hidden;transition:max-height 0.35s ease;}
     .faq-item.open .faq-a{max-height:200px;}
     .faq-a p{padding-bottom:18px;font-size:13px;color:var(--muted);line-height:1.7;}
-
-    /* ── CTA BOTTOM ── */
     .cta-bottom{text-align:center;padding:96px 0;border-top:1px solid var(--border);}
     .cta-bottom h2{font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-0.03em;margin-bottom:14px;}
     .cta-bottom p{font-size:16px;color:var(--muted);max-width:480px;margin:0 auto 32px;line-height:1.7;}
-
-    /* ── FOOTER ── */
     footer{padding:32px 0;border-top:1px solid var(--border);position:relative;z-index:1;}
     .footer-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
     .footer-brand{font-size:14px;font-weight:800;color:var(--muted);}
@@ -270,8 +202,6 @@
     .footer-links a{font-size:12px;color:var(--muted2);transition:color 0.2s;}
     .footer-links a:hover{color:var(--text);}
     .footer-copy{font-size:11px;color:var(--muted2);}
-
-    /* ── COOKIE ── */
     .cookie{display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(10,10,22,0.96);border:1px solid var(--border);border-radius:16px;padding:16px 22px;max-width:520px;width:calc(100% - 40px);z-index:9998;backdrop-filter:blur(20px);box-shadow:0 8px 48px rgba(0,0,0,0.6);align-items:center;gap:16px;flex-wrap:wrap;}
     .cookie.show{display:flex;}
     .cookie-text{font-size:13px;color:var(--muted);flex:1;min-width:180px;line-height:1.6;}
@@ -279,20 +209,14 @@
     .cookie-btns{display:flex;gap:8px;flex-shrink:0;}
     .ck-ok{padding:9px 20px;background:var(--accent);border:none;border-radius:100px;color:white;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);}
     .ck-no{padding:9px 20px;background:none;border:1px solid var(--border);border-radius:100px;color:var(--muted);font-size:13px;cursor:pointer;font-family:var(--font);}
-
-    /* ── REVEAL ── */
     .reveal{opacity:0;transform:translateY(20px);transition:opacity 0.55s ease,transform 0.55s ease;}
     .reveal.vis{opacity:1;transform:none;}
     .rd1{transition-delay:0.08s;}.rd2{transition-delay:0.16s;}.rd3{transition-delay:0.24s;}
-
-    /* ── SECTION LABELS ── */
     .section-tag{font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;}
     .section-title{font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.15;letter-spacing:-0.025em;margin-bottom:14px;}
     .section-sub{font-size:15px;color:var(--muted);max-width:520px;line-height:1.75;}
     .centered{text-align:center;}
     .centered .section-sub{margin:0 auto;}
-
-    /* ── MENEER TIM ── */
     .tim-section{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
     .tim-features{display:flex;flex-direction:column;gap:14px;margin-bottom:28px;}
     .tim-feat{display:flex;align-items:flex-start;gap:12px;}
@@ -301,8 +225,6 @@
     .tim-feat span{font-size:13px;color:var(--muted);line-height:1.5;}
     .tim-cta{display:inline-flex;align-items:center;padding:13px 28px;border-radius:100px;background:linear-gradient(135deg,#5c7cfa,#818cf8);color:white;font-size:14px;font-weight:700;text-decoration:none;transition:all 0.25s;box-shadow:0 0 24px rgba(92,124,250,0.3);}
     .tim-cta:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(92,124,250,0.4);}
-
-    /* Chat preview */
     .tim-chat-preview{background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.4);}
     .tcp-header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);}
     .tcp-messages{padding:16px;display:flex;flex-direction:column;gap:12px;}
@@ -317,12 +239,9 @@
     .tcp-dots span:nth-child(2){animation-delay:0.2s;}
     .tcp-dots span:nth-child(3){animation-delay:0.4s;}
     @keyframes dot{0%,60%,100%{transform:translateY(0);opacity:0.4}30%{transform:translateY(-4px);opacity:1}}
-
-    /* ── RESPONSIVE ── */
     @media(max-width:900px){
       .hero-inner{grid-template-columns:1fr;gap:48px;text-align:center;}
       .hero-sub,.hero-actions,.hero-proof{margin-left:auto;margin-right:auto;justify-content:center;}
-      .result-preview{max-width:440px;margin:0 auto;transform:none!important;}
       .how-grid,.test-grid,.pricing-grid{grid-template-columns:1fr;max-width:440px;margin-left:auto;margin-right:auto;}
       .compare-grid{grid-template-columns:1fr;}
       .showcase{grid-template-columns:1fr;}
@@ -352,9 +271,9 @@
     <div class="nav-links">
       <a href="#hoe">Hoe het werkt</a>
       <a href="#prijzen">Prijzen</a>
-      <a href="meneer-tim.html" style="display:flex;align-items:center;gap:6px;color:var(--tim) !important;"><img src="tim-avatar.png" style="width:16px;height:16px;border-radius:50%;object-fit:cover;">Meneer Tim</a>
+      <a href="meneer-tim.html" style="display:flex;align-items:center;gap:6px;"><img src="tim-avatar.png" style="width:16px;height:16px;border-radius:50%;object-fit:cover;">Meneer Tim</a>
       <a href="#faq">FAQ</a>
-      <a href="mailto:info@studybrain.nl">Contact</a>
+      <a href="contact.html">Contact</a>
     </div>
     <div class="nav-actions">
       <a href="login.html" class="btn-ghost hide-mob">Inloggen</a>
@@ -379,7 +298,7 @@
       <a href="#hoe" class="drawer-link" onclick="document.getElementById('drawer').classList.remove('open')">Hoe het werkt</a>
       <a href="#prijzen" class="drawer-link" onclick="document.getElementById('drawer').classList.remove('open')">Prijzen</a>
       <a href="#faq" class="drawer-link" onclick="document.getElementById('drawer').classList.remove('open')">FAQ</a>
-      <a href="mailto:info@studybrain.nl" class="drawer-link">Contact</a>
+      <a href="contact.html" class="drawer-link">Contact</a>
       <div class="drawer-sep"></div>
       <a href="login.html" class="drawer-link" onclick="document.getElementById('drawer').classList.remove('open')">Inloggen</a>
     </div>
@@ -409,13 +328,12 @@
 
     <!-- OUTPUT PREVIEW -->
     <div style="perspective:1200px">
-      <div class="result-preview" style="background:#0d0d1a;border:0.5px solid rgba(255,255,255,0.1);border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.5);transform:rotateY(-2deg) rotateX(1deg);transition:transform 0.6s ease;" onmouseover="this.style.transform='rotateY(0) rotateX(0)'" onmouseout="this.style.transform='rotateY(-2deg) rotateX(1deg)'">
+      <div style="background:#0d0d1a;border:0.5px solid rgba(255,255,255,0.1);border-radius:16px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.5);transform:rotateY(-2deg) rotateX(1deg);transition:transform 0.6s ease;" onmouseover="this.style.transform='rotateY(0) rotateX(0)'" onmouseout="this.style.transform='rotateY(-2deg) rotateX(1deg)'">
         <div style="display:flex;align-items:center;padding:10px 16px;gap:8px;background:#080814;border-bottom:0.5px solid rgba(255,255,255,0.08);">
           <div style="display:flex;gap:5px;"><span style="width:10px;height:10px;border-radius:50%;background:#ff5f57;display:block;"></span><span style="width:10px;height:10px;border-radius:50%;background:#febc2e;display:block;"></span><span style="width:10px;height:10px;border-radius:50%;background:#28c840;display:block;"></span></div>
           <div style="flex:1;margin-left:6px;background:rgba(255,255,255,0.06);border-radius:5px;padding:4px 12px;font-size:11px;color:rgba(255,255,255,0.35);text-align:center;font-family:monospace;">studybrain.nl — jouw analyse</div>
         </div>
         <div style="padding:18px;">
-          <!-- Meta -->
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
             <div>
               <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.9);">Biologie H7 — Fotosynthese</div>
@@ -423,16 +341,14 @@
             </div>
             <div style="font-size:9px;font-weight:600;padding:3px 9px;border-radius:20px;background:rgba(0,230,118,0.12);color:#00e676;border:0.5px solid rgba(0,230,118,0.25);">Analyse klaar</div>
           </div>
-          <!-- Tabs -->
           <div style="display:flex;background:rgba(255,255,255,0.04);border-radius:7px;padding:3px;margin-bottom:12px;gap:2px;">
             <div style="flex:1;text-align:center;padding:6px 4px;font-size:10px;font-weight:600;color:rgba(255,255,255,0.9);background:rgba(255,255,255,0.1);border-radius:5px;">Must learn</div>
             <div style="flex:1;text-align:center;padding:6px 4px;font-size:10px;color:rgba(255,255,255,0.4);">Nice to know</div>
             <div style="flex:1;text-align:center;padding:6px 4px;font-size:10px;color:rgba(255,255,255,0.4);">Skip</div>
             <div style="flex:1;text-align:center;padding:6px 4px;font-size:10px;color:rgba(255,255,255,0.4);">Cheatsheet</div>
           </div>
-          <!-- Must -->
           <div style="border-radius:9px;padding:11px 13px;margin-bottom:7px;background:rgba(0,230,118,0.07);border:0.5px solid rgba(0,230,118,0.2);position:relative;overflow:hidden;">
-            <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#00e676;border-radius:0;"></div>
+            <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#00e676;"></div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
               <div style="font-size:8px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#00e676;">Must learn</div>
               <div style="font-size:8px;font-weight:600;padding:2px 7px;border-radius:20px;background:rgba(0,230,118,0.12);color:#00e676;">Zeker in de toets</div>
@@ -441,9 +357,8 @@
             <div style="font-size:10px;color:rgba(255,255,255,0.45);line-height:1.5;margin-bottom:7px;">6CO₂ + 6H₂O + licht → glucose + zuurstof. Lichtreacties in thylakoid (het groene zakje), Calvin-cyclus in het stroma.</div>
             <div style="display:flex;gap:5px;background:rgba(0,230,118,0.08);border-radius:5px;padding:5px 7px;font-size:9px;color:#00e676;line-height:1.45;"><span>→</span><span>"6 Coole Olifanten lopen door het Stroma"</span></div>
           </div>
-          <!-- Nice -->
           <div style="border-radius:9px;padding:11px 13px;margin-bottom:7px;background:rgba(255,214,0,0.07);border:0.5px solid rgba(255,214,0,0.2);position:relative;overflow:hidden;">
-            <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#ffd600;border-radius:0;"></div>
+            <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#ffd600;"></div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
               <div style="font-size:8px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ffd600;">Nice to know</div>
               <div style="font-size:8px;font-weight:600;padding:2px 7px;border-radius:20px;background:rgba(255,214,0,0.12);color:#ffd600;">Extra punten</div>
@@ -451,9 +366,8 @@
             <div style="font-size:12px;font-weight:500;color:rgba(255,255,255,0.92);margin-bottom:3px;">Hoe energie wordt doorgegeven</div>
             <div style="font-size:10px;color:rgba(255,255,255,0.45);line-height:1.5;">NAD⁺ (een energiekoerier in je cel) pakt waterstof op en brengt het naar de plek waar energie nodig is.</div>
           </div>
-          <!-- Skip -->
           <div style="border-radius:9px;padding:11px 13px;margin-bottom:12px;background:rgba(255,77,109,0.07);border:0.5px solid rgba(255,77,109,0.2);position:relative;overflow:hidden;">
-            <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#ff4d6d;border-radius:0;"></div>
+            <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#ff4d6d;"></div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
               <div style="font-size:8px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#ff4d6d;">Skip</div>
               <div style="font-size:8px;font-weight:600;padding:2px 7px;border-radius:20px;background:rgba(255,77,109,0.12);color:#ff4d6d;">Sla dit over</div>
@@ -461,9 +375,7 @@
             <div style="font-size:12px;font-weight:500;color:rgba(255,255,255,0.92);margin-bottom:3px;">Hoe pyruvaat eruitziet als tekening</div>
             <div style="font-size:10px;color:rgba(255,255,255,0.45);line-height:1.5;">Nooit gevraagd op toetsen. Weet alleen dat het bestaat.</div>
           </div>
-          <!-- Divider -->
           <div style="height:0.5px;background:rgba(255,255,255,0.07);margin-bottom:12px;"></div>
-          <!-- Studieplan mini -->
           <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,77,109,0.06);border:0.5px solid rgba(255,77,109,0.2);border-radius:9px;padding:12px 14px;">
             <div style="display:flex;align-items:center;gap:10px;">
               <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,77,109,0.12);border:0.5px solid rgba(255,77,109,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
@@ -476,7 +388,6 @@
             </div>
             <div style="display:flex;align-items:center;gap:5px;padding:8px 12px;background:#ff4d6d;border-radius:7px;font-size:11px;font-weight:600;color:white;white-space:nowrap;flex-shrink:0;">Download studieplan →</div>
           </div>
-          <!-- Footer -->
           <div style="display:flex;align-items:center;gap:10px;margin-top:12px;padding-top:12px;border-top:0.5px solid rgba(255,255,255,0.07);">
             <div style="font-size:9px;color:rgba(255,255,255,0.3);white-space:nowrap;letter-spacing:0.04em;text-transform:uppercase;">Toetsgereedheid</div>
             <div style="flex:1;height:3px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;"><div style="height:100%;width:82%;background:linear-gradient(90deg,#00e676,#4dffa0);border-radius:3px;"></div></div>
@@ -484,11 +395,7 @@
           </div>
         </div>
       </div>
-      <!-- Onderste label -->
-      <div style="text-align:center;margin-top:16px;">
-        <p style="font-size:13px;color:rgba(255,255,255,0.4);margin:0;">Dit is een voorbeeld — jouw analyse bevat ook een <strong style="color:rgba(255,255,255,0.7);">volledig persoonlijk studieplan</strong>, ezelsbruggetjes, cheatsheet en oefentoets.</p>
-        <a href="login.html#signup" style="display:inline-block;margin-top:12px;padding:10px 24px;background:rgba(255,77,109,0.1);border:1px solid rgba(255,77,109,0.25);border-radius:100px;font-size:13px;font-weight:600;color:#ff4d6d;text-decoration:none;">Probeer gratis — zie de volledige output →</a>
-      </div>
+      <!-- FIX 1: "Probeer gratis" knop VERWIJDERD -->
     </div>
   </div>
 </section>
@@ -592,6 +499,19 @@
         <div class="sri-title">Hoe pyruvaat eruitziet als tekening</div>
         <div class="sri-body">Nooit gevraagd op toetsen. Weet alleen dat het bestaat — de naam is genoeg.</div>
       </div>
+      <!-- FIX 2: Studieplan download blokje -->
+      <div style="margin-top:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,77,109,0.06);border:1px solid rgba(255,77,109,0.2);border-radius:10px;padding:12px 14px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:34px;height:34px;border-radius:8px;background:rgba(255,77,109,0.12);border:1px solid rgba(255,77,109,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff4d6d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.9);margin-bottom:2px;">Download volledige uitleg + studieplan</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.4);">Ezelsbruggetjes · herhalingsschema · oefentoets</div>
+          </div>
+        </div>
+        <a href="login.html#signup" style="display:flex;align-items:center;padding:8px 14px;background:#ff4d6d;border-radius:8px;font-size:11px;font-weight:700;color:white;white-space:nowrap;flex-shrink:0;text-decoration:none;">Download →</a>
+      </div>
     </div>
   </div>
 </div></section>
@@ -626,7 +546,7 @@
   </div>
 </div></section>
 
-<!-- TESTIMONIALS -->
+<!-- EARLY ACCESS -->
 <section><div class="wrap">
   <div class="centered">
     <div class="section-tag">Early access</div>
@@ -666,27 +586,9 @@
       <h2 class="section-title">Huiswerk niet begrepen?<br><em style="font-style:normal;background:linear-gradient(135deg,#5c7cfa,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Vraag het Meneer Tim.</em></h2>
       <p style="font-size:15px;color:var(--muted);line-height:1.75;margin-bottom:28px;">Snap je iets niet? Meneer Tim legt het uit in gewone taal — met voorbeelden, tekeningen en oefenvragen. Altijd beschikbaar, nooit ongeduldig.</p>
       <div class="tim-features">
-        <div class="tim-feat">
-          <div class="tim-feat-icon">💬</div>
-          <div>
-            <strong>Leg het simpel uit</strong>
-            <span>Geen schoolboekentaal. Gewoon zoals een vriend het zou uitleggen.</span>
-          </div>
-        </div>
-        <div class="tim-feat">
-          <div class="tim-feat-icon">📝</div>
-          <div>
-            <strong>Stuur je huiswerk mee</strong>
-            <span>Upload een PDF of foto en Tim kijkt het voor je na.</span>
-          </div>
-        </div>
-        <div class="tim-feat">
-          <div class="tim-feat-icon">🎯</div>
-          <div>
-            <strong>Oefenvragen op maat</strong>
-            <span>Na de uitleg test hij of je het echt snapt.</span>
-          </div>
-        </div>
+        <div class="tim-feat"><div class="tim-feat-icon">💬</div><div><strong>Leg het simpel uit</strong><span>Geen schoolboekentaal. Gewoon zoals een vriend het zou uitleggen.</span></div></div>
+        <div class="tim-feat"><div class="tim-feat-icon">📝</div><div><strong>Stuur je huiswerk mee</strong><span>Upload een PDF of foto en Tim kijkt het voor je na.</span></div></div>
+        <div class="tim-feat"><div class="tim-feat-icon">🎯</div><div><strong>Oefenvragen op maat</strong><span>Na de uitleg test hij of je het echt snapt.</span></div></div>
       </div>
       <a href="meneer-tim.html" class="tim-cta">Ontdek Meneer Tim →</a>
     </div>
@@ -700,63 +602,20 @@
           </div>
         </div>
         <div class="tcp-messages">
-
-          <!-- Leerling stuurt vraag -->
-          <div class="tcp-msg user">
-            <div class="tcp-bubble user-bubble">
-              Ik snap osmose echt niet voor mijn toets morgen
-            </div>
-          </div>
-
-          <!-- Tim vraagt eerst wat je weet — socratisch -->
-          <div class="tcp-msg tim">
-            <img src="tim-avatar.png" alt="Tim" style="width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;align-self:flex-end;">
-            <div class="tcp-bubble tim-bubble" style="font-size:12px;line-height:1.6;">
-              Geen stress! Eerst even dit: heb je ooit een rozijn in water gelegd?
-            </div>
-          </div>
-
-          <!-- Leerling antwoordt -->
-          <div class="tcp-msg user">
-            <div class="tcp-bubble user-bubble">
-              Ja die wordt dan groter toch?
-            </div>
-          </div>
-
-          <!-- Tim bouwt voort — simpele uitleg -->
-          <div class="tcp-msg tim">
-            <img src="tim-avatar.png" alt="Tim" style="width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;align-self:flex-end;">
-            <div class="tcp-bubble tim-bubble" style="font-size:12px;line-height:1.6;">
-              Ja! Precies! En dat is osmose. Water beweegt altijd van veel water naar weinig water. De rozijn is droog van binnen — dus water trekt er vanzelf in. Snap je het?
-            </div>
-          </div>
-
-          <!-- Leerling snapt het -->
-          <div class="tcp-msg user">
-            <div class="tcp-bubble user-bubble">
-              Oh wacht... dus water beweegt altijd naar waar het droger is?
-            </div>
-          </div>
-
-          <!-- Tim bevestigt + oefenvraag -->
-          <div class="tcp-msg tim">
-            <img src="tim-avatar.png" alt="Tim" style="width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;align-self:flex-end;">
-            <div class="tcp-bubble tim-bubble" style="font-size:12px;line-height:1.6;">
-              Yes! Je snapt het al! Oefenvraagje: wat gebeurt er met een cel als je hem in zout water legt?
-            </div>
-          </div>
-
-          <!-- Typing -->
-          <div class="tcp-typing">
-            <img src="tim-avatar.png" alt="Tim" style="width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;">
-            <div class="tcp-dots"><span></span><span></span><span></span></div>
-          </div>
-
+          <div class="tcp-msg user"><div class="tcp-bubble user-bubble">Ik snap osmose echt niet voor mijn toets morgen</div></div>
+          <div class="tcp-msg tim"><img src="tim-avatar.png" alt="Tim" style="width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;align-self:flex-end;"><div class="tcp-bubble tim-bubble" style="font-size:12px;line-height:1.6;">Geen stress! Eerst even dit: heb je ooit een rozijn in water gelegd?</div></div>
+          <div class="tcp-msg user"><div class="tcp-bubble user-bubble">Ja die wordt dan groter toch?</div></div>
+          <div class="tcp-msg tim"><img src="tim-avatar.png" alt="Tim" style="width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;align-self:flex-end;"><div class="tcp-bubble tim-bubble" style="font-size:12px;line-height:1.6;">Ja! Precies! En dat is osmose. Water beweegt altijd van veel water naar weinig water. De rozijn is droog van binnen — dus water trekt er vanzelf in. Snap je het?</div></div>
+          <div class="tcp-msg user"><div class="tcp-bubble user-bubble">Oh wacht... dus water beweegt altijd naar waar het droger is?</div></div>
+          <div class="tcp-msg tim"><img src="tim-avatar.png" alt="Tim" style="width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;align-self:flex-end;"><div class="tcp-bubble tim-bubble" style="font-size:12px;line-height:1.6;">Yes! Je snapt het al! Oefenvraagje: wat gebeurt er met een cel als je hem in zout water legt?</div></div>
+          <div class="tcp-typing"><img src="tim-avatar.png" alt="Tim" style="width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0;"><div class="tcp-dots"><span></span><span></span><span></span></div></div>
         </div>
       </div>
     </div>
   </div>
 </div></section>
+
+<!-- PRICING -->
 <section id="prijzen"><div class="wrap">
   <div class="centered">
     <div class="section-tag">Abonnementen</div>
@@ -827,7 +686,7 @@
     <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Werkt StudyBrain voor elk vak?<span class="faq-icon">+</span></button><div class="faq-a"><p>Ja. StudyBrain werkt voor alle vakken waarbij je een PDF hebt — van biologie en scheikunde tot economie, geschiedenis en recht.</p></div></div>
     <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Wat krijg ik met mijn gratis analyse?<span class="faq-icon">+</span></button><div class="faq-a"><p>Je eerste analyse is volledig gratis en toont de complete output — Must Learn met uitleg, Nice to Know, Skip, cheatsheet en oefentoets. Geen creditcard nodig.</p></div></div>
     <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Hoe groot mag mijn PDF zijn?<span class="faq-icon">+</span></button><div class="faq-a"><p>Je PDF mag maximaal 20MB zijn. We verwerken tot 15 pagina's per analyse voor de beste resultaten.</p></div></div>
-    <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Hoe nauwkeurig zijn de prioriteiten?<span class="faq-icon">+</span></button><div class="faq-a"><p>StudyBrain analyseert herhaling, vetgedrukte tekst, definities en structuur in jouw lesstof — exact hoe een leraar denkt bij het maken van een toets. Getest met echte lesstof door studenten op HAVO en VWO.</p></div></div>
+    <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Hoe nauwkeurig zijn de prioriteiten?<span class="faq-icon">+</span></button><div class="faq-a"><p>StudyBrain analyseert herhaling, vetgedrukte tekst, definities en structuur in jouw lesstof — exact hoe een leraar denkt bij het maken van een toets.</p></div></div>
     <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Kan ik mijn abonnement opzeggen?<span class="faq-icon">+</span></button><div class="faq-a"><p>Ja, maandelijks opzegbaar. Geen lange contracten of verborgen kosten.</p></div></div>
     <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Heb je een vraag of probleem?<span class="faq-icon">+</span></button><div class="faq-a"><p>Stuur een mail naar <a href="mailto:info@studybrain.nl" style="color:var(--accent);text-decoration:none;">info@studybrain.nl</a> — we reageren binnen 24 uur.</p></div></div>
     <div class="faq-item"><button class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is mijn lesstof privé?<span class="faq-icon">+</span></button><div class="faq-a"><p>Ja. Je PDFs worden alleen gebruikt voor jouw analyse en worden daarna niet opgeslagen of gedeeld.</p></div></div>
@@ -850,7 +709,7 @@
     <div class="footer-links">
       <a href="privacy.html">Privacy</a>
       <a href="voorwaarden.html">Voorwaarden</a>
-      <a href="mailto:info@studybrain.nl">Contact</a>
+      <a href="contact.html">Contact</a>
     </div>
     <div class="footer-copy">© 2026 StudyBrain</div>
   </div>
@@ -875,26 +734,16 @@ const obs = new IntersectionObserver(e => {
 }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-// Check sessie voor nav knoppen
 (async () => {
   const { createClient } = supabase;
   const sb = createClient(
     'https://wtfzqpaectqrbprmxjqp.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind0ZnpxcGFlY3RxcmJwcm14anFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1NzE4NDYsImV4cCI6MjA4ODE0Nzg0Nn0.LeJqnukvUpVJZyG_2pjwS0xnl24ATdV6Mi6qqZeVbJ4',
-    {
-      auth: {
-        persistSession: true,
-        storageKey: 'studybrain-auth',
-        storage: window.localStorage,
-        autoRefreshToken: true,
-        detectSessionInUrl: true,
-      }
-    }
+    { auth: { persistSession: true, storageKey: 'studybrain-auth', storage: window.localStorage, autoRefreshToken: true, detectSessionInUrl: true } }
   );
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
-    // Vervang inloggen knop door dashboard knop
-    const navActions = document.querySelector('.nav-actions, .sb-nav-actions');
+    const navActions = document.querySelector('.nav-actions');
     if (navActions) {
       navActions.innerHTML = `<a href="welcome.html" style="padding:9px 20px;border-radius:100px;background:var(--accent);color:white;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 0 16px rgba(255,77,109,0.3);">Naar dashboard →</a>`;
     }
