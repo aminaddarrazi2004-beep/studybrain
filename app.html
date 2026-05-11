@@ -409,11 +409,11 @@
 <div class="sb-upgrade-modal" id="upgradeModal">
   <div class="sb-upgrade-box">
     <h2>Upgrade je account</h2>
-    <p>Onbeperkt analyses, persoonlijk studieplan en volledige uitleg met ezelsbruggetjes.</p>
+    <p>Je gratis analyse is gebruikt. Kies een plan om door te gaan:</p>
     <div class="sb-upgrade-plans">
-      <a href="https://buy.stripe.com/bJe5kv1RudhP9b36SA8IU02" target="_blank" class="sb-upgrade-plan-btn starter">Starter — €12,99/mnd · 10 analyses</a>
-      <a href="https://buy.stripe.com/6oUdR1cw891zfzrfp68IU01" target="_blank" class="sb-upgrade-plan-btn pro">Pro — €14,99/mnd · Onbeperkt + studieplan</a>
-      <a href="https://buy.stripe.com/eVq6ozcw82Db1IBgta8IU00" target="_blank" class="sb-upgrade-plan-btn elite">Elite — €22,99/mnd · 4 vakken</a>
+      <a href="https://buy.stripe.com/bJe5kv1RudhP9b36SA8IU02" target="_blank" class="sb-upgrade-plan-btn starter">Starter — €12,99/mnd · 20 analyses/maand</a>
+      <a href="https://buy.stripe.com/6oUdR1cw891zfzrfp68IU01" target="_blank" class="sb-upgrade-plan-btn pro">Pro — €14,99/mnd · Onbeperkt + studieplan + ezelsbruggetjes + ezelsbruggetjes</a>
+      <a href="https://buy.stripe.com/eVq6ozcw82Db1IBgta8IU00" target="_blank" class="sb-upgrade-plan-btn elite">Elite — €22,99/mnd · Onbeperkt + Meneer Tim onbeperkt</a>
     </div>
     <button class="sb-upgrade-close" onclick="document.getElementById('upgradeModal').classList.remove('open')">Terug naar de app</button>
   </div>
@@ -447,149 +447,4 @@
         <button class="time-btn" data-time="2-3 uur">2–3 uur</button>
         <button class="time-btn active" data-time="een avond">Een avond</button>
       </div>
-    </div>
-
-    <button class="analyze-btn" id="analyzeBtn" onclick="analyze()">Analyseer mijn lesstof</button>
-    <div class="error-box" id="errorBox"></div>
-  </div>
-
-  <!-- Loading -->
-  <div class="loading" id="loadingState">
-    <div class="loading-header">
-      <h3>Analyse bezig</h3>
-      <p>Even geduld — StudyBrain analyseert je lesstof</p>
-    </div>
-    <div class="loading-steps">
-      <div class="loading-step" id="lstep0">
-        <div class="ls-icon">1</div>
-        <div class="ls-text"><strong>PDF verwerken</strong><span>Tekst extraheren uit je bestand</span></div>
-        <div class="ls-check">✓</div>
-      </div>
-      <div class="loading-step" id="lstep1">
-        <div class="ls-icon">2</div>
-        <div class="ls-text"><strong>Toetspatronen herkennen</strong><span>Analyseren wat docenten toetsen</span></div>
-        <div class="ls-check">✓</div>
-      </div>
-      <div class="loading-step" id="lstep2">
-        <div class="ls-icon">3</div>
-        <div class="ls-text"><strong>Prioriteiten bepalen</strong><span>Must Learn, Nice to Know en Skip</span></div>
-        <div class="ls-check">✓</div>
-      </div>
-      <div class="loading-step" id="lstep3">
-        <div class="ls-icon">4</div>
-        <div class="ls-text"><strong>Studieplan genereren</strong><span>Leerroute en ezelsbruggetjes</span></div>
-        <div class="ls-check">✓</div>
-      </div>
-    </div>
-    <div class="loading-bar-wrap"><div class="loading-bar-fill" id="loadingBarFill"></div></div>
-  </div>
-
-  <!-- Results -->
-  <div class="results" id="resultsSection">
-    <div class="results-header">
-      <h2 id="resultsTitle">Jouw analyse</h2>
-      <p id="resultsSubtitle">Gebaseerd op jouw lesstof en beschikbare tijd</p>
-    </div>
-
-    <div class="res-tabs">
-      <button class="res-tab active" onclick="switchTab('must', this)"><span class="tab-dot must-dot"></span> Must Learn</button>
-      <button class="res-tab" onclick="switchTab('should', this)"><span class="tab-dot should-dot"></span> Nice to Know</button>
-      <button class="res-tab" onclick="switchTab('skip', this)"><span class="tab-dot skip-dot"></span> Skip</button>
-      <button class="res-tab" onclick="switchTab('cheat', this)">Cheatsheet</button>
-    </div>
-
-    <div id="tab-must">
-      <div class="res-section-label">Dit staat sowieso in de toets. Begin hier.</div>
-      <div id="mustList"></div>
-    </div>
-    <div id="tab-should" style="display:none">
-      <div class="res-section-label">Geeft extra punten als je nog tijd hebt.</div>
-      <div id="shouldList"></div>
-    </div>
-    <div id="tab-skip" style="display:none">
-      <div class="res-section-label">Te gedetailleerd of nooit getoetst. Sla over.</div>
-      <div id="skipList"></div>
-    </div>
-    <div id="tab-cheat" style="display:none">
-      <div class="res-section-label">Alles in één oogopslag.</div>
-      <pre class="cheatsheet-content" id="cheatsheetContent"></pre>
-    </div>
-
-    <div id="studieplanContainer"></div>
-
-    <div id="toetsvragenSection" style="display:none">
-      <div class="res-block-title">Oefentoets</div>
-      <div id="toetsvragenList"></div>
-      <div id="toetsScore"></div>
-      <button class="submit-toets-btn" id="submitToets" style="display:none" onclick="submitToets()">Indienen & antwoorden bekijken</button>
-    </div>
-
-    <button class="reset-btn" onclick="reset()">← Nieuwe analyse starten</button>
-  </div>
-
-</div>
-</div>
-
-<script src="auth.js"></script>
-<script src="app.js"></script>
-<script>
-checkAccess();
-
-sb.auth.onAuthStateChange((event, session) => {
-  if (session) document.getElementById('sidebarEmail').textContent = session.user.email;
-});
-
-(async () => {
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) return;
-  document.getElementById('sidebarEmail').textContent = session.user.email;
-
-  const { data: profile } = await sb.from('profiles').select('plan').eq('id', session.user.id).single();
-  const plan = profile?.plan || 'gratis';
-  const planEl = document.getElementById('sidebarPlanName');
-  const badgeEl = document.getElementById('sidebarPlanBadge');
-  const labelEl = document.getElementById('sidebarPlanLabel');
-  const pillEl = document.getElementById('sidebarPlanPill');
-
-  if (plan === 'pro') {
-    planEl.textContent = 'Pro plan';
-    badgeEl.textContent = 'Pro';
-    labelEl.textContent = 'Onbeperkt analyses';
-    pillEl.style.cursor = 'default';
-  } else if (plan === 'elite') {
-    planEl.textContent = 'Elite plan';
-    badgeEl.textContent = 'Elite';
-    badgeEl.style.cssText += 'background:rgba(255,214,0,0.1);color:#ffd600;border-color:rgba(255,214,0,0.25)';
-    labelEl.textContent = 'Onbeperkt + 4 vakken';
-    pillEl.style.cursor = 'default';
-  } else if (plan === 'starter') {
-    planEl.textContent = 'Starter plan';
-    badgeEl.textContent = 'Starter';
-    labelEl.textContent = '10 analyses per maand';
-  }
-})();
-
-function switchTab(tab, el) {
-  document.querySelectorAll('.res-tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  ['must','should','skip','cheat'].forEach(t => {
-    const el = document.getElementById('tab-' + t);
-    if (el) el.style.display = t === tab ? 'block' : 'none';
-  });
-}
-
-function scrollToTop(el) {
-  document.querySelectorAll('.sb-sidebar-item').forEach(i => i.classList.remove('active'));
-  el.classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function showUpgradeModal() {
-  document.getElementById('upgradeModal').classList.add('open');
-}
-function hideUpgradeModal() {
-  document.getElementById('upgradeModal').classList.remove('open');
-}
-</script>
-</body>
-</html>
+    </div
