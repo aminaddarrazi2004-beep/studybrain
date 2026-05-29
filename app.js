@@ -281,6 +281,21 @@ async function analyze() {
     if (cur) cur.classList.add('active');
     const fill = document.getElementById('loadingBarFill');
     if (fill) fill.style.width = ((stepIdx + 1) * 25) + '%';
+
+    // Zodra stap 4 (studieplan) actief wordt → toon de voortgangsbalk eronder
+    if (stepIdx === 3) {
+      const spWrap = document.getElementById('studieplanLoadingWrap');
+      const spBar = document.getElementById('studieplanLoadingBar');
+      if (spWrap) spWrap.style.display = 'block';
+      if (spBar) {
+        let pct = 0;
+        window._spInterval = setInterval(() => {
+          pct = Math.min(pct + Math.random() * 3, 90);
+          spBar.style.width = pct + '%';
+        }, 500);
+      }
+    }
+
     stepIdx++;
   }
   advanceStep();
@@ -301,6 +316,9 @@ async function analyze() {
       const weekplan = await buildCombinedStudieplan(vakResultaten);
       clearInterval(stepTimer);
       await markAnalysisUsed();
+      const fillM = document.getElementById('loadingBarFill');
+      if (fillM) { fillM.style.transition = 'width 0.6s ease'; fillM.style.width = '100%'; }
+      await new Promise(r => setTimeout(r, 400));
       showMultiResults(vakResultaten, weekplan);
     } else {
       let text = await extractPdfText(files[0]);
@@ -308,9 +326,39 @@ async function analyze() {
       lastExtractedText = text;
       const result = await callAnalyzeAPI(text, files[0].name, vragenCount);
       clearInterval(stepTimer);
+      // Alle stappen als done markeren
+      for (let s = 0; s < 4; s++) {
+        const step = document.getElementById('lstep' + s);
+        if (step) { step.classList.remove('active'); step.classList.add('done'); }
+      }
+      // Hoofdbalk naar 100%
+      const mainBar = document.getElementById('loadingBarFill');
+      if (mainBar) { mainBar.style.transition = 'width 0.5s ease'; mainBar.style.width = '100%'; }
+
+      // Studieplan balk tonen en animeren
+      const spWrap = document.getElementById('studieplanLoadingWrap');
+      const spBar = document.getElementById('studieplanLoadingBar');
+      if (spWrap) spWrap.style.display = 'block';
+      if (spBar) {
+        let pct = 0;
+        const spInterval = setInterval(() => {
+          pct = Math.min(pct + Math.random() * 4, 92);
+          spBar.style.width = pct + '%';
+        }, 400);
+        // Sla interval op zodat we hem later kunnen stoppen
+        window._spInterval = spInterval;
+      }
+
       await markAnalysisUsed();
       const vakNaamClean = files[0].name.replace('.pdf', '').replace('.PDF', '');
       slaAnalyseOp(vakNaamClean, result);
+      // Studieplan balk naar 100% en afsluiten
+      if (window._spInterval) clearInterval(window._spInterval);
+      const spBarFin = document.getElementById('studieplanLoadingBar');
+      const spTxt = document.getElementById('studieplanLoadingText');
+      if (spBarFin) { spBarFin.style.width = '100%'; }
+      if (spTxt) spTxt.textContent = 'Klaar! Jouw analyse staat klaar.';
+      await new Promise(r => setTimeout(r, 500));
       showResults(result, vakNaamClean);
     }
   } catch (err) {
