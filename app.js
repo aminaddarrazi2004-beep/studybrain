@@ -108,6 +108,17 @@ async function getAuthToken() {
   return session?.access_token || null;
 }
 
+// ── Tijdinstructies per optie ──
+function getTijdInstructies(tijd) {
+  const instructies = {
+    '1 uur': '- Must: MAX 3 onderwerpen — alleen het allerbelangrijkste dat zeker gevraagd wordt\n- Should: MAX 1\n- Skip: alles wat niet de absolute kern is',
+    '2-3 uur': '- Must: 4-5 onderwerpen\n- Should: 2-3\n- Skip: details en voetnoten',
+    'een avond': '- Must: 5-6 onderwerpen\n- Should: 3-4\n- Skip: randgevallen en details die nooit gevraagd worden',
+    'een weekend': '- Must: 7-8 onderwerpen — alles wat fundamenteel is\n- Should: 4-5\n- Skip: alleen minieme details en uitzonderingen op uitzonderingen',
+  };
+  return instructies[tijd] || instructies['een avond'];
+}
+
 async function callAnalyzeAPI(text, vakNaam, vragenCount) {
   const token = await getAuthToken();
   if (!token) throw new Error('Niet ingelogd');
@@ -142,14 +153,13 @@ STAP 1 — Begrijp eerst de structuur van de stof:
 Lees de volledige tekst en stel jezelf de vraag: "Wat zijn de 3-5 concepten waar ALLES om draait in dit onderwerp?" Die zijn altijd must — ongeacht hoeveel tekst erover staat.
 
 STAP 2 — Must learn = conceptueel fundamenteel:
-Een onderwerp is must als een leerling ZONDER dit concept de rest niet kan begrijpen of de toets niet kan maken. Denk: formules, processen, vergelijkingen, definities die terugkomen in andere onderdelen.
-- Vergelijkingen met getallen (bijv. 38 ATP vs 2 ATP) → ALTIJD must
+Een onderwerp is must als een leerling ZONDER dit concept de rest niet kan begrijpen of de toets niet kan maken.
+- Vergelijkingen met getallen → ALTIJD must
 - Formules en reactievergelijkingen → ALTIJD must
 - Concepten die andere concepten verklaren → ALTIJD must
-- Iets dat kort behandeld wordt maar conceptueel cruciaal is → nog steeds must
 
 STAP 3 — Skip = details, niet concepten:
-Iets is alleen skip als het een detail IS, niet als het kort beschreven wordt. Namen van onderzoekers, jaartallen, uitzonderingen op uitzonderingen → skip. Maar een kort beschreven kernbegrip dat fundamenteel is voor het vak → nooit skip.
+Iets is alleen skip als het een detail IS. Namen van onderzoekers, jaartallen, uitzonderingen op uitzonderingen → skip.
 
 - reason moet ALTIJD zeggen wat voor vraag het is: "Dit wordt gevraagd als invulvraag", "Dit komt als vergelijkingsvraag"
 - VERBODEN in reason: "essentieel", "kritisch", "belangrijk", "komt vaak terug"
@@ -158,40 +168,11 @@ Geef ALLEEN JSON terug. Geen tekst ervoor of erna.
 
 JSON formaat:
 {
-  "must": [
-    {
-      "topic": "Korte simpele titel die een 16-jarige begrijpt",
-      "summary": "4-5 zinnen in gewone taal. Gebruik getallen en formules uit de tekst. Geef een voorbeeld uit het dagelijks leven. Geen moeilijke woorden.",
-      "reason": "Dit wordt gevraagd als [type vraag] — [concrete reden in 1 zin].",
-      "tip": "2-3 grappige ezelsbruggetjes die blijven hangen. Hoe raarder, hoe beter."
-    }
-  ],
-  "should": [
-    {
-      "topic": "Korte simpele titel",
-      "summary": "2-3 zinnen in gewone taal.",
-      "reason": "Handig om te weten maar niet het belangrijkste.",
-      "tip": "1 ezelsbruggetje."
-    }
-  ],
-  "skip": [
-    {
-      "topic": "Wat je kunt overslaan",
-      "reason": "1 zin waarom je dit kunt skippen. Direct en eerlijk."
-    }
-  ],
+  "must": [{"topic": "Korte simpele titel","summary": "4-5 zinnen in gewone taal.","reason": "Dit wordt gevraagd als [type vraag].","tip": "2-3 grappige ezelsbruggetjes."}],
+  "should": [{"topic": "Korte simpele titel","summary": "2-3 zinnen in gewone taal.","reason": "Handig om te weten maar niet het belangrijkste.","tip": "1 ezelsbruggetje."}],
+  "skip": [{"topic": "Wat je kunt overslaan","reason": "1 zin waarom je dit kunt skippen."}],
   "cheatsheet": "Spiekbriefje in gewone taal. Gebruik → en ! symbolen. Groepeer per thema. Max 400 woorden. Alleen de kern.",
-  "toetsvragen": [
-    {
-      "vraag": "Vraag in gewone taal zoals een leraar het zou stellen",
-      "a": "...",
-      "b": "...",
-      "c": "...",
-      "d": "...",
-      "antwoord": "A",
-      "uitleg": "Leg in 1-2 simpele zinnen uit waarom dit het goede antwoord is."
-    }
-  ]
+  "toetsvragen": [{"vraag": "Vraag zoals een leraar het zou stellen","a": "...","b": "...","c": "...","d": "...","antwoord": "A","uitleg": "Leg in 1-2 simpele zinnen uit waarom dit het goede antwoord is."}]
 }`
         },
         {
@@ -199,12 +180,7 @@ JSON formaat:
           content: `Analyseer deze leerstof (${vakNaam}) voor een leerling met ${selectedTime} beschikbaar.
 
 HOEVEEL ONDERWERPEN:
-${selectedTime === '30 minuten' ? '- Must: MAX 2 onderwerpen — alleen het allerbelangrijkste\n- Should: MAX 1\n- Skip: alles wat niet must is' : ''}
-${selectedTime === '1 uur' ? '- Must: MAX 3 onderwerpen\n- Should: MAX 2\n- Skip: alles wat niet echt getoetst wordt' : ''}
-${selectedTime === '2-3 uur' ? '- Must: 4-5 onderwerpen\n- Should: 2-3\n- Skip: details en voetnoten' : ''}
-${selectedTime === 'een avond' ? '- Must: 5-6 onderwerpen\n- Should: 3-4\n- Skip: randgevallen en details die nooit gevraagd worden' : ''}
-${'1-2 dagen' === selectedTime ? '- Must: 6-7 onderwerpen\n- Should: 4-5\n- Skip: alles wat echt niet gevraagd wordt' : ''}
-${'een week' === selectedTime ? '- Must: 8 onderwerpen\n- Should: 5-6\n- Skip: minieme details' : ''}
+${getTijdInstructies(selectedTime)}
 
 TOETSVRAGEN: Maak precies ${vragenCount} meerkeuzevragen. Maak ze zoals een echte leraar ze zou stellen.
 
@@ -362,8 +338,6 @@ function showResults(data, vakNaam) {
   document.getElementById('resultsSection').style.display = 'block';
   document.getElementById('resultsSubtitle').textContent = `${vakNaam} · ${selectedTime}`;
 
-  const hasAccess = (userPlan === 'pro' || userPlan === 'elite' || userPlan === 'starter' || userPlan === 'gratis');
-
   document.getElementById('mustList').innerHTML = (data.must || []).map(item => `
     <div class="res-item must">
       <div class="res-item-header">
@@ -402,7 +376,6 @@ function showResults(data, vakNaam) {
 
   renderToetsvragen(data.toetsvragen || []);
 
-  // Pro/Elite: genereer studieplan
   if (userPlan === 'pro' || userPlan === 'elite') {
     const existing = document.getElementById('studieplanContainer');
     if (existing) existing.remove();
@@ -446,7 +419,6 @@ function showResults(data, vakNaam) {
       .catch(err => {
         clearTimeout(studieplanTimeout);
         clearInterval(spTimer);
-        console.error('Studieplan error:', err);
         renderStudieplanError('studieplanContainer', 'Er ging iets mis bij het genereren van je studieplan.');
       });
   }
@@ -481,12 +453,10 @@ async function retryStudieplan() {
     if (sp) renderStudieplan(sp, 'studieplanContainer');
     else renderStudieplanError('studieplanContainer', 'Studieplan kon niet worden gegenereerd.');
   } catch (err) {
-    console.error('Retry studieplan error:', err);
     renderStudieplanError('studieplanContainer', 'Er ging iets mis. Probeer later opnieuw.');
   }
 }
 
-// ── STUDIEPLAN BUILDER ──
 async function buildStudieplan(result, vakNaam, rawText = '') {
   const cfg = getTijdConfig(selectedTime);
   const mustTopics = (result.must || []).map(m => `- ${m.topic}: ${m.summary || ''}`).join('\n');
@@ -503,49 +473,18 @@ async function buildStudieplan(result, vakNaam, rawText = '') {
           role: 'system',
           content: `Je schrijft een studieplan voor een leerling van 15-17 jaar. Schrijf alsof je een vriend bent die de stof al kent en het uitlegt.
 
-TAALREGEL — ABSOLUTE PRIORITEIT BOVEN ALLES:
-Schrijf op taalniveau B1. Gewone taal die iedereen begrijpt.
+TAALREGEL: Schrijf op taalniveau B1. Gewone taal. Korte zinnen. Max 15 woorden per zin.
+GOUDEN REGEL: Na elk moeilijk woord schrijf je ALTIJD tussen haakjes wat het betekent.
 
-GOUDEN REGEL: Na elk vaktechnisch of moeilijk woord schrijf je ALTIJD tussen haakjes wat het betekent.
-Voorbeelden: "ATP (de energiebrandstof van je cel)", "enzymen (eiwitten die processen versnellen)".
-
-Stel je voor: je legt het uit aan je beste vriend die dit vak nooit heeft gevolgd.
-Test jezelf: als een 14-jarige het niet begrijpt, schrijf je het opnieuw.
-Korte zinnen. Max 15 woorden per zin. Schrijf "je", niet "u" of "men".
-
-INHOUD REGELS:
-- JIJ legt de stof uit. Geen "lees dit" of "bestudeer dat".
-- Elke uitleg is minimaal 5 zinnen met echte feiten en getallen uit de lesstof.
-- Elk onderwerp eindigt met een voorbeeld: "Denk aan..."
-- Ezelsbruggetje: hoe gekker en raarder, hoe beter het blijft hangen.
-- Valkuil: de meest gemaakte fout op toetsen, heel concreet.
-
-Geef ALLEEN JSON terug. Geen tekst ervoor of erna.
+Geef ALLEEN JSON terug.
 
 JSON formaat:
 {
-  "samenvatting": "2-3 zinnen in gewone taal: waar gaat dit vak over en waarom hangt het samen?",
-  "leerroute": [
-    {
-      "stap": 1,
-      "onderwerp": "Simpele naam die een leerling begrijpt",
-      "uitleg": "Minimaal 5 zinnen. Echte feiten, getallen, formules. Gewone taal. Eindig met: Denk aan [herkenbaar voorbeeld uit het dagelijks leven].",
-      "onthoud": "De exacte definitie of regel die op de toets gevraagd wordt. Max 2 zinnen.",
-      "ezelsbruggetje": "Grappig, raar en memorabel. Leg uit hoe je het gebruikt.",
-      "valkuil": "De meest gemaakte fout op toetsen + hoe je hem vermijdt. Heel concreet.",
-      "tijd": "15 min"
-    }
-  ],
-  "herhalingsschema": [
-    {"moment": "Direct na het leren", "actie": "Sluit alles. Schrijf uit je hoofd de 3 belangrijkste dingen op. Check daarna."},
-    {"moment": "Na 1 uur", "actie": "Zeg per onderwerp het ezelsbruggetje op. Wat weet je nog?"},
-    {"moment": "Voor het slapen", "actie": "Lees alleen de 'Onthoud' blokken door. Niks meer."},
-    {"moment": "Dag van de toets", "actie": "Lees het spiekbriefje 1x door. Schrijf daarna uit je hoofd op wat je weet."}
-  ],
-  "focuspunten": [
-    "Onderwerp — soort vraag — Voorbeeld zoals de leraar het vraagt"
-  ],
-  "geheimtip": "Een concrete tip van iemand die weet hoe leraren nakijken: wat levert direct punten op, wat wil de leraar zien."
+  "samenvatting": "2-3 zinnen in gewone taal.",
+  "leerroute": [{"stap": 1,"onderwerp": "Naam","uitleg": "Minimaal 5 zinnen. Eindig met: Denk aan [voorbeeld].","onthoud": "De exacte definitie. Max 2 zinnen.","ezelsbruggetje": "Grappig en memorabel.","valkuil": "Meest gemaakte fout op toetsen.","tijd": "15 min"}],
+  "herhalingsschema": [{"moment": "Direct na het leren","actie": "Schrijf uit je hoofd de 3 belangrijkste dingen op."}],
+  "focuspunten": ["Onderwerp — soort vraag — Voorbeeld zoals de leraar het vraagt"],
+  "geheimtip": "Concrete tip over hoe leraren nakijken."
 }`
         },
         {
@@ -561,98 +500,29 @@ ${mustTopics}
 Dit is handig maar minder belangrijk:
 ${shouldTopics}
 
-Originele lesstof (gebruik alleen feiten hieruit, verzin niets):
+Originele lesstof:
 ${rawText ? rawText.slice(0, 8000) : 'Niet beschikbaar'}`
         }
       ]
     })
   });
 
-  if (!res.ok) { console.error('Studieplan API error:', res.status); return null; }
-
+  if (!res.ok) { return null; }
   const data = await res.json();
   const raw = data.choices?.[0]?.message?.content || '';
   const cleaned = raw.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
   const match = cleaned.match(/\{[\s\S]*\}/);
-  if (!match) { console.error('Studieplan JSON parse failed:', raw.slice(0, 500)); return null; }
-
+  if (!match) { return null; }
   try { return JSON.parse(match[0]); }
-  catch (err) { console.error('Studieplan JSON parse error:', err); return null; }
-}
-
-function renderStudieplan(studieplan, containerId) {
-  const el = document.getElementById(containerId);
-  if (!studieplan || !el) return;
-
-  el.innerHTML = `
-    <div class="sp-doc">
-      <div class="sp-doc-header">
-        <div class="sp-doc-label">Persoonlijk studieplan</div>
-        <button class="sp-doc-download" onclick="downloadStudieplanPDF()">Opslaan als PDF</button>
-      </div>
-
-      ${studieplan.samenvatting ? `<div class="sp-intro"><p>${studieplan.samenvatting}</p></div>` : ''}
-
-      ${studieplan.focuspunten?.length ? `
-      <div class="sp-block">
-        <div class="sp-block-title">Dit komt in de toets</div>
-        <div class="sp-focus-list">
-          ${studieplan.focuspunten.map((f, i) => `
-            <div class="sp-focus-row">
-              <span class="sp-focus-n">${i + 1}</span>
-              <span>${f}</span>
-            </div>`).join('')}
-        </div>
-      </div>` : ''}
-
-      <div class="sp-block">
-        <div class="sp-block-title">Leer de stof — stap voor stap</div>
-        <div class="sp-steps">
-          ${(studieplan.leerroute || []).map(s => `
-            <div class="sp-step">
-              <div class="sp-step-header">
-                <span class="sp-step-num">Stap ${s.stap}</span>
-                <span class="sp-step-name">${s.onderwerp}</span>
-                <span class="sp-step-time">${s.tijd || ''}</span>
-              </div>
-              <div class="sp-step-body">
-                <p class="sp-step-uitleg">${s.uitleg || ''}</p>
-                ${s.onthoud ? `<div class="sp-onthoud"><span class="sp-onthoud-label">Onthoud dit</span>${s.onthoud}</div>` : ''}
-                ${s.ezelsbruggetje ? `<div class="sp-ezel"><span class="sp-ezel-label">Ezelsbruggetje</span>${s.ezelsbruggetje}</div>` : ''}
-                ${s.valkuil ? `<div class="sp-valkuil"><span class="sp-valkuil-label">Let op</span>${s.valkuil}</div>` : ''}
-              </div>
-            </div>`).join('')}
-        </div>
-      </div>
-
-      <div class="sp-block">
-        <div class="sp-block-title">Herhalingsschema</div>
-        <div class="sp-herhaling-list">
-          ${(studieplan.herhalingsschema || []).map(h => `
-            <div class="sp-herhaling-row">
-              <div class="sp-herhaling-moment">${h.moment}</div>
-              <div class="sp-herhaling-actie">${h.actie}</div>
-            </div>`).join('')}
-        </div>
-        <div class="sp-herhaling-uitleg">Herhalen op de juiste momenten zorgt dat je het echt onthoudt — niet alleen vanavond.</div>
-      </div>
-
-      ${studieplan.geheimtip ? `
-      <div class="sp-tip">
-        <div class="sp-tip-label">Tip van een leraar</div>
-        <p>${studieplan.geheimtip}</p>
-      </div>` : ''}
-    </div>`;
+  catch (err) { return null; }
 }
 
 function getTijdConfig(tijd) {
   const configs = {
-    '30 minuten': { planStappen: 2, herhalingsSchema: ['Direct nu', '10 min voor de toets'] },
-    '1 uur': { planStappen: 3, herhalingsSchema: ['Direct na het lezen', 'Over 30 min', '10 min voor de toets'] },
-    '2-3 uur': { planStappen: 5, herhalingsSchema: ['Direct na het lezen', 'Na 1 uur pauze', '1 uur voor de toets'] },
-    'een avond': { planStappen: 6, herhalingsSchema: ['Direct na het lezen', 'Na een korte pauze', 'Voor het slapen', 'Ochtend van de toets'] },
-    '1-2 dagen': { planStappen: 8, herhalingsSchema: ['Dag 1 avond', 'Dag 2 ochtend', 'Dag 2 middag', '1 uur voor de toets'] },
-    'een week': { planStappen: 10, herhalingsSchema: ['Dag 1', 'Dag 3', 'Dag 5', 'Dag 7 ochtend'] }
+    '1 uur':      { planStappen: 3, herhalingsSchema: ['Direct na het lezen', 'Na 30 min', '10 min voor de toets'] },
+    '2-3 uur':    { planStappen: 5, herhalingsSchema: ['Direct na het lezen', 'Na 1 uur pauze', '1 uur voor de toets'] },
+    'een avond':  { planStappen: 6, herhalingsSchema: ['Direct na het lezen', 'Na een korte pauze', 'Voor het slapen', 'Ochtend van de toets'] },
+    'een weekend':{ planStappen: 9, herhalingsSchema: ['Dag 1 avond', 'Dag 2 ochtend', 'Dag 2 middag', 'Ochtend van de toets'] },
   };
   return configs[tijd] || configs['een avond'];
 }
@@ -660,8 +530,7 @@ function getTijdConfig(tijd) {
 function downloadStudieplanPDF() {
   const el = document.querySelector('.sp-doc');
   if (!el) return;
-  const htmlContent = `<!DOCTYPE html>
-<html><head><meta charset="UTF-8"><title>Studieplan — StudyBrain</title>
+  const htmlContent = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Studieplan — StudyBrain</title>
 <style>
   @media print { .sp-doc-download { display: none !important; } body { margin: 0; } }
   body { font-family: Arial, sans-serif; max-width: 680px; margin: 0 auto; padding: 32px; color: #1a1a2e; font-size: 14px; line-height: 1.6; }
@@ -671,27 +540,23 @@ function downloadStudieplanPDF() {
   .sp-intro { background: #f8f8ff; border-left: 3px solid #ff4d6d; padding: 12px 16px; margin-bottom: 24px; border-radius: 0 8px 8px 0; }
   .sp-block { margin-bottom: 28px; }
   .sp-block-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #888; margin-bottom: 14px; padding-bottom: 6px; border-bottom: 1px solid #eee; }
-  .sp-focus-row { display: flex; gap: 10px; margin-bottom: 6px; align-items: flex-start; }
+  .sp-focus-row { display: flex; gap: 10px; margin-bottom: 6px; }
   .sp-focus-n { background: #ff4d6d; color: white; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
-  .sp-step { margin-bottom: 20px; page-break-inside: avoid; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
+  .sp-step { margin-bottom: 20px; border: 1px solid #eee; border-radius: 8px; overflow: hidden; }
   .sp-step-header { display: flex; align-items: center; gap: 10px; background: #fafafa; padding: 10px 14px; border-bottom: 1px solid #eee; }
   .sp-step-num { font-size: 10px; font-weight: 700; color: #ff4d6d; text-transform: uppercase; }
   .sp-step-name { font-weight: 700; font-size: 14px; flex: 1; }
   .sp-step-time { font-size: 11px; color: #888; background: #f0f0f0; padding: 2px 8px; border-radius: 20px; }
   .sp-step-body { padding: 14px; }
-  .sp-step-uitleg { margin-bottom: 10px; color: #333; }
   .sp-onthoud { background: #fffde7; border-left: 3px solid #ffc107; padding: 8px 12px; margin: 8px 0; border-radius: 0 6px 6px 0; font-size: 13px; }
-  .sp-onthoud-label, .sp-ezel-label, .sp-valkuil-label { font-size: 10px; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 3px; }
-  .sp-onthoud-label { color: #f59e0b; }
+  .sp-onthoud-label { font-size: 10px; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 3px; color: #f59e0b; }
   .sp-ezel { background: #f0fff4; border-left: 3px solid #00c853; padding: 8px 12px; margin: 8px 0; border-radius: 0 6px 6px 0; font-size: 13px; }
-  .sp-ezel-label { color: #00c853; }
+  .sp-ezel-label { font-size: 10px; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 3px; color: #00c853; }
   .sp-valkuil { background: #fff3e0; border-left: 3px solid #ff9800; padding: 8px 12px; margin: 8px 0; border-radius: 0 6px 6px 0; font-size: 13px; }
-  .sp-valkuil-label { color: #ff9800; }
+  .sp-valkuil-label { font-size: 10px; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 3px; color: #ff9800; }
   .sp-herhaling-row { display: grid; grid-template-columns: 160px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
   .sp-herhaling-moment { font-weight: 700; font-size: 13px; color: #ff4d6d; }
-  .sp-herhaling-actie { font-size: 13px; color: #333; }
-  .sp-herhaling-uitleg { font-size: 12px; color: #888; margin-top: 10px; font-style: italic; }
-  .sp-tip { background: #fffde7; border: 1px solid #ffc107; border-radius: 8px; padding: 14px 16px; font-size: 13px; color: #333; }
+  .sp-tip { background: #fffde7; border: 1px solid #ffc107; border-radius: 8px; padding: 14px 16px; font-size: 13px; }
   .sp-tip-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #f59e0b; margin-bottom: 6px; }
   .footer { margin-top: 32px; text-align: center; font-size: 11px; color: #aaa; border-top: 1px solid #eee; padding-top: 12px; }
 </style></head><body>
@@ -704,7 +569,6 @@ function downloadStudieplanPDF() {
   newWin.document.close();
 }
 
-// ── Multi-vak ──
 function showMultiResults(vakResultaten, weekplan) {
   document.getElementById('loadingState').style.display = 'none';
   document.getElementById('resultsSection').style.display = 'block';
@@ -751,7 +615,6 @@ function showMultiResults(vakResultaten, weekplan) {
   renderToetsvragen(alleVragen);
 }
 
-// ── Oefentoets ──
 let toetsvragenData = [];
 let gebruikersAntwoorden = {};
 
