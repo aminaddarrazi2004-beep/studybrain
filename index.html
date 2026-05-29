@@ -639,7 +639,7 @@
         <li class="off"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg></span>Volledige uitleg + ezelsbruggetjes</li>
         <li class="off"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l8 8M11 3l-8 8"/></svg></span>Persoonlijk studieplan</li>
       </ul>
-      <div class="p-btn"><a href="https://buy.stripe.com/bJe5kv1RudhP9b36SA8IU02" class="p-btn-s">Begin met Starter</a></div>
+      <div class="p-btn"><button onclick="startCheckout('starter')" class="p-btn-s" style="width:100%;cursor:pointer;">Begin met Starter</button></div>
     </div>
     <div class="price-card pop reveal rd2">
       <div class="price-tag">Meest gekozen</div>
@@ -655,7 +655,7 @@
         <li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Meerdere vakken combineren</li>
         <li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Meneer Tim — 60 vragen per dag</li>
       </ul>
-      <div class="p-btn"><a href="https://buy.stripe.com/6oUdR1cw891zfzrfp68IU01" class="p-btn-a">Begin met Pro</a></div>
+      <div class="p-btn"><button onclick="startCheckout('pro')" class="p-btn-a" style="width:100%;cursor:pointer;">Begin met Pro</button></div>
     </div>
     <div class="price-card reveal rd3">
       <div class="price-name">Elite</div>
@@ -670,7 +670,7 @@
         <li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Meneer Tim — <strong>onbeperkt</strong></li>
         <li class="on"><span class="li-i"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7l4 4 6-6"/></svg></span>Prioriteit support</li>
       </ul>
-      <div class="p-btn"><a href="https://buy.stripe.com/eVq6ozcw82Db1IBgta8IU00" class="p-btn-s">Begin met Elite</a></div>
+      <div class="p-btn"><button onclick="startCheckout('elite')" class="p-btn-s" style="width:100%;cursor:pointer;">Begin met Elite</button></div>
     </div>
   </div>
   <p class="pricing-footer">Veilig betalen met iDEAL · Maandelijks opzegbaar · Geen verborgen kosten</p>
@@ -753,6 +753,45 @@ document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
     });
   }
 })();
+
+async function startCheckout(plan) {
+  // Check of ingelogd
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) {
+    // Niet ingelogd -> naar login, daarna terug naar prijzen
+    window.location.href = 'login.html?redirect=prijzen&plan=' + plan;
+    return;
+  }
+
+  // Ingelogd -> stripe-checkout Worker aanroepen
+  try {
+    const btn = event.target;
+    btn.textContent = 'Laden...';
+    btn.disabled = true;
+
+    const res = await fetch('https://stripe-checkout.aminaddarrazi2004.workers.dev', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + session.access_token
+      },
+      body: JSON.stringify({ plan })
+    });
+
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      btn.textContent = 'Probeer opnieuw';
+      btn.disabled = false;
+      alert('Er ging iets mis. Probeer het opnieuw.');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Er ging iets mis. Probeer het opnieuw.');
+  }
+}
+
 </script>
 </body>
 </html>
