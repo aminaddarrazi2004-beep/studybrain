@@ -320,6 +320,13 @@ function showResults(data, vakNaam) {
   document.getElementById('cheatsheetContent').textContent = data.cheatsheet || '';
   renderToetsvragen(data.toetsvragen || []);
 
+  // Herlaad userPlan voor de check - kan async zijn geladen
+  const { data: { session: _sess } } = await sb.auth.getSession();
+  if (_sess) {
+    const { data: _prof } = await sb.from('profiles').select('plan').eq('id', _sess.user.id).single();
+    if (_prof?.plan) userPlan = _prof.plan;
+  }
+
   if (userPlan === 'pro' || userPlan === 'elite') {
     const existing = document.getElementById('studieplanContainer');
     if (existing) existing.remove();
