@@ -427,8 +427,7 @@ ${mustTopics}
 Nice to know:
 ${shouldTopics}
 
-Lesstof:
-${rawText ? rawText.slice(0, 4000) : 'Niet beschikbaar'}`
+Gebruik alleen de must/should topics hierboven. Verzin geen extra informatie.`
         }
       ]
     })
