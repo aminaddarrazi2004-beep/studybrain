@@ -3,6 +3,8 @@ const files = [];
 let selectedTime = 'een avond';
 let userPlan = 'gratis';
 let lastExtractedText = '';
+let lastAnalyseResult = null;
+let lastVakNaam = '';
 
 // ── DOM refs ──
 const zone = document.getElementById('uploadZone');
@@ -265,6 +267,8 @@ async function analyze() {
       await markAnalysisUsed();
       const vakNaamClean = files[0].name.replace('.pdf', '').replace('.PDF', '');
       slaAnalyseOp(vakNaamClean, result);
+      lastAnalyseResult = result;
+      lastVakNaam = vakNaamClean;
       showResults(result, vakNaamClean);
     }
   } catch (err) {
@@ -374,14 +378,9 @@ async function retryStudieplan() {
   if (!container) return;
   container.innerHTML = `<div class="sp-loading"><div class="sp-loading-steps"><div class="sp-loading-step sp-loading-step-active">Opnieuw proberen...</div></div></div>`;
   try {
-    const vakNaam = document.getElementById('resultsSubtitle')?.textContent?.split(' · ')[0] || 'Onbekend';
-    const mustItems = document.querySelectorAll('#mustList .res-item');
-    const shouldItems = document.querySelectorAll('#shouldList .res-item');
-    const reconstructed = {
-      must: Array.from(mustItems).map(el => ({ topic: el.querySelector('.res-item-title')?.textContent || '', summary: el.querySelector('.res-item-body')?.textContent || '' })),
-      should: Array.from(shouldItems).map(el => ({ topic: el.querySelector('.res-item-title')?.textContent || '', summary: el.querySelector('.res-item-body')?.textContent || '' }))
-    };
-    const sp = await buildStudieplan(reconstructed, vakNaam, lastExtractedText);
+    const vakNaam = lastVakNaam || document.getElementById('resultsSubtitle')?.textContent?.split(' · ')[0] || 'Onbekend';
+    const result = lastAnalyseResult || { must: [], should: [] };
+    const sp = await buildStudieplan(result, vakNaam, lastExtractedText);
     if (sp) renderStudieplan(sp, 'studieplanContainer');
     else renderStudieplanError('studieplanContainer', 'Studieplan kon niet worden gegenereerd.');
   } catch (err) {
@@ -459,8 +458,9 @@ function getTijdConfig(tijd) {
 }
 
 function renderStudieplan(studieplan, containerId) {
+  try {
   const el = document.getElementById(containerId);
-  if (!studieplan || !el) return;
+  if (!studieplan || !el) { alert('renderStudieplan: geen studieplan of container. containerId=' + containerId + ' studieplan=' + JSON.stringify(studieplan).slice(0,100)); return; }
   el.innerHTML = `
     <div class="sp-doc">
       <div class="sp-doc-header">
@@ -494,6 +494,9 @@ function renderStudieplan(studieplan, containerId) {
       </div>
       ${studieplan.geheimtip ? `<div class="sp-tip"><div class="sp-tip-label">Tip van een leraar</div><p>${studieplan.geheimtip}</p></div>` : ''}
     </div>`;
+}
+
+  } catch(e) { alert('renderStudieplan CRASH: ' + e.message + ' | ' + e.stack); }
 }
 
 function downloadStudieplanPDF() {
