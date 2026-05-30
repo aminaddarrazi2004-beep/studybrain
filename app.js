@@ -174,10 +174,9 @@ ${text}`
 
   const data = await res.json();
   const raw = data.choices?.[0]?.message?.content || '';
-  const cleaned = raw.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
-  const match = cleaned.match(/\{[\s\S]*\}/);
-  if (!match) throw new Error('Kon resultaten niet verwerken.');
-  return JSON.parse(match[0]);
+  const match1 = raw.match(/\{[\s\S]*\}/);
+  if (!match1) throw new Error('Kon resultaten niet verwerken.');
+  return JSON.parse(match1[0]);
 }
 
 async function buildCombinedStudieplan(vakResultaten) {
@@ -436,21 +435,9 @@ Gebruik alleen de must/should topics hierboven. Verzin geen extra informatie.`
   if (!res.ok) { throw new Error('API error: ' + res.status); }
   const data = await res.json();
   const raw = data.choices?.[0]?.message?.content || '';
-  // Robuustere cleanup van markdown code blocks
-  const cleaned = raw
-    .replace(/^```json\s*/i, '')
-    .replace(/^```\s*/i, '')
-    .replace(/```\s*$/i, '')
-    .trim();
-  // Probeer eerst direct te parsen
-  try {
-    return JSON.parse(cleaned);
-  } catch(e) {
-    // Anders zoek naar JSON object
-    const match = cleaned.match(/\{[\s\S]*\}/);
-    if (!match) { throw new Error('Geen JSON gevonden in: ' + cleaned.slice(0, 100)); }
-    return JSON.parse(match[0]);
-  }
+  const match2 = raw.match(/\{[\s\S]*\}/);
+  if (!match2) { throw new Error('Geen JSON gevonden'); }
+  return JSON.parse(match2[0]);
 }
 
 function getTijdConfig(tijd) {
