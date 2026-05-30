@@ -543,8 +543,12 @@ async function buildStudieplan(result, vakNaam, rawText = '') {
   const shouldTopics = (result.should || []).map(s => `- ${s.topic}: ${s.summary || ''}`).join('\n');
   const token = await getAuthToken();
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 25000);
+
   const res = await fetch('https://analyze.aminaddarrazi2004.workers.dev', {
     method: 'POST',
+    signal: controller.signal,
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
     body: JSON.stringify({
       is_studieplan: true,
@@ -581,12 +585,13 @@ Dit is handig maar minder belangrijk:
 ${shouldTopics}
 
 Originele lesstof:
-${rawText ? rawText.slice(0, 8000) : 'Niet beschikbaar'}`
+${rawText ? rawText.slice(0, 4000) : 'Niet beschikbaar'}`
         }
       ]
     })
   });
 
+  clearTimeout(timeoutId);
   if (!res.ok) { return null; }
   const data = await res.json();
   const raw = data.choices?.[0]?.message?.content || '';
