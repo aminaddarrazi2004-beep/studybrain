@@ -355,6 +355,7 @@ function showResults(data, vakNaam) {
       .catch(err => {
         clearTimeout(studieplanTimeout);
         clearInterval(spTimer);
+        alert('STUDIEPLAN FOUT: ' + err.message + ' | Stack: ' + (err.stack || 'geen stack'));
         renderStudieplanError('studieplanContainer', 'Er ging iets mis: ' + err.message);
       });
   }
