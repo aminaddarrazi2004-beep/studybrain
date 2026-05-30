@@ -306,9 +306,9 @@
     <h2>Upgrade je account</h2>
     <p>Je gratis analyse is gebruikt. Kies een plan om door te gaan:</p>
     <div class="sb-upgrade-plans">
-      <a href="https://buy.stripe.com/bJe5kv1RudhP9b36SA8IU02" target="_blank" class="sb-upgrade-plan-btn starter">Starter — €12,99/mnd · 20 analyses/maand</a>
-      <a href="https://buy.stripe.com/6oUdR1cw891zfzrfp68IU01" target="_blank" class="sb-upgrade-plan-btn pro">Pro — €14,99/mnd · Onbeperkt + studieplan + ezelsbruggetjes</a>
-      <a href="https://buy.stripe.com/eVq6ozcw82Db1IBgta8IU00" target="_blank" class="sb-upgrade-plan-btn elite">Elite — €22,99/mnd · Onbeperkt + Meneer Tim onbeperkt</a>
+      <button onclick="startCheckout('starter')" class="sb-upgrade-plan-btn starter" style="cursor:pointer;width:100%;border:none;text-align:left;">Starter — €12,99/mnd · 20 analyses/maand</button>
+      <button onclick="startCheckout('pro')" class="sb-upgrade-plan-btn pro" style="cursor:pointer;width:100%;border:none;text-align:left;">Pro — €14,99/mnd · Onbeperkt + studieplan + ezelsbruggetjes</button>
+      <button onclick="startCheckout('elite')" class="sb-upgrade-plan-btn elite" style="cursor:pointer;width:100%;border:none;text-align:left;">Elite — €22,99/mnd · Onbeperkt + Meneer Tim onbeperkt</button>
     </div>
     <button class="sb-upgrade-close" onclick="document.getElementById('upgradeModal').classList.remove('open')">Terug naar de app</button>
   </div>
@@ -529,6 +529,41 @@ function scrollToTop(el) {
 }
 function showUpgradeModal() { document.getElementById('upgradeModal').classList.add('open'); }
 function hideUpgradeModal() { document.getElementById('upgradeModal').classList.remove('open'); }
+
+async function startCheckout(plan) {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) {
+    window.location.href = 'login.html?redirect=prijzen&plan=' + plan;
+    return;
+  }
+  try {
+    const btn = event.target;
+    const origText = btn.textContent;
+    btn.textContent = 'Laden...';
+    btn.disabled = true;
+
+    const res = await fetch('https://stripe-checkout.aminaddarrazi2004.workers.dev', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + session.access_token
+      },
+      body: JSON.stringify({ plan })
+    });
+
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      btn.textContent = origText;
+      btn.disabled = false;
+      alert('Er ging iets mis. Probeer het opnieuw.');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Er ging iets mis. Probeer het opnieuw.');
+  }
+}
 </script>
 </body>
 </html>
