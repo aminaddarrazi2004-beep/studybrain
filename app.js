@@ -545,7 +545,7 @@ async function buildStudieplan(result, vakNaam, rawText = '') {
   const token = await getAuthToken();
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 25000);
+  const timeoutId = setTimeout(() => controller.abort(), 55000);
 
   const res = await fetch('https://analyze.aminaddarrazi2004.workers.dev', {
     method: 'POST',
