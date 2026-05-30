@@ -412,6 +412,23 @@
       </div>
     </div>
     <div class="loading-bar-wrap"><div class="loading-bar-fill" id="loadingBarFill"></div></div>
+
+    <!-- Studieplan loading animatie -->
+    <div id="studieplanLoadingWrap" style="display:none;margin-top:16px;background:rgba(255,77,109,0.04);border:1px solid rgba(255,77,109,0.15);border-radius:12px;padding:14px 16px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--accent);animation:spPulse 1.2s ease-in-out infinite;flex-shrink:0;"></div>
+        <div style="font-size:13px;font-weight:600;color:var(--accent);" id="studieplanLoadingText">Persoonlijk studieplan schrijven...</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06);border-radius:4px;height:3px;overflow:hidden;">
+        <div id="studieplanLoadingBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#ff8fa3);border-radius:4px;transition:width 0.5s ease;"></div>
+      </div>
+    </div>
+    <style>
+    @keyframes spPulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50% { opacity:0.4; transform:scale(0.7); }
+    }
+    </style>
   </div>
 
   <!-- Results -->
@@ -420,6 +437,14 @@
       <h2 id="resultsTitle">Jouw analyse</h2>
       <p id="resultsSubtitle">Gebaseerd op jouw lesstof en beschikbare tijd</p>
     </div>
+    <!-- Studieplan status knop -->
+    <div id="studieplanStatusBar" style="display:none;margin-bottom:16px;">
+      <button id="studieplanStatusBtn" style="width:100%;padding:14px 20px;border-radius:12px;background:rgba(255,77,109,0.08);border:1px solid rgba(255,77,109,0.25);color:var(--accent);font-family:var(--font);font-size:14px;font-weight:700;cursor:default;display:flex;align-items:center;justify-content:center;gap:10px;">
+        <span id="studieplanStatusDot" style="width:8px;height:8px;border-radius:50%;background:var(--accent);animation:spPulse 1.2s ease-in-out infinite;flex-shrink:0;"></span>
+        <span id="studieplanStatusTxt">Studieplan genereren...</span>
+      </button>
+    </div>
+
     <div class="res-tabs">
       <button class="res-tab active" onclick="switchTab('must', this)"><span class="tab-dot must-dot"></span> Must Learn</button>
       <button class="res-tab" onclick="switchTab('should', this)"><span class="tab-dot should-dot"></span> Nice to Know</button>
