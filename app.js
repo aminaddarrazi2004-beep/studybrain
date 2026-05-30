@@ -499,7 +499,8 @@ function showResults(data, vakNaam) {
       .catch(err => {
         clearTimeout(studieplanTimeout);
         clearInterval(spTimer);
-        renderStudieplanError('studieplanContainer', 'Er ging iets mis bij het genereren van je studieplan.');
+        console.error('Studieplan catch error:', err);
+        renderStudieplanError('studieplanContainer', 'Fout: ' + err.message);
       });
   }
 }
@@ -592,14 +593,26 @@ ${rawText ? rawText.slice(0, 4000) : 'Niet beschikbaar'}`
   });
 
   clearTimeout(timeoutId);
-  if (!res.ok) { return null; }
+  clearTimeout(timeoutId);
+  if (!res.ok) {
+    const errText = await res.text();
+    console.error('Studieplan API error:', res.status, errText);
+    throw new Error('API error: ' + res.status + ' ' + errText);
+  }
   const data = await res.json();
   const raw = data.choices?.[0]?.message?.content || '';
+  console.log('Studieplan raw response length:', raw.length);
   const cleaned = raw.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
   const match = cleaned.match(/\{[\s\S]*\}/);
-  if (!match) { return null; }
+  if (!match) {
+    console.error('Studieplan JSON not found in response:', raw.slice(0, 200));
+    throw new Error('JSON niet gevonden in response');
+  }
   try { return JSON.parse(match[0]); }
-  catch (err) { return null; }
+  catch (err) {
+    console.error('Studieplan JSON parse error:', err, match[0].slice(0, 200));
+    throw new Error('JSON parse error: ' + err.message);
+  }
 }
 
 function getTijdConfig(tijd) {
