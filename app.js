@@ -282,18 +282,32 @@ async function analyze() {
     const fill = document.getElementById('loadingBarFill');
     if (fill) fill.style.width = ((stepIdx + 1) * 25) + '%';
 
-    // Zodra stap 4 (studieplan) actief wordt → toon de voortgangsbalk eronder
+    // Zodra stap 4 (studieplan) actief wordt → toon animatie eronder
     if (stepIdx === 3) {
       const spWrap = document.getElementById('studieplanLoadingWrap');
       const spBar = document.getElementById('studieplanLoadingBar');
+      const spTxt = document.getElementById('studieplanLoadingText');
       if (spWrap) spWrap.style.display = 'block';
-      if (spBar) {
-        let pct = 0;
-        window._spInterval = setInterval(() => {
-          pct = Math.min(pct + Math.random() * 3, 90);
-          spBar.style.width = pct + '%';
-        }, 500);
-      }
+
+      const spTexts = [
+        'Persoonlijk studieplan schrijven...',
+        'Ezelsbruggetjes bedenken...',
+        'Leerstof prioriteren...',
+        'Herhalingsschema opstellen...',
+        'Toetsvragen samenstellen...',
+        'Bijna klaar...'
+      ];
+      let spTextIdx = 0;
+      let pct = 0;
+
+      window._spInterval = setInterval(() => {
+        // Wissel tekst
+        spTextIdx = (spTextIdx + 1) % spTexts.length;
+        if (spTxt) spTxt.textContent = spTexts[spTextIdx];
+        // Balk loopt op
+        pct = Math.min(pct + Math.random() * 8 + 3, 90);
+        if (spBar) spBar.style.width = pct + '%';
+      }, 1800);
     }
 
     stepIdx++;
@@ -386,6 +400,13 @@ function showResults(data, vakNaam) {
   document.getElementById('resultsSection').style.display = 'block';
   document.getElementById('resultsSubtitle').textContent = `${vakNaam} · ${selectedTime}`;
 
+  // Toon studieplan status knop
+  const statusBar = document.getElementById('studieplanStatusBar');
+  const statusBtn = document.getElementById('studieplanStatusBtn');
+  const statusTxt = document.getElementById('studieplanStatusTxt');
+  const statusDot = document.getElementById('studieplanStatusDot');
+  if (statusBar) statusBar.style.display = 'block';
+
   document.getElementById('mustList').innerHTML = (data.must || []).map(item => `
     <div class="res-item must">
       <div class="res-item-header">
@@ -461,8 +482,19 @@ function showResults(data, vakNaam) {
       .then(sp => {
         clearTimeout(studieplanTimeout);
         clearInterval(spTimer);
-        if (sp) renderStudieplan(sp, 'studieplanContainer');
-        else renderStudieplanError('studieplanContainer', 'Studieplan kon niet worden gegenereerd. Probeer het opnieuw.');
+        if (sp) {
+          renderStudieplan(sp, 'studieplanContainer');
+          // Update status knop naar download
+          if (statusTxt) statusTxt.textContent = '📥 Download studieplan';
+          if (statusDot) statusDot.style.animation = 'none';
+          if (statusBtn) {
+            statusBtn.style.background = 'var(--accent)';
+            statusBtn.style.color = 'white';
+            statusBtn.style.border = 'none';
+            statusBtn.style.cursor = 'pointer';
+            statusBtn.onclick = () => downloadStudieplanPDF();
+          }
+        } else renderStudieplanError('studieplanContainer', 'Studieplan kon niet worden gegenereerd. Probeer het opnieuw.');
       })
       .catch(err => {
         clearTimeout(studieplanTimeout);
