@@ -366,7 +366,6 @@ function showResults(data, vakNaam) {
       .catch(err => {
         clearTimeout(studieplanTimeout);
         clearInterval(spTimer);
-        alert('STUDIEPLAN FOUT: ' + err.message + ' | Stack: ' + (err.stack || 'geen stack'));
         renderStudieplanError('studieplanContainer', 'Er ging iets mis: ' + err.message);
       });
   }
@@ -465,9 +464,8 @@ function getTijdConfig(tijd) {
 }
 
 function renderStudieplan(studieplan, containerId) {
-  try {
   const el = document.getElementById(containerId);
-  if (!studieplan || !el) { alert('renderStudieplan: geen studieplan of container. containerId=' + containerId + ' studieplan=' + JSON.stringify(studieplan).slice(0,100)); return; }
+  if (!studieplan || !el) return;
   el.innerHTML = `
     <div class="sp-doc">
       <div class="sp-doc-header">
@@ -503,7 +501,6 @@ function renderStudieplan(studieplan, containerId) {
     </div>`;
 }
 
-  } catch(e) { alert('renderStudieplan CRASH: ' + e.message + ' | ' + e.stack); }
 }
 
 function downloadStudieplanPDF() {
