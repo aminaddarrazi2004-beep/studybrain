@@ -434,12 +434,14 @@ Gebruik alleen de must/should topics hierboven. Verzin geen extra informatie.`
 
   if (!res.ok) { throw new Error('API error: ' + res.status); }
   const data = await res.json();
+  // Worker kan choices als array of als object teruggeven
+  const choices = Array.isArray(data) ? data : (data.choices || []);
   // Gebruik parsed veld van Worker als beschikbaar
-  if (data.choices?.[0]?.message?.parsed) {
-    return data.choices[0].message.parsed;
+  if (choices[0]?.message?.parsed) {
+    return choices[0].message.parsed;
   }
   // Fallback: parse zelf
-  const raw = data.choices?.[0]?.message?.content || '';
+  const raw = choices[0]?.message?.content || '';
   const match2 = raw.match(/\{[\s\S]*\}/);
   if (!match2) { throw new Error('Geen JSON gevonden'); }
   return JSON.parse(match2[0]);
