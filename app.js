@@ -290,7 +290,7 @@ function hideUpgradeModal() {
   if (modal) modal.classList.remove('open');
 }
 
-function showResults(data, vakNaam) {
+async function showResults(data, vakNaam) {
   document.getElementById('loadingState').style.display = 'none';
   document.getElementById('resultsSection').style.display = 'block';
   document.getElementById('resultsSubtitle').textContent = `${vakNaam} · ${selectedTime}`;
@@ -319,13 +319,6 @@ function showResults(data, vakNaam) {
 
   document.getElementById('cheatsheetContent').textContent = data.cheatsheet || '';
   renderToetsvragen(data.toetsvragen || []);
-
-  // Herlaad userPlan voor de check - kan async zijn geladen
-  const { data: { session: _sess } } = await sb.auth.getSession();
-  if (_sess) {
-    const { data: _prof } = await sb.from('profiles').select('plan').eq('id', _sess.user.id).single();
-    if (_prof?.plan) userPlan = _prof.plan;
-  }
 
   if (userPlan === 'pro' || userPlan === 'elite') {
     const existing = document.getElementById('studieplanContainer');
@@ -499,8 +492,6 @@ function renderStudieplan(studieplan, containerId) {
       </div>
       ${studieplan.geheimtip ? `<div class="sp-tip"><div class="sp-tip-label">Tip van een leraar</div><p>${studieplan.geheimtip}</p></div>` : ''}
     </div>`;
-}
-
 }
 
 function downloadStudieplanPDF() {
