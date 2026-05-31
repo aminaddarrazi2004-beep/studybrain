@@ -321,6 +321,25 @@ async function showResults(data, vakNaam) {
   renderToetsvragen(data.toetsvragen || []);
 
   if (userPlan === 'pro' || userPlan === 'elite') {
+    // Voeg studieplan knop toe boven de tabs
+    const existingBtn = document.getElementById('studieplanScrollBtn');
+    if (existingBtn) existingBtn.remove();
+    const btn = document.createElement('div');
+    btn.id = 'studieplanScrollBtn';
+    btn.innerHTML = `<button onclick="document.getElementById('studieplanContainer')?.scrollIntoView({behavior:'smooth'})" style="
+      display:flex; align-items:center; gap:10px; width:100%;
+      background: linear-gradient(135deg, #ff4d6d22, #ff4d6d11);
+      border: 1.5px solid #ff4d6d;
+      color: #ff4d6d; font-weight:700; font-size:14px;
+      padding: 14px 20px; border-radius: 12px; cursor:pointer;
+      margin-bottom: 16px; text-align:left;
+    ">
+      <span style="font-size:20px">📋</span>
+      <span>Persoonlijk studieplan wordt gegenereerd...</span>
+      <span style="margin-left:auto; font-size:18px">↓</span>
+    </button>`;
+    const resultsSubtitle = document.getElementById('resultsSubtitle');
+    resultsSubtitle.parentNode.insertBefore(btn, resultsSubtitle.nextSibling);
     const existing = document.getElementById('studieplanContainer');
     if (existing) existing.remove();
     const studieplanSection = document.getElementById('toetsvragenSection');
@@ -334,6 +353,18 @@ async function showResults(data, vakNaam) {
       <div class="sp-loading-step" id="spstep2">Ezelsbruggetjes genereren...</div>
       <div class="sp-loading-step" id="spstep3">Herhalingsschema maken...</div>
     </div></div>`;
+
+    // Toon status balk bovenaan
+    const statusBar = document.getElementById('studieplanStatusBar');
+    const statusBtn = document.getElementById('studieplanStatusBtn');
+    const statusTxt = document.getElementById('studieplanStatusTxt');
+    const statusDot = document.getElementById('studieplanStatusDot');
+    if (statusBar) {
+      statusBar.style.display = 'block';
+      statusTxt.textContent = 'Studieplan genereren...';
+      statusBtn.style.cursor = 'default';
+      statusDot.style.animation = 'spPulse 1.2s ease-in-out infinite';
+    }
 
     let spIdx = 0;
     const spTimer = setInterval(() => {
@@ -353,12 +384,40 @@ async function showResults(data, vakNaam) {
       .then(sp => {
         clearTimeout(studieplanTimeout);
         clearInterval(spTimer);
-        if (sp) renderStudieplan(sp, 'studieplanContainer');
+        if (sp) {
+          renderStudieplan(sp, 'studieplanContainer');
+          // Update status balk naar klaar
+          const statusTxt2 = document.getElementById('studieplanStatusTxt');
+          const statusDot2 = document.getElementById('studieplanStatusDot');
+          const statusBtn2 = document.getElementById('studieplanStatusBtn');
+          if (statusTxt2) statusTxt2.textContent = '📋 Bekijk jouw persoonlijk studieplan ↓';
+          if (statusDot2) statusDot2.style.animation = 'none';
+          if (statusBtn2) {
+            statusBtn2.style.cursor = 'pointer';
+            statusBtn2.style.background = 'rgba(255,77,109,0.15)';
+            statusBtn2.onclick = () => document.getElementById('studieplanContainer')?.scrollIntoView({behavior:'smooth'});
+          }
+          const scrollBtn = document.getElementById('studieplanScrollBtn');
+          if (scrollBtn) scrollBtn.innerHTML = `<button onclick="document.getElementById('studieplanContainer')?.scrollIntoView({behavior:'smooth'})" style="
+            display:flex; align-items:center; gap:10px; width:100%;
+            background: linear-gradient(135deg, #ff4d6d33, #ff4d6d11);
+            border: 1.5px solid #ff4d6d;
+            color: #ff4d6d; font-weight:700; font-size:14px;
+            padding: 14px 20px; border-radius: 12px; cursor:pointer;
+            margin-bottom: 16px; text-align:left;
+          ">
+            <span style="font-size:20px">📋</span>
+            <span>Bekijk jouw persoonlijk studieplan</span>
+            <span style="margin-left:auto; font-size:18px">↓</span>
+          </button>`;
+        }
         else renderStudieplanError('studieplanContainer', 'Studieplan kon niet worden gegenereerd.');
       })
       .catch(err => {
         clearTimeout(studieplanTimeout);
         clearInterval(spTimer);
+        const statusBar2 = document.getElementById('studieplanStatusBar');
+        if (statusBar2) statusBar2.style.display = 'none';
         renderStudieplanError('studieplanContainer', 'Er ging iets mis: ' + err.message);
       });
   }
