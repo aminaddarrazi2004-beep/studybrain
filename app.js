@@ -240,7 +240,24 @@ async function analyze() {
     stepIdx++;
   }
   advanceStep();
-  const stepTimer = setInterval(() => { if (stepIdx < 4) advanceStep(); }, 2500);
+  const stepTimer = setInterval(() => {
+    if (stepIdx < 4) advanceStep();
+    // Toon laadbalk zodra stap 4 actief is
+    if (stepIdx === 4) {
+      const pw = document.getElementById('studieplanProgressWrap');
+      const pb = document.getElementById('studieplanProgressBar');
+      if (pw) pw.style.display = 'block';
+      let pct = 0;
+      const pi = setInterval(() => {
+        if (pct < 90) {
+          pct += (90 - pct) * 0.03;
+          if (pb) pb.style.width = pct + '%';
+        }
+      }, 400);
+      // Sla interval op zodat we hem kunnen stoppen
+      window._studieplanProgressInterval = pi;
+    }
+  }, 2500);
 
   const vragenCount = getVragenCount();
 
@@ -293,6 +310,12 @@ function hideUpgradeModal() {
 async function showResults(data, vakNaam) {
   document.getElementById('loadingState').style.display = 'none';
   document.getElementById('resultsSection').style.display = 'block';
+  // Stop laadbalk en reset
+  if (window._studieplanProgressInterval) clearInterval(window._studieplanProgressInterval);
+  const _pb = document.getElementById('studieplanProgressBar');
+  if (_pb) _pb.style.width = '0%';
+  const _pw = document.getElementById('studieplanProgressWrap');
+  if (_pw) _pw.style.display = 'none';
   document.getElementById('resultsSubtitle').textContent = `${vakNaam} · ${selectedTime}`;
 
   document.getElementById('mustList').innerHTML = (data.must || []).map(item => `
