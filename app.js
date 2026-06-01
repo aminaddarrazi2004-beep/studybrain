@@ -320,6 +320,15 @@ async function showResults(data, vakNaam) {
   document.getElementById('cheatsheetContent').textContent = data.cheatsheet || '';
   renderToetsvragen(data.toetsvragen || []);
 
+  // Herlaad userPlan direct van Supabase voor de check
+  try {
+    const { data: { session: _s } } = await sb.auth.getSession();
+    if (_s) {
+      const { data: _p } = await sb.from('profiles').select('plan').eq('id', _s.user.id).single();
+      if (_p?.plan) userPlan = _p.plan;
+    }
+  } catch(e) {}
+
   if (userPlan === 'pro' || userPlan === 'elite' || userPlan === 'gratis') {
     // Voeg studieplan knop toe boven de tabs
     const existingBtn = document.getElementById('studieplanScrollBtn');
@@ -345,7 +354,12 @@ async function showResults(data, vakNaam) {
     const studieplanSection = document.getElementById('toetsvragenSection');
     const planContainer = document.createElement('div');
     planContainer.id = 'studieplanContainer';
-    studieplanSection.parentNode.insertBefore(planContainer, studieplanSection);
+    const insertParent = studieplanSection?.parentNode || document.getElementById('resultsSection');
+    if (studieplanSection?.parentNode) {
+      studieplanSection.parentNode.insertBefore(planContainer, studieplanSection);
+    } else {
+      insertParent.appendChild(planContainer);
+    }
 
     planContainer.innerHTML = `<div class="sp-loading"><div class="sp-loading-steps">
       <div class="sp-loading-step" id="spstep0">Stof analyseren...</div>
