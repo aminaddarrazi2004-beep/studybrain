@@ -329,7 +329,10 @@ async function showResults(data, vakNaam) {
     }
   } catch(e) {}
 
+  console.log('=== STUDIEPLAN CHECK === userPlan:', userPlan);
+
   if (userPlan === 'pro' || userPlan === 'elite' || userPlan === 'gratis') {
+    console.log('=== STUDIEPLAN WORDT GESTART ===');
     // Voeg studieplan knop toe boven de tabs
     const existingBtn = document.getElementById('studieplanScrollBtn');
     if (existingBtn) existingBtn.remove();
