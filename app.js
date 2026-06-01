@@ -375,8 +375,25 @@ async function showResults(data, vakNaam) {
       spIdx = (spIdx + 1) % 4;
     }, 1800);
 
+    // Toon voortgangsbalk bij stap 4
+    const progressWrap = document.getElementById('studieplanProgressWrap');
+    const progressBar = document.getElementById('studieplanProgressBar');
+    const progressTxt = document.getElementById('studieplanProgressTxt');
+    if (progressWrap) progressWrap.style.display = 'block';
+    
+    // Animeer balk van 0 naar 90% in ~25 seconden
+    let progressPct = 0;
+    const progressInterval = setInterval(() => {
+      if (progressPct < 90) {
+        progressPct += (90 - progressPct) * 0.04;
+        if (progressBar) progressBar.style.width = progressPct + '%';
+      }
+    }, 500);
+
     const studieplanTimeout = setTimeout(() => {
       clearInterval(spTimer);
+      clearInterval(progressInterval);
+      if (progressWrap) progressWrap.style.display = 'none';
       renderStudieplanError('studieplanContainer', 'Studieplan duurde te lang. Probeer opnieuw.');
     }, 60000);
 
@@ -385,6 +402,10 @@ async function showResults(data, vakNaam) {
         clearTimeout(studieplanTimeout);
         clearInterval(spTimer);
         if (sp) {
+          // Vul balk naar 100%
+          clearInterval(progressInterval);
+          if (progressBar) { progressBar.style.width = '100%'; }
+          setTimeout(() => { if (progressWrap) progressWrap.style.display = 'none'; }, 400);
           renderStudieplan(sp, 'studieplanContainer');
           // Update status balk naar klaar
           const statusTxt2 = document.getElementById('studieplanStatusTxt');
