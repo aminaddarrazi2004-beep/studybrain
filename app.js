@@ -320,7 +320,7 @@ async function showResults(data, vakNaam) {
   document.getElementById('cheatsheetContent').textContent = data.cheatsheet || '';
   renderToetsvragen(data.toetsvragen || []);
 
-  if (userPlan === 'pro' || userPlan === 'elite') {
+  if (userPlan === 'pro' || userPlan === 'elite' || userPlan === 'gratis') {
     // Voeg studieplan knop toe boven de tabs
     const existingBtn = document.getElementById('studieplanScrollBtn');
     if (existingBtn) existingBtn.remove();
