@@ -269,7 +269,7 @@ async function analyze() {
       slaAnalyseOp(vakNaamClean, result);
       lastAnalyseResult = result;
       lastVakNaam = vakNaamClean;
-      showResults(result, vakNaamClean);
+      await showResults(result, vakNaamClean);
     }
   } catch (err) {
     clearInterval(stepTimer);
